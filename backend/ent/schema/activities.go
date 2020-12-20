@@ -28,3 +28,4 @@ func (Activities) Edges() []ent.Edge {
 		edge.From("academicyear", AcademicYear.Type).Ref("activities").Unique(),
 	}
 }
+//
