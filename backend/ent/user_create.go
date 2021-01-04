@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/clubapplication"
 	"github.com/OMENX/app/ent/complaint"
@@ -75,21 +74,6 @@ func (uc *UserCreate) AddClub(c ...*Club) *UserCreate {
 		ids[i] = c[i].ID
 	}
 	return uc.AddClubIDs(ids...)
-}
-
-// AddActivityIDs adds the activities edge to Activities by ids.
-func (uc *UserCreate) AddActivityIDs(ids ...int) *UserCreate {
-	uc.mutation.AddActivityIDs(ids...)
-	return uc
-}
-
-// AddActivities adds the activities edges to Activities.
-func (uc *UserCreate) AddActivities(a ...*Activities) *UserCreate {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
-	}
-	return uc.AddActivityIDs(ids...)
 }
 
 // AddClubapplicationIDs adds the clubapplication edge to Clubapplication by ids.
@@ -277,25 +261,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: club.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges = append(_spec.Edges, edge)
-	}
-	if nodes := uc.mutation.ActivitiesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.ActivitiesTable,
-			Columns: []string{user.ActivitiesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: activities.FieldID,
 				},
 			},
 		}

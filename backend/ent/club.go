@@ -45,9 +45,11 @@ type ClubEdges struct {
 	Clubapplication []*Clubapplication
 	// ClubToComplaint holds the value of the ClubToComplaint edge.
 	ClubToComplaint []*Complaint
+	// Activities holds the value of the activities edge.
+	Activities []*Activities
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [5]bool
+	loadedTypes [6]bool
 }
 
 // UserOrErr returns the User value or an error if the edge
@@ -108,6 +110,15 @@ func (e ClubEdges) ClubToComplaintOrErr() ([]*Complaint, error) {
 		return e.ClubToComplaint, nil
 	}
 	return nil, &NotLoadedError{edge: "ClubToComplaint"}
+}
+
+// ActivitiesOrErr returns the Activities value or an error if the edge
+// was not loaded in eager-loading.
+func (e ClubEdges) ActivitiesOrErr() ([]*Activities, error) {
+	if e.loadedTypes[5] {
+		return e.Activities, nil
+	}
+	return nil, &NotLoadedError{edge: "activities"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -203,6 +214,11 @@ func (c *Club) QueryClubapplication() *ClubapplicationQuery {
 // QueryClubToComplaint queries the ClubToComplaint edge of the Club.
 func (c *Club) QueryClubToComplaint() *ComplaintQuery {
 	return (&ClubClient{config: c.config}).QueryClubToComplaint(c)
+}
+
+// QueryActivities queries the activities edge of the Club.
+func (c *Club) QueryActivities() *ActivitiesQuery {
+	return (&ClubClient{config: c.config}).QueryActivities(c)
 }
 
 // Update returns a builder for updating this Club.

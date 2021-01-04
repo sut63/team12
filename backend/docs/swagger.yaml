@@ -1,0 +1,1261 @@
+basePath: /api/v1
+definitions:
+  ent.AcademicYear:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.AcademicYearEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the AcademicYearQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      semester:
+        description: Semester holds the value of the "semester" field.
+        type: string
+    type: object
+  ent.AcademicYearEdges:
+    properties:
+      activities:
+        description: Activities holds the value of the activities edge.
+        items:
+          $ref: '#/definitions/ent.Activities'
+        type: array
+    type: object
+  ent.Activities:
+    properties:
+      academicYearID:
+        type: integer
+      activityTypeID:
+        type: integer
+      detail:
+        description: Detail holds the value of the "detail" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.ActivitiesEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ActivitiesQuery when eager-loading is set.
+        type: object
+      endtime:
+        description: Endtime holds the value of the "endtime" field.
+        type: string
+      id:
+        description: ID of the ent.
+        type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
+      starttime:
+        description: Starttime holds the value of the "starttime" field.
+        type: string
+      userID:
+        type: integer
+    type: object
+  ent.ActivitiesEdges:
+    properties:
+      academicyear:
+        $ref: '#/definitions/ent.AcademicYear'
+        description: Academicyear holds the value of the academicyear edge.
+        type: object
+      activitytype:
+        $ref: '#/definitions/ent.ActivityType'
+        description: Activitytype holds the value of the activitytype edge.
+        type: object
+      user:
+        $ref: '#/definitions/ent.User'
+        description: User holds the value of the user edge.
+        type: object
+    type: object
+  ent.ActivityType:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.ActivityTypeEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ActivityTypeQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
+    type: object
+  ent.ActivityTypeEdges:
+    properties:
+      activities:
+        description: Activities holds the value of the activities edge.
+        items:
+          $ref: '#/definitions/ent.Activities'
+        type: array
+    type: object
+  ent.Club:
+    properties:
+      clubBranch_ID:
+        type: integer
+      clubType_ID:
+        type: integer
+      edges:
+        $ref: '#/definitions/ent.ClubEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ClubQuery when eager-loading is set.
+        type: object
+      foundingdate:
+        description: Foundingdate holds the value of the "foundingdate" field.
+        type: string
+      id:
+        description: ID of the ent.
+        type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
+      purpose:
+        description: Purpose holds the value of the "purpose" field.
+        type: string
+      userID:
+        type: integer
+    type: object
+  ent.ClubBranch:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.ClubBranchEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ClubBranchQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
+    type: object
+  ent.ClubBranchEdges:
+    properties:
+      club:
+        description: Club holds the value of the club edge.
+        items:
+          $ref: '#/definitions/ent.Club'
+        type: array
+    type: object
+  ent.ClubEdges:
+    properties:
+      clubToComplaint:
+        description: ClubToComplaint holds the value of the ClubToComplaint edge.
+        items:
+          $ref: '#/definitions/ent.Complaint'
+        type: array
+      clubapplication:
+        description: Clubapplication holds the value of the clubapplication edge.
+        items:
+          $ref: '#/definitions/ent.Clubapplication'
+        type: array
+      clubbranch:
+        $ref: '#/definitions/ent.ClubBranch'
+        description: Clubbranch holds the value of the clubbranch edge.
+        type: object
+      clubtype:
+        $ref: '#/definitions/ent.ClubType'
+        description: Clubtype holds the value of the clubtype edge.
+        type: object
+      user:
+        $ref: '#/definitions/ent.User'
+        description: User holds the value of the user edge.
+        type: object
+    type: object
+  ent.ClubType:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.ClubTypeEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ClubTypeQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
+    type: object
+  ent.ClubTypeEdges:
+    properties:
+      club:
+        description: Club holds the value of the club edge.
+        items:
+          $ref: '#/definitions/ent.Club'
+        type: array
+    type: object
+  ent.ClubappStatus:
+    properties:
+      apply_status:
+        description: ApplyStatus holds the value of the "apply_status" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.ClubappStatusEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ClubappStatusQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.ClubappStatusEdges:
+    properties:
+      clubapplication:
+        description: Clubapplication holds the value of the clubapplication edge.
+        items:
+          $ref: '#/definitions/ent.Clubapplication'
+        type: array
+    type: object
+  ent.Clubapplication:
+    properties:
+      applyname:
+        description: Applyname holds the value of the "applyname" field.
+        type: string
+      clubID:
+        type: integer
+      contact:
+        description: Contact holds the value of the "contact" field.
+        type: string
+      created_at:
+        description: CreatedAt holds the value of the "created_at" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.ClubapplicationEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ClubapplicationQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      reason:
+        description: Reason holds the value of the "reason" field.
+        type: string
+      userID:
+        type: integer
+    type: object
+  ent.ClubapplicationEdges:
+    properties:
+      club:
+        $ref: '#/definitions/ent.Club'
+        description: Club holds the value of the club edge.
+        type: object
+      clubappstatus:
+        $ref: '#/definitions/ent.ClubappStatus'
+        description: Clubappstatus holds the value of the clubappstatus edge.
+        type: object
+      owner:
+        $ref: '#/definitions/ent.User'
+        description: Owner holds the value of the owner edge.
+        type: object
+    type: object
+  ent.Complaint:
+    properties:
+      clubID:
+        type: integer
+      date:
+        description: Date holds the value of the "date" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.ComplaintEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ComplaintQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      info:
+        description: Info holds the value of the "info" field.
+        type: string
+      type:
+        type: integer
+      userID:
+        type: integer
+    type: object
+  ent.ComplaintEdges:
+    properties:
+      complaintToClub:
+        $ref: '#/definitions/ent.Club'
+        description: ComplaintToClub holds the value of the ComplaintToClub edge.
+        type: object
+      complaintToComplaintType:
+        $ref: '#/definitions/ent.ComplaintType'
+        description: ComplaintToComplaintType holds the value of the ComplaintToComplaintType
+          edge.
+        type: object
+      complaintToUser:
+        $ref: '#/definitions/ent.User'
+        description: ComplaintToUser holds the value of the ComplaintToUser edge.
+        type: object
+    type: object
+  ent.ComplaintType:
+    properties:
+      description:
+        description: Description holds the value of the "description" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.ComplaintTypeEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the ComplaintTypeQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+    type: object
+  ent.ComplaintTypeEdges:
+    properties:
+      complaintTypeToComplaint:
+        description: ComplaintTypeToComplaint holds the value of the ComplaintTypeToComplaint
+          edge.
+        items:
+          $ref: '#/definitions/ent.Complaint'
+        type: array
+    type: object
+  ent.Room:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.RoomEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the RoomQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      max_contain:
+        description: MaxContain holds the value of the "max_contain" field.
+        type: integer
+      room_floor:
+        description: RoomFloor holds the value of the "room_floor" field.
+        type: string
+      room_location:
+        description: RoomLocation holds the value of the "room_location" field.
+        type: string
+      room_name:
+        description: RoomName holds the value of the "room_name" field.
+        type: string
+    type: object
+  ent.RoomEdges:
+    properties:
+      roomuses:
+        description: Roomuses holds the value of the roomuses edge.
+        items:
+          $ref: '#/definitions/ent.Roomuse'
+        type: array
+    type: object
+  ent.Roompurpose:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.RoompurposeEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the RoompurposeQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      purpose:
+        description: Purpose holds the value of the "purpose" field.
+        type: string
+    type: object
+  ent.RoompurposeEdges:
+    properties:
+      roompurpose:
+        description: Roompurpose holds the value of the roompurpose edge.
+        items:
+          $ref: '#/definitions/ent.Roomuse'
+        type: array
+    type: object
+  ent.Roomuse:
+    properties:
+      added_time:
+        description: AddedTime holds the value of the "added_time" field.
+        type: string
+      edges:
+        $ref: '#/definitions/ent.RoomuseEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the RoomuseQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      userID:
+        type: integer
+    type: object
+  ent.RoomuseEdges:
+    properties:
+      purposes:
+        $ref: '#/definitions/ent.Roompurpose'
+        description: Purposes holds the value of the purposes edge.
+        type: object
+      rooms:
+        $ref: '#/definitions/ent.Room'
+        description: Rooms holds the value of the rooms edge.
+        type: object
+      users:
+        $ref: '#/definitions/ent.User'
+        description: Users holds the value of the users edge.
+        type: object
+    type: object
+  ent.User:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.UserEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the UserQuery when eager-loading is set.
+        type: object
+      email:
+        description: Email holds the value of the "email" field.
+        type: string
+      id:
+        description: ID of the ent.
+        type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
+      password:
+        description: Password holds the value of the "password" field.
+        type: integer
+      userTypeID:
+        type: integer
+    type: object
+  ent.UserEdges:
+    properties:
+      activities:
+        description: Activities holds the value of the activities edge.
+        items:
+          $ref: '#/definitions/ent.Activities'
+        type: array
+      club:
+        description: Club holds the value of the club edge.
+        items:
+          $ref: '#/definitions/ent.Club'
+        type: array
+      clubapplication:
+        description: Clubapplication holds the value of the clubapplication edge.
+        items:
+          $ref: '#/definitions/ent.Clubapplication'
+        type: array
+      roomuse:
+        description: Roomuse holds the value of the Roomuse edge.
+        items:
+          $ref: '#/definitions/ent.Roomuse'
+        type: array
+      userToComplaint:
+        description: UserToComplaint holds the value of the UserToComplaint edge.
+        items:
+          $ref: '#/definitions/ent.Complaint'
+        type: array
+      usertype:
+        $ref: '#/definitions/ent.Usertype'
+        description: Usertype holds the value of the usertype edge.
+        type: object
+    type: object
+  ent.Usertype:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.UsertypeEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the UsertypeQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
+    type: object
+  ent.UsertypeEdges:
+    properties:
+      user:
+        description: User holds the value of the user edge.
+        items:
+          $ref: '#/definitions/ent.User'
+        type: array
+    type: object
+  gin.H:
+    additionalProperties: true
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for SUT SE 2563
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: SUT SA Example API
+  version: "1.0"
+paths:
+  /AcademicYears:
+    get:
+      description: list AcademicYear entities
+      operationId: list-AcademicYear
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.AcademicYear'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List AcademicYear entities
+    post:
+      consumes:
+      - application/json
+      description: Create AcademicYear
+      operationId: create-AcademicYear
+      parameters:
+      - description: AcademicYear entity
+        in: body
+        name: AcademicYear
+        required: true
+        schema:
+          $ref: '#/definitions/ent.AcademicYear'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.AcademicYear'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create AcademicYear
+  /AcademicYears/{id}:
+    delete:
+      description: get AcademicYear by ID
+      operationId: delete-AcademicYear
+      parameters:
+      - description: AcademicYear ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a AcademicYear entity by ID
+    get:
+      description: get AcademicYear by ID
+      operationId: get-AcademicYear
+      parameters:
+      - description: AcademicYear ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.AcademicYear'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a AcademicYear entity by ID
+    put:
+      consumes:
+      - application/json
+      description: update AcademicYear by ID
+      operationId: update-AcademicYear
+      parameters:
+      - description: AcademicYear ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: AcademicYear entity
+        in: body
+        name: AcademicYear
+        required: true
+        schema:
+          $ref: '#/definitions/ent.AcademicYear'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.AcademicYear'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a AcademicYear entity by ID
+  /Activitiess:
+    get:
+      description: list Activities entities
+      operationId: list-Activities
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Activities'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List Activities entities
+    post:
+      consumes:
+      - application/json
+      description: Create Activities
+      operationId: create-Activities
+      parameters:
+      - description: Activities entity
+        in: body
+        name: Activities
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Activities'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Activities'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create Activities
+  /Activitiess/{id}:
+    delete:
+      description: get Activities by ID
+      operationId: delete-Activities
+      parameters:
+      - description: Activities ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a Activities entity by ID
+    get:
+      description: get Activities by ID
+      operationId: get-Activities
+      parameters:
+      - description: Activities ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Activities'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a Activities entity by ID
+    put:
+      consumes:
+      - application/json
+      description: update Activities by ID
+      operationId: update-Activities
+      parameters:
+      - description: Activities ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Activities entity
+        in: body
+        name: Activities
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Activities'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Activities'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a Activities entity by ID
+  /ActivityTypes:
+    get:
+      description: list ActivityType entities
+      operationId: list-ActivityType
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.ActivityType'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List ActivityType entities
+    post:
+      consumes:
+      - application/json
+      description: Create ActivityType
+      operationId: create-ActivityType
+      parameters:
+      - description: ActivityType entity
+        in: body
+        name: ActivityType
+        required: true
+        schema:
+          $ref: '#/definitions/ent.ActivityType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.ActivityType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create ActivityType
+  /ActivityTypes/{id}:
+    delete:
+      description: get ActivityType by ID
+      operationId: delete-ActivityType
+      parameters:
+      - description: ActivityType ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a ActivityType entity by ID
+    get:
+      description: get ActivityType by ID
+      operationId: get-ActivityType
+      parameters:
+      - description: ActivityType ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.ActivityType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a ActivityType entity by ID
+    put:
+      consumes:
+      - application/json
+      description: update ActivityType by ID
+      operationId: update-ActivityType
+      parameters:
+      - description: ActivityType ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: ActivityType entity
+        in: body
+        name: ActivityType
+        required: true
+        schema:
+          $ref: '#/definitions/ent.ActivityType'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.ActivityType'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a ActivityType entity by ID
+  /users:
+    get:
+      description: list user entities
+      operationId: list-user
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List user entities
+    post:
+      consumes:
+      - application/json
+      description: Create user
+      operationId: create-user
+      parameters:
+      - description: User entity
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/ent.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create user
+  /users/{id}:
+    delete:
+      description: get user by ID
+      operationId: delete-user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/gin.H'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Delete a user entity by ID
+    get:
+      description: get user by ID
+      operationId: get-user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a user entity by ID
+    put:
+      consumes:
+      - application/json
+      description: update user by ID
+      operationId: update-user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User entity
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/ent.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a user entity by ID
+  /usertypes:
+    get:
+      description: list usertype entities
+      operationId: list-usertype
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Usertype'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: List usertype entities
+    post:
+      consumes:
+      - application/json
+      description: Create usertype
+      operationId: create-usertype
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Usertype'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Create usertype
+  /usertypes/{id}:
+    get:
+      description: get usertype by ID
+      operationId: get-usertype
+      parameters:
+      - description: Usertype ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Usertype'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a usertype entity by ID
+    put:
+      consumes:
+      - application/json
+      description: update usertype by ID
+      operationId: update-usertype
+      parameters:
+      - description: Usertype ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Usertype entity
+        in: body
+        name: usertype
+        required: true
+        schema:
+          $ref: '#/definitions/ent.Usertype'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ent.Usertype'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Update a usertype entity by ID
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+  BasicAuth:
+    type: basic
+  OAuth2AccessCode:
+    authorizationUrl: https://example.com/oauth/authorize
+    flow: accessCode
+    scopes:
+      admin: ' Grants read and write access to administrative information'
+    tokenUrl: https://example.com/oauth/token
+    type: oauth2
+  OAuth2Application:
+    authorizationUrl: ""
+    flow: application
+    scopes:
+      admin: ' Grants read and write access to administrative information'
+      write: ' Grants write access'
+    tokenUrl: https://example.com/oauth/token
+    type: oauth2
+  OAuth2Implicit:
+    authorizationUrl: https://example.com/oauth/authorize
+    flow: implicit
+    scopes:
+      admin: ' Grants read and write access to administrative information'
+      write: ' Grants write access'
+    type: oauth2
+  OAuth2Password:
+    authorizationUrl: ""
+    flow: password
+    scopes:
+      admin: ' Grants read and write access to administrative information'
+      read: ' Grants read access'
+      write: ' Grants write access'
+    tokenUrl: https://example.com/oauth/token
+    type: oauth2
+swagger: "2.0"

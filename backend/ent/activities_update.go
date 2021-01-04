@@ -10,8 +10,8 @@ import (
 	"github.com/OMENX/app/ent/academicyear"
 	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/activitytype"
+	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/predicate"
-	"github.com/OMENX/app/ent/user"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
@@ -93,23 +93,23 @@ func (au *ActivitiesUpdate) SetAcademicyear(a *AcademicYear) *ActivitiesUpdate {
 	return au.SetAcademicyearID(a.ID)
 }
 
-// SetUserID sets the user edge to User by id.
-func (au *ActivitiesUpdate) SetUserID(id int) *ActivitiesUpdate {
-	au.mutation.SetUserID(id)
+// SetClubID sets the club edge to Club by id.
+func (au *ActivitiesUpdate) SetClubID(id int) *ActivitiesUpdate {
+	au.mutation.SetClubID(id)
 	return au
 }
 
-// SetNillableUserID sets the user edge to User by id if the given value is not nil.
-func (au *ActivitiesUpdate) SetNillableUserID(id *int) *ActivitiesUpdate {
+// SetNillableClubID sets the club edge to Club by id if the given value is not nil.
+func (au *ActivitiesUpdate) SetNillableClubID(id *int) *ActivitiesUpdate {
 	if id != nil {
-		au = au.SetUserID(*id)
+		au = au.SetClubID(*id)
 	}
 	return au
 }
 
-// SetUser sets the user edge to User.
-func (au *ActivitiesUpdate) SetUser(u *User) *ActivitiesUpdate {
-	return au.SetUserID(u.ID)
+// SetClub sets the club edge to Club.
+func (au *ActivitiesUpdate) SetClub(c *Club) *ActivitiesUpdate {
+	return au.SetClubID(c.ID)
 }
 
 // Mutation returns the ActivitiesMutation object of the builder.
@@ -129,9 +129,9 @@ func (au *ActivitiesUpdate) ClearAcademicyear() *ActivitiesUpdate {
 	return au
 }
 
-// ClearUser clears the user edge to User.
-func (au *ActivitiesUpdate) ClearUser() *ActivitiesUpdate {
-	au.mutation.ClearUser()
+// ClearClub clears the club edge to Club.
+func (au *ActivitiesUpdate) ClearClub() *ActivitiesUpdate {
+	au.mutation.ClearClub()
 	return au
 }
 
@@ -313,33 +313,33 @@ func (au *ActivitiesUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if au.mutation.UserCleared() {
+	if au.mutation.ClubCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   activities.UserTable,
-			Columns: []string{activities.UserColumn},
+			Table:   activities.ClubTable,
+			Columns: []string{activities.ClubColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: user.FieldID,
+					Column: club.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := au.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := au.mutation.ClubIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   activities.UserTable,
-			Columns: []string{activities.UserColumn},
+			Table:   activities.ClubTable,
+			Columns: []string{activities.ClubColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: user.FieldID,
+					Column: club.FieldID,
 				},
 			},
 		}
@@ -428,23 +428,23 @@ func (auo *ActivitiesUpdateOne) SetAcademicyear(a *AcademicYear) *ActivitiesUpda
 	return auo.SetAcademicyearID(a.ID)
 }
 
-// SetUserID sets the user edge to User by id.
-func (auo *ActivitiesUpdateOne) SetUserID(id int) *ActivitiesUpdateOne {
-	auo.mutation.SetUserID(id)
+// SetClubID sets the club edge to Club by id.
+func (auo *ActivitiesUpdateOne) SetClubID(id int) *ActivitiesUpdateOne {
+	auo.mutation.SetClubID(id)
 	return auo
 }
 
-// SetNillableUserID sets the user edge to User by id if the given value is not nil.
-func (auo *ActivitiesUpdateOne) SetNillableUserID(id *int) *ActivitiesUpdateOne {
+// SetNillableClubID sets the club edge to Club by id if the given value is not nil.
+func (auo *ActivitiesUpdateOne) SetNillableClubID(id *int) *ActivitiesUpdateOne {
 	if id != nil {
-		auo = auo.SetUserID(*id)
+		auo = auo.SetClubID(*id)
 	}
 	return auo
 }
 
-// SetUser sets the user edge to User.
-func (auo *ActivitiesUpdateOne) SetUser(u *User) *ActivitiesUpdateOne {
-	return auo.SetUserID(u.ID)
+// SetClub sets the club edge to Club.
+func (auo *ActivitiesUpdateOne) SetClub(c *Club) *ActivitiesUpdateOne {
+	return auo.SetClubID(c.ID)
 }
 
 // Mutation returns the ActivitiesMutation object of the builder.
@@ -464,9 +464,9 @@ func (auo *ActivitiesUpdateOne) ClearAcademicyear() *ActivitiesUpdateOne {
 	return auo
 }
 
-// ClearUser clears the user edge to User.
-func (auo *ActivitiesUpdateOne) ClearUser() *ActivitiesUpdateOne {
-	auo.mutation.ClearUser()
+// ClearClub clears the club edge to Club.
+func (auo *ActivitiesUpdateOne) ClearClub() *ActivitiesUpdateOne {
+	auo.mutation.ClearClub()
 	return auo
 }
 
@@ -646,33 +646,33 @@ func (auo *ActivitiesUpdateOne) sqlSave(ctx context.Context) (a *Activities, err
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if auo.mutation.UserCleared() {
+	if auo.mutation.ClubCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   activities.UserTable,
-			Columns: []string{activities.UserColumn},
+			Table:   activities.ClubTable,
+			Columns: []string{activities.ClubColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: user.FieldID,
+					Column: club.FieldID,
 				},
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := auo.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := auo.mutation.ClubIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   activities.UserTable,
-			Columns: []string{activities.UserColumn},
+			Table:   activities.ClubTable,
+			Columns: []string{activities.ClubColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: user.FieldID,
+					Column: club.FieldID,
 				},
 			},
 		}

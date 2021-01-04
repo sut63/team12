@@ -11,7 +11,7 @@ import (
 	"github.com/OMENX/app/ent/academicyear"
 	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/activitytype"
-	"github.com/OMENX/app/ent/user"
+	"github.com/OMENX/app/ent/club"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 )
@@ -85,23 +85,23 @@ func (ac *ActivitiesCreate) SetAcademicyear(a *AcademicYear) *ActivitiesCreate {
 	return ac.SetAcademicyearID(a.ID)
 }
 
-// SetUserID sets the user edge to User by id.
-func (ac *ActivitiesCreate) SetUserID(id int) *ActivitiesCreate {
-	ac.mutation.SetUserID(id)
+// SetClubID sets the club edge to Club by id.
+func (ac *ActivitiesCreate) SetClubID(id int) *ActivitiesCreate {
+	ac.mutation.SetClubID(id)
 	return ac
 }
 
-// SetNillableUserID sets the user edge to User by id if the given value is not nil.
-func (ac *ActivitiesCreate) SetNillableUserID(id *int) *ActivitiesCreate {
+// SetNillableClubID sets the club edge to Club by id if the given value is not nil.
+func (ac *ActivitiesCreate) SetNillableClubID(id *int) *ActivitiesCreate {
 	if id != nil {
-		ac = ac.SetUserID(*id)
+		ac = ac.SetClubID(*id)
 	}
 	return ac
 }
 
-// SetUser sets the user edge to User.
-func (ac *ActivitiesCreate) SetUser(u *User) *ActivitiesCreate {
-	return ac.SetUserID(u.ID)
+// SetClub sets the club edge to Club.
+func (ac *ActivitiesCreate) SetClub(c *Club) *ActivitiesCreate {
+	return ac.SetClubID(c.ID)
 }
 
 // Mutation returns the ActivitiesMutation object of the builder.
@@ -263,17 +263,17 @@ func (ac *ActivitiesCreate) createSpec() (*Activities, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := ac.mutation.UserIDs(); len(nodes) > 0 {
+	if nodes := ac.mutation.ClubIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   activities.UserTable,
-			Columns: []string{activities.UserColumn},
+			Table:   activities.ClubTable,
+			Columns: []string{activities.ClubColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: user.FieldID,
+					Column: club.FieldID,
 				},
 			},
 		}

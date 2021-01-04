@@ -10,7 +10,7 @@ import (
 	"github.com/OMENX/app/ent/academicyear"
 	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/activitytype"
-	"github.com/OMENX/app/ent/user"
+	"github.com/OMENX/app/ent/club"
 	"github.com/facebookincubator/ent/dialect/sql"
 )
 
@@ -32,7 +32,7 @@ type Activities struct {
 	Edges          ActivitiesEdges `json:"edges"`
 	AcademicYearID *int
 	ActivityTypeID *int
-	UserID         *int
+	ClubID         *int
 }
 
 // ActivitiesEdges holds the relations/edges for other nodes in the graph.
@@ -41,8 +41,8 @@ type ActivitiesEdges struct {
 	Activitytype *ActivityType
 	// Academicyear holds the value of the academicyear edge.
 	Academicyear *AcademicYear
-	// User holds the value of the user edge.
-	User *User
+	// Club holds the value of the club edge.
+	Club *Club
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [3]bool
@@ -76,18 +76,18 @@ func (e ActivitiesEdges) AcademicyearOrErr() (*AcademicYear, error) {
 	return nil, &NotLoadedError{edge: "academicyear"}
 }
 
-// UserOrErr returns the User value or an error if the edge
+// ClubOrErr returns the Club value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e ActivitiesEdges) UserOrErr() (*User, error) {
+func (e ActivitiesEdges) ClubOrErr() (*Club, error) {
 	if e.loadedTypes[2] {
-		if e.User == nil {
-			// The edge user was loaded in eager-loading,
+		if e.Club == nil {
+			// The edge club was loaded in eager-loading,
 			// but was not found.
-			return nil, &NotFoundError{label: user.Label}
+			return nil, &NotFoundError{label: club.Label}
 		}
-		return e.User, nil
+		return e.Club, nil
 	}
-	return nil, &NotLoadedError{edge: "user"}
+	return nil, &NotLoadedError{edge: "club"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -106,7 +106,7 @@ func (*Activities) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // AcademicYearID
 		&sql.NullInt64{}, // ActivityTypeID
-		&sql.NullInt64{}, // UserID
+		&sql.NullInt64{}, // ClubID
 	}
 }
 
@@ -157,10 +157,10 @@ func (a *Activities) assignValues(values ...interface{}) error {
 			*a.ActivityTypeID = int(value.Int64)
 		}
 		if value, ok := values[2].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field UserID", value)
+			return fmt.Errorf("unexpected type %T for edge-field ClubID", value)
 		} else if value.Valid {
-			a.UserID = new(int)
-			*a.UserID = int(value.Int64)
+			a.ClubID = new(int)
+			*a.ClubID = int(value.Int64)
 		}
 	}
 	return nil
@@ -176,9 +176,9 @@ func (a *Activities) QueryAcademicyear() *AcademicYearQuery {
 	return (&ActivitiesClient{config: a.config}).QueryAcademicyear(a)
 }
 
-// QueryUser queries the user edge of the Activities.
-func (a *Activities) QueryUser() *UserQuery {
-	return (&ActivitiesClient{config: a.config}).QueryUser(a)
+// QueryClub queries the club edge of the Activities.
+func (a *Activities) QueryClub() *ClubQuery {
+	return (&ActivitiesClient{config: a.config}).QueryClub(a)
 }
 
 // Update returns a builder for updating this Activities.

@@ -29,7 +29,7 @@ var (
 		{Name: "endtime", Type: field.TypeTime},
 		{Name: "AcademicYearID", Type: field.TypeInt, Nullable: true},
 		{Name: "ActivityTypeID", Type: field.TypeInt, Nullable: true},
-		{Name: "UserID", Type: field.TypeInt, Nullable: true},
+		{Name: "ClubID", Type: field.TypeInt, Nullable: true},
 	}
 	// ActivitiesTable holds the schema information for the "activities" table.
 	ActivitiesTable = &schema.Table{
@@ -52,10 +52,10 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "activities_users_activities",
+				Symbol:  "activities_clubs_activities",
 				Columns: []*schema.Column{ActivitiesColumns[7]},
 
-				RefColumns: []*schema.Column{UsersColumns[0]},
+				RefColumns: []*schema.Column{ClubsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 		},
@@ -359,7 +359,7 @@ var (
 func init() {
 	ActivitiesTable.ForeignKeys[0].RefTable = AcademicYearsTable
 	ActivitiesTable.ForeignKeys[1].RefTable = ActivityTypesTable
-	ActivitiesTable.ForeignKeys[2].RefTable = UsersTable
+	ActivitiesTable.ForeignKeys[2].RefTable = ClubsTable
 	ClubsTable.ForeignKeys[0].RefTable = ClubBranchesTable
 	ClubsTable.ForeignKeys[1].RefTable = ClubTypesTable
 	ClubsTable.ForeignKeys[2].RefTable = UsersTable

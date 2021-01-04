@@ -11,8 +11,8 @@ import (
 	"github.com/OMENX/app/ent/academicyear"
 	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/activitytype"
+	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/predicate"
-	"github.com/OMENX/app/ent/user"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
@@ -29,7 +29,7 @@ type ActivitiesQuery struct {
 	// eager-loading edges.
 	withActivitytype *ActivityTypeQuery
 	withAcademicyear *AcademicYearQuery
-	withUser         *UserQuery
+	withClub         *ClubQuery
 	withFKs          bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -96,17 +96,17 @@ func (aq *ActivitiesQuery) QueryAcademicyear() *AcademicYearQuery {
 	return query
 }
 
-// QueryUser chains the current query on the user edge.
-func (aq *ActivitiesQuery) QueryUser() *UserQuery {
-	query := &UserQuery{config: aq.config}
+// QueryClub chains the current query on the club edge.
+func (aq *ActivitiesQuery) QueryClub() *ClubQuery {
+	query := &ClubQuery{config: aq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := aq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(activities.Table, activities.FieldID, aq.sqlQuery()),
-			sqlgraph.To(user.Table, user.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, activities.UserTable, activities.UserColumn),
+			sqlgraph.To(club.Table, club.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, activities.ClubTable, activities.ClubColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(aq.driver.Dialect(), step)
 		return fromU, nil
@@ -315,14 +315,14 @@ func (aq *ActivitiesQuery) WithAcademicyear(opts ...func(*AcademicYearQuery)) *A
 	return aq
 }
 
-//  WithUser tells the query-builder to eager-loads the nodes that are connected to
-// the "user" edge. The optional arguments used to configure the query builder of the edge.
-func (aq *ActivitiesQuery) WithUser(opts ...func(*UserQuery)) *ActivitiesQuery {
-	query := &UserQuery{config: aq.config}
+//  WithClub tells the query-builder to eager-loads the nodes that are connected to
+// the "club" edge. The optional arguments used to configure the query builder of the edge.
+func (aq *ActivitiesQuery) WithClub(opts ...func(*ClubQuery)) *ActivitiesQuery {
+	query := &ClubQuery{config: aq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	aq.withUser = query
+	aq.withClub = query
 	return aq
 }
 
@@ -396,10 +396,10 @@ func (aq *ActivitiesQuery) sqlAll(ctx context.Context) ([]*Activities, error) {
 		loadedTypes = [3]bool{
 			aq.withActivitytype != nil,
 			aq.withAcademicyear != nil,
-			aq.withUser != nil,
+			aq.withClub != nil,
 		}
 	)
-	if aq.withActivitytype != nil || aq.withAcademicyear != nil || aq.withUser != nil {
+	if aq.withActivitytype != nil || aq.withAcademicyear != nil || aq.withClub != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -479,16 +479,16 @@ func (aq *ActivitiesQuery) sqlAll(ctx context.Context) ([]*Activities, error) {
 		}
 	}
 
-	if query := aq.withUser; query != nil {
+	if query := aq.withClub; query != nil {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Activities)
 		for i := range nodes {
-			if fk := nodes[i].UserID; fk != nil {
+			if fk := nodes[i].ClubID; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
 		}
-		query.Where(user.IDIn(ids...))
+		query.Where(club.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err
@@ -496,10 +496,10 @@ func (aq *ActivitiesQuery) sqlAll(ctx context.Context) ([]*Activities, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "UserID" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "ClubID" returned %v`, n.ID)
 			}
 			for i := range nodes {
-				nodes[i].Edges.User = n
+				nodes[i].Edges.Club = n
 			}
 		}
 	}

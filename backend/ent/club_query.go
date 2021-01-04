@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/clubapplication"
 	"github.com/OMENX/app/ent/clubbranch"
@@ -35,6 +36,7 @@ type ClubQuery struct {
 	withClubbranch      *ClubBranchQuery
 	withClubapplication *ClubapplicationQuery
 	withClubToComplaint *ComplaintQuery
+	withActivities      *ActivitiesQuery
 	withFKs             bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -148,6 +150,24 @@ func (cq *ClubQuery) QueryClubToComplaint() *ComplaintQuery {
 			sqlgraph.From(club.Table, club.FieldID, cq.sqlQuery()),
 			sqlgraph.To(complaint.Table, complaint.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, club.ClubToComplaintTable, club.ClubToComplaintColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryActivities chains the current query on the activities edge.
+func (cq *ClubQuery) QueryActivities() *ActivitiesQuery {
+	query := &ActivitiesQuery{config: cq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := cq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(club.Table, club.FieldID, cq.sqlQuery()),
+			sqlgraph.To(activities.Table, activities.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, club.ActivitiesTable, club.ActivitiesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(cq.driver.Dialect(), step)
 		return fromU, nil
@@ -389,6 +409,17 @@ func (cq *ClubQuery) WithClubToComplaint(opts ...func(*ComplaintQuery)) *ClubQue
 	return cq
 }
 
+//  WithActivities tells the query-builder to eager-loads the nodes that are connected to
+// the "activities" edge. The optional arguments used to configure the query builder of the edge.
+func (cq *ClubQuery) WithActivities(opts ...func(*ActivitiesQuery)) *ClubQuery {
+	query := &ActivitiesQuery{config: cq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	cq.withActivities = query
+	return cq
+}
+
 // GroupBy used to group vertices by one or more fields/columns.
 // It is often used with aggregate functions, like: count, max, mean, min, sum.
 //
@@ -456,12 +487,13 @@ func (cq *ClubQuery) sqlAll(ctx context.Context) ([]*Club, error) {
 		nodes       = []*Club{}
 		withFKs     = cq.withFKs
 		_spec       = cq.querySpec()
-		loadedTypes = [5]bool{
+		loadedTypes = [6]bool{
 			cq.withUser != nil,
 			cq.withClubtype != nil,
 			cq.withClubbranch != nil,
 			cq.withClubapplication != nil,
 			cq.withClubToComplaint != nil,
+			cq.withActivities != nil,
 		}
 	)
 	if cq.withUser != nil || cq.withClubtype != nil || cq.withClubbranch != nil {
@@ -622,6 +654,34 @@ func (cq *ClubQuery) sqlAll(ctx context.Context) ([]*Club, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "ClubID" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.ClubToComplaint = append(node.Edges.ClubToComplaint, n)
+		}
+	}
+
+	if query := cq.withActivities; query != nil {
+		fks := make([]driver.Value, 0, len(nodes))
+		nodeids := make(map[int]*Club)
+		for i := range nodes {
+			fks = append(fks, nodes[i].ID)
+			nodeids[nodes[i].ID] = nodes[i]
+		}
+		query.withFKs = true
+		query.Where(predicate.Activities(func(s *sql.Selector) {
+			s.Where(sql.InValues(club.ActivitiesColumn, fks...))
+		}))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			fk := n.ClubID
+			if fk == nil {
+				return nil, fmt.Errorf(`foreign-key "ClubID" is nil for node %v`, n.ID)
+			}
+			node, ok := nodeids[*fk]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "ClubID" returned %v for node %v`, *fk, n.ID)
+			}
+			node.Edges.Activities = append(node.Edges.Activities, n)
 		}
 	}
 

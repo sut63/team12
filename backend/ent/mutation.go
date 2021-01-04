@@ -437,8 +437,8 @@ type ActivitiesMutation struct {
 	clearedactivitytype bool
 	academicyear        *int
 	clearedacademicyear bool
-	user                *int
-	cleareduser         bool
+	club                *int
+	clearedclub         bool
 	done                bool
 	oldValue            func(context.Context) (*Activities, error)
 }
@@ -748,43 +748,43 @@ func (m *ActivitiesMutation) ResetAcademicyear() {
 	m.clearedacademicyear = false
 }
 
-// SetUserID sets the user edge to User by id.
-func (m *ActivitiesMutation) SetUserID(id int) {
-	m.user = &id
+// SetClubID sets the club edge to Club by id.
+func (m *ActivitiesMutation) SetClubID(id int) {
+	m.club = &id
 }
 
-// ClearUser clears the user edge to User.
-func (m *ActivitiesMutation) ClearUser() {
-	m.cleareduser = true
+// ClearClub clears the club edge to Club.
+func (m *ActivitiesMutation) ClearClub() {
+	m.clearedclub = true
 }
 
-// UserCleared returns if the edge user was cleared.
-func (m *ActivitiesMutation) UserCleared() bool {
-	return m.cleareduser
+// ClubCleared returns if the edge club was cleared.
+func (m *ActivitiesMutation) ClubCleared() bool {
+	return m.clearedclub
 }
 
-// UserID returns the user id in the mutation.
-func (m *ActivitiesMutation) UserID() (id int, exists bool) {
-	if m.user != nil {
-		return *m.user, true
+// ClubID returns the club id in the mutation.
+func (m *ActivitiesMutation) ClubID() (id int, exists bool) {
+	if m.club != nil {
+		return *m.club, true
 	}
 	return
 }
 
-// UserIDs returns the user ids in the mutation.
+// ClubIDs returns the club ids in the mutation.
 // Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// UserID instead. It exists only for internal usage by the builders.
-func (m *ActivitiesMutation) UserIDs() (ids []int) {
-	if id := m.user; id != nil {
+// ClubID instead. It exists only for internal usage by the builders.
+func (m *ActivitiesMutation) ClubIDs() (ids []int) {
+	if id := m.club; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetUser reset all changes of the "user" edge.
-func (m *ActivitiesMutation) ResetUser() {
-	m.user = nil
-	m.cleareduser = false
+// ResetClub reset all changes of the "club" edge.
+func (m *ActivitiesMutation) ResetClub() {
+	m.club = nil
+	m.clearedclub = false
 }
 
 // Op returns the operation name.
@@ -960,8 +960,8 @@ func (m *ActivitiesMutation) AddedEdges() []string {
 	if m.academicyear != nil {
 		edges = append(edges, activities.EdgeAcademicyear)
 	}
-	if m.user != nil {
-		edges = append(edges, activities.EdgeUser)
+	if m.club != nil {
+		edges = append(edges, activities.EdgeClub)
 	}
 	return edges
 }
@@ -978,8 +978,8 @@ func (m *ActivitiesMutation) AddedIDs(name string) []ent.Value {
 		if id := m.academicyear; id != nil {
 			return []ent.Value{*id}
 		}
-	case activities.EdgeUser:
-		if id := m.user; id != nil {
+	case activities.EdgeClub:
+		if id := m.club; id != nil {
 			return []ent.Value{*id}
 		}
 	}
@@ -1011,8 +1011,8 @@ func (m *ActivitiesMutation) ClearedEdges() []string {
 	if m.clearedacademicyear {
 		edges = append(edges, activities.EdgeAcademicyear)
 	}
-	if m.cleareduser {
-		edges = append(edges, activities.EdgeUser)
+	if m.clearedclub {
+		edges = append(edges, activities.EdgeClub)
 	}
 	return edges
 }
@@ -1025,8 +1025,8 @@ func (m *ActivitiesMutation) EdgeCleared(name string) bool {
 		return m.clearedactivitytype
 	case activities.EdgeAcademicyear:
 		return m.clearedacademicyear
-	case activities.EdgeUser:
-		return m.cleareduser
+	case activities.EdgeClub:
+		return m.clearedclub
 	}
 	return false
 }
@@ -1041,8 +1041,8 @@ func (m *ActivitiesMutation) ClearEdge(name string) error {
 	case activities.EdgeAcademicyear:
 		m.ClearAcademicyear()
 		return nil
-	case activities.EdgeUser:
-		m.ClearUser()
+	case activities.EdgeClub:
+		m.ClearClub()
 		return nil
 	}
 	return fmt.Errorf("unknown Activities unique edge %s", name)
@@ -1059,8 +1059,8 @@ func (m *ActivitiesMutation) ResetEdge(name string) error {
 	case activities.EdgeAcademicyear:
 		m.ResetAcademicyear()
 		return nil
-	case activities.EdgeUser:
-		m.ResetUser()
+	case activities.EdgeClub:
+		m.ResetClub()
 		return nil
 	}
 	return fmt.Errorf("unknown Activities edge %s", name)
@@ -1455,6 +1455,8 @@ type ClubMutation struct {
 	removedclubapplication  map[int]struct{}
 	_ClubToComplaint        map[int]struct{}
 	removed_ClubToComplaint map[int]struct{}
+	activities              map[int]struct{}
+	removedactivities       map[int]struct{}
 	done                    bool
 	oldValue                func(context.Context) (*Club, error)
 }
@@ -1850,6 +1852,48 @@ func (m *ClubMutation) ResetClubToComplaint() {
 	m.removed_ClubToComplaint = nil
 }
 
+// AddActivityIDs adds the activities edge to Activities by ids.
+func (m *ClubMutation) AddActivityIDs(ids ...int) {
+	if m.activities == nil {
+		m.activities = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.activities[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveActivityIDs removes the activities edge to Activities by ids.
+func (m *ClubMutation) RemoveActivityIDs(ids ...int) {
+	if m.removedactivities == nil {
+		m.removedactivities = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedactivities[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedActivities returns the removed ids of activities.
+func (m *ClubMutation) RemovedActivitiesIDs() (ids []int) {
+	for id := range m.removedactivities {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ActivitiesIDs returns the activities ids in the mutation.
+func (m *ClubMutation) ActivitiesIDs() (ids []int) {
+	for id := range m.activities {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetActivities reset all changes of the "activities" edge.
+func (m *ClubMutation) ResetActivities() {
+	m.activities = nil
+	m.removedactivities = nil
+}
+
 // Op returns the operation name.
 func (m *ClubMutation) Op() Op {
 	return m.op
@@ -1999,7 +2043,7 @@ func (m *ClubMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *ClubMutation) AddedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.user != nil {
 		edges = append(edges, club.EdgeUser)
 	}
@@ -2014,6 +2058,9 @@ func (m *ClubMutation) AddedEdges() []string {
 	}
 	if m._ClubToComplaint != nil {
 		edges = append(edges, club.EdgeClubToComplaint)
+	}
+	if m.activities != nil {
+		edges = append(edges, club.EdgeActivities)
 	}
 	return edges
 }
@@ -2046,6 +2093,12 @@ func (m *ClubMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case club.EdgeActivities:
+		ids := make([]ent.Value, 0, len(m.activities))
+		for id := range m.activities {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -2053,12 +2106,15 @@ func (m *ClubMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *ClubMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.removedclubapplication != nil {
 		edges = append(edges, club.EdgeClubapplication)
 	}
 	if m.removed_ClubToComplaint != nil {
 		edges = append(edges, club.EdgeClubToComplaint)
+	}
+	if m.removedactivities != nil {
+		edges = append(edges, club.EdgeActivities)
 	}
 	return edges
 }
@@ -2079,6 +2135,12 @@ func (m *ClubMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case club.EdgeActivities:
+		ids := make([]ent.Value, 0, len(m.removedactivities))
+		for id := range m.removedactivities {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -2086,7 +2148,7 @@ func (m *ClubMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *ClubMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 6)
 	if m.cleareduser {
 		edges = append(edges, club.EdgeUser)
 	}
@@ -2149,6 +2211,9 @@ func (m *ClubMutation) ResetEdge(name string) error {
 		return nil
 	case club.EdgeClubToComplaint:
 		m.ResetClubToComplaint()
+		return nil
+	case club.EdgeActivities:
+		m.ResetActivities()
 		return nil
 	}
 	return fmt.Errorf("unknown Club edge %s", name)
@@ -6239,8 +6304,6 @@ type UserMutation struct {
 	clearedusertype         bool
 	club                    map[int]struct{}
 	removedclub             map[int]struct{}
-	activities              map[int]struct{}
-	removedactivities       map[int]struct{}
 	clubapplication         map[int]struct{}
 	removedclubapplication  map[int]struct{}
 	_UserToComplaint        map[int]struct{}
@@ -6542,48 +6605,6 @@ func (m *UserMutation) ResetClub() {
 	m.removedclub = nil
 }
 
-// AddActivityIDs adds the activities edge to Activities by ids.
-func (m *UserMutation) AddActivityIDs(ids ...int) {
-	if m.activities == nil {
-		m.activities = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.activities[ids[i]] = struct{}{}
-	}
-}
-
-// RemoveActivityIDs removes the activities edge to Activities by ids.
-func (m *UserMutation) RemoveActivityIDs(ids ...int) {
-	if m.removedactivities == nil {
-		m.removedactivities = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedactivities[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedActivities returns the removed ids of activities.
-func (m *UserMutation) RemovedActivitiesIDs() (ids []int) {
-	for id := range m.removedactivities {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ActivitiesIDs returns the activities ids in the mutation.
-func (m *UserMutation) ActivitiesIDs() (ids []int) {
-	for id := range m.activities {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetActivities reset all changes of the "activities" edge.
-func (m *UserMutation) ResetActivities() {
-	m.activities = nil
-	m.removedactivities = nil
-}
-
 // AddClubapplicationIDs adds the clubapplication edge to Clubapplication by ids.
 func (m *UserMutation) AddClubapplicationIDs(ids ...int) {
 	if m.clubapplication == nil {
@@ -6874,15 +6895,12 @@ func (m *UserMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 5)
 	if m.usertype != nil {
 		edges = append(edges, user.EdgeUsertype)
 	}
 	if m.club != nil {
 		edges = append(edges, user.EdgeClub)
-	}
-	if m.activities != nil {
-		edges = append(edges, user.EdgeActivities)
 	}
 	if m.clubapplication != nil {
 		edges = append(edges, user.EdgeClubapplication)
@@ -6907,12 +6925,6 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 	case user.EdgeClub:
 		ids := make([]ent.Value, 0, len(m.club))
 		for id := range m.club {
-			ids = append(ids, id)
-		}
-		return ids
-	case user.EdgeActivities:
-		ids := make([]ent.Value, 0, len(m.activities))
-		for id := range m.activities {
 			ids = append(ids, id)
 		}
 		return ids
@@ -6941,12 +6953,9 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 5)
 	if m.removedclub != nil {
 		edges = append(edges, user.EdgeClub)
-	}
-	if m.removedactivities != nil {
-		edges = append(edges, user.EdgeActivities)
 	}
 	if m.removedclubapplication != nil {
 		edges = append(edges, user.EdgeClubapplication)
@@ -6967,12 +6976,6 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 	case user.EdgeClub:
 		ids := make([]ent.Value, 0, len(m.removedclub))
 		for id := range m.removedclub {
-			ids = append(ids, id)
-		}
-		return ids
-	case user.EdgeActivities:
-		ids := make([]ent.Value, 0, len(m.removedactivities))
-		for id := range m.removedactivities {
 			ids = append(ids, id)
 		}
 		return ids
@@ -7001,7 +7004,7 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 5)
 	if m.clearedusertype {
 		edges = append(edges, user.EdgeUsertype)
 	}
@@ -7039,9 +7042,6 @@ func (m *UserMutation) ResetEdge(name string) error {
 		return nil
 	case user.EdgeClub:
 		m.ResetClub()
-		return nil
-	case user.EdgeActivities:
-		m.ResetActivities()
 		return nil
 	case user.EdgeClubapplication:
 		m.ResetClubapplication()

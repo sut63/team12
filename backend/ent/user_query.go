@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/clubapplication"
 	"github.com/OMENX/app/ent/complaint"
@@ -33,7 +32,6 @@ type UserQuery struct {
 	// eager-loading edges.
 	withUsertype        *UsertypeQuery
 	withClub            *ClubQuery
-	withActivities      *ActivitiesQuery
 	withClubapplication *ClubapplicationQuery
 	withUserToComplaint *ComplaintQuery
 	withRoomuse         *RoomuseQuery
@@ -96,24 +94,6 @@ func (uq *UserQuery) QueryClub() *ClubQuery {
 			sqlgraph.From(user.Table, user.FieldID, uq.sqlQuery()),
 			sqlgraph.To(club.Table, club.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.ClubTable, user.ClubColumn),
-		)
-		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
-		return fromU, nil
-	}
-	return query
-}
-
-// QueryActivities chains the current query on the activities edge.
-func (uq *UserQuery) QueryActivities() *ActivitiesQuery {
-	query := &ActivitiesQuery{config: uq.config}
-	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
-		if err := uq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		step := sqlgraph.NewStep(
-			sqlgraph.From(user.Table, user.FieldID, uq.sqlQuery()),
-			sqlgraph.To(activities.Table, activities.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, user.ActivitiesTable, user.ActivitiesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
@@ -376,17 +356,6 @@ func (uq *UserQuery) WithClub(opts ...func(*ClubQuery)) *UserQuery {
 	return uq
 }
 
-//  WithActivities tells the query-builder to eager-loads the nodes that are connected to
-// the "activities" edge. The optional arguments used to configure the query builder of the edge.
-func (uq *UserQuery) WithActivities(opts ...func(*ActivitiesQuery)) *UserQuery {
-	query := &ActivitiesQuery{config: uq.config}
-	for _, opt := range opts {
-		opt(query)
-	}
-	uq.withActivities = query
-	return uq
-}
-
 //  WithClubapplication tells the query-builder to eager-loads the nodes that are connected to
 // the "clubapplication" edge. The optional arguments used to configure the query builder of the edge.
 func (uq *UserQuery) WithClubapplication(opts ...func(*ClubapplicationQuery)) *UserQuery {
@@ -487,10 +456,9 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		nodes       = []*User{}
 		withFKs     = uq.withFKs
 		_spec       = uq.querySpec()
-		loadedTypes = [6]bool{
+		loadedTypes = [5]bool{
 			uq.withUsertype != nil,
 			uq.withClub != nil,
-			uq.withActivities != nil,
 			uq.withClubapplication != nil,
 			uq.withUserToComplaint != nil,
 			uq.withRoomuse != nil,
@@ -576,34 +544,6 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "UserID" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Club = append(node.Edges.Club, n)
-		}
-	}
-
-	if query := uq.withActivities; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*User)
-		for i := range nodes {
-			fks = append(fks, nodes[i].ID)
-			nodeids[nodes[i].ID] = nodes[i]
-		}
-		query.withFKs = true
-		query.Where(predicate.Activities(func(s *sql.Selector) {
-			s.Where(sql.InValues(user.ActivitiesColumn, fks...))
-		}))
-		neighbors, err := query.All(ctx)
-		if err != nil {
-			return nil, err
-		}
-		for _, n := range neighbors {
-			fk := n.UserID
-			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "UserID" is nil for node %v`, n.ID)
-			}
-			node, ok := nodeids[*fk]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "UserID" returned %v for node %v`, *fk, n.ID)
-			}
-			node.Edges.Activities = append(node.Edges.Activities, n)
 		}
 	}
 

@@ -20,8 +20,8 @@ const (
 	EdgeActivitytype = "activitytype"
 	// EdgeAcademicyear holds the string denoting the academicyear edge name in mutations.
 	EdgeAcademicyear = "academicyear"
-	// EdgeUser holds the string denoting the user edge name in mutations.
-	EdgeUser = "user"
+	// EdgeClub holds the string denoting the club edge name in mutations.
+	EdgeClub = "club"
 
 	// Table holds the table name of the activities in the database.
 	Table = "activities"
@@ -39,13 +39,13 @@ const (
 	AcademicyearInverseTable = "academic_years"
 	// AcademicyearColumn is the table column denoting the academicyear relation/edge.
 	AcademicyearColumn = "AcademicYearID"
-	// UserTable is the table the holds the user relation/edge.
-	UserTable = "activities"
-	// UserInverseTable is the table name for the User entity.
-	// It exists in this package in order to avoid circular dependency with the "user" package.
-	UserInverseTable = "users"
-	// UserColumn is the table column denoting the user relation/edge.
-	UserColumn = "UserID"
+	// ClubTable is the table the holds the club relation/edge.
+	ClubTable = "activities"
+	// ClubInverseTable is the table name for the Club entity.
+	// It exists in this package in order to avoid circular dependency with the "club" package.
+	ClubInverseTable = "clubs"
+	// ClubColumn is the table column denoting the club relation/edge.
+	ClubColumn = "ClubID"
 )
 
 // Columns holds all SQL columns for activities fields.
@@ -61,7 +61,7 @@ var Columns = []string{
 var ForeignKeys = []string{
 	"AcademicYearID",
 	"ActivityTypeID",
-	"UserID",
+	"ClubID",
 }
 
 var (

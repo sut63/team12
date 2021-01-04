@@ -6,7 +6,6 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/clubapplication"
 	"github.com/OMENX/app/ent/complaint"
@@ -92,21 +91,6 @@ func (uu *UserUpdate) AddClub(c ...*Club) *UserUpdate {
 	return uu.AddClubIDs(ids...)
 }
 
-// AddActivityIDs adds the activities edge to Activities by ids.
-func (uu *UserUpdate) AddActivityIDs(ids ...int) *UserUpdate {
-	uu.mutation.AddActivityIDs(ids...)
-	return uu
-}
-
-// AddActivities adds the activities edges to Activities.
-func (uu *UserUpdate) AddActivities(a ...*Activities) *UserUpdate {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
-	}
-	return uu.AddActivityIDs(ids...)
-}
-
 // AddClubapplicationIDs adds the clubapplication edge to Clubapplication by ids.
 func (uu *UserUpdate) AddClubapplicationIDs(ids ...int) *UserUpdate {
 	uu.mutation.AddClubapplicationIDs(ids...)
@@ -176,21 +160,6 @@ func (uu *UserUpdate) RemoveClub(c ...*Club) *UserUpdate {
 		ids[i] = c[i].ID
 	}
 	return uu.RemoveClubIDs(ids...)
-}
-
-// RemoveActivityIDs removes the activities edge to Activities by ids.
-func (uu *UserUpdate) RemoveActivityIDs(ids ...int) *UserUpdate {
-	uu.mutation.RemoveActivityIDs(ids...)
-	return uu
-}
-
-// RemoveActivities removes activities edges to Activities.
-func (uu *UserUpdate) RemoveActivities(a ...*Activities) *UserUpdate {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
-	}
-	return uu.RemoveActivityIDs(ids...)
 }
 
 // RemoveClubapplicationIDs removes the clubapplication edge to Clubapplication by ids.
@@ -419,44 +388,6 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if nodes := uu.mutation.RemovedActivitiesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.ActivitiesTable,
-			Columns: []string{user.ActivitiesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: activities.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uu.mutation.ActivitiesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.ActivitiesTable,
-			Columns: []string{user.ActivitiesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: activities.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
 	if nodes := uu.mutation.RemovedClubapplicationIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.O2M,
@@ -648,21 +579,6 @@ func (uuo *UserUpdateOne) AddClub(c ...*Club) *UserUpdateOne {
 	return uuo.AddClubIDs(ids...)
 }
 
-// AddActivityIDs adds the activities edge to Activities by ids.
-func (uuo *UserUpdateOne) AddActivityIDs(ids ...int) *UserUpdateOne {
-	uuo.mutation.AddActivityIDs(ids...)
-	return uuo
-}
-
-// AddActivities adds the activities edges to Activities.
-func (uuo *UserUpdateOne) AddActivities(a ...*Activities) *UserUpdateOne {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
-	}
-	return uuo.AddActivityIDs(ids...)
-}
-
 // AddClubapplicationIDs adds the clubapplication edge to Clubapplication by ids.
 func (uuo *UserUpdateOne) AddClubapplicationIDs(ids ...int) *UserUpdateOne {
 	uuo.mutation.AddClubapplicationIDs(ids...)
@@ -732,21 +648,6 @@ func (uuo *UserUpdateOne) RemoveClub(c ...*Club) *UserUpdateOne {
 		ids[i] = c[i].ID
 	}
 	return uuo.RemoveClubIDs(ids...)
-}
-
-// RemoveActivityIDs removes the activities edge to Activities by ids.
-func (uuo *UserUpdateOne) RemoveActivityIDs(ids ...int) *UserUpdateOne {
-	uuo.mutation.RemoveActivityIDs(ids...)
-	return uuo
-}
-
-// RemoveActivities removes activities edges to Activities.
-func (uuo *UserUpdateOne) RemoveActivities(a ...*Activities) *UserUpdateOne {
-	ids := make([]int, len(a))
-	for i := range a {
-		ids[i] = a[i].ID
-	}
-	return uuo.RemoveActivityIDs(ids...)
 }
 
 // RemoveClubapplicationIDs removes the clubapplication edge to Clubapplication by ids.
@@ -965,44 +866,6 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (u *User, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: club.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Add = append(_spec.Edges.Add, edge)
-	}
-	if nodes := uuo.mutation.RemovedActivitiesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.ActivitiesTable,
-			Columns: []string{user.ActivitiesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: activities.FieldID,
-				},
-			},
-		}
-		for _, k := range nodes {
-			edge.Target.Nodes = append(edge.Target.Nodes, k)
-		}
-		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
-	}
-	if nodes := uuo.mutation.ActivitiesIDs(); len(nodes) > 0 {
-		edge := &sqlgraph.EdgeSpec{
-			Rel:     sqlgraph.O2M,
-			Inverse: false,
-			Table:   user.ActivitiesTable,
-			Columns: []string{user.ActivitiesColumn},
-			Bidi:    false,
-			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: activities.FieldID,
 				},
 			},
 		}

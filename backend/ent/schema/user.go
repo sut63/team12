@@ -2,8 +2,8 @@ package schema
 
 import (
 	"github.com/facebookincubator/ent"
-    "github.com/facebookincubator/ent/schema/edge"
-    "github.com/facebookincubator/ent/schema/field"
+	"github.com/facebookincubator/ent/schema/edge"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // User holds the schema definition for the User entity.
@@ -26,7 +26,6 @@ func (User) Edges() []ent.Edge {
 		edge.From("usertype", Usertype.Type).Ref("user").Unique(),
 
 		edge.To("club",Club.Type).StorageKey(edge.Column("UserID")),
-		edge.To("activities",Activities.Type).StorageKey(edge.Column("UserID")),
 		edge.To("clubapplication", Clubapplication.Type).StorageKey(edge.Column("UserID")),
 		edge.To("UserToComplaint", Complaint.Type).StorageKey(edge.Column("UserID")),
 		edge.To("Roomuse", Roomuse.Type).StorageKey(edge.Column("UserID")),

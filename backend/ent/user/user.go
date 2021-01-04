@@ -18,8 +18,6 @@ const (
 	EdgeUsertype = "usertype"
 	// EdgeClub holds the string denoting the club edge name in mutations.
 	EdgeClub = "club"
-	// EdgeActivities holds the string denoting the activities edge name in mutations.
-	EdgeActivities = "activities"
 	// EdgeClubapplication holds the string denoting the clubapplication edge name in mutations.
 	EdgeClubapplication = "clubapplication"
 	// EdgeUserToComplaint holds the string denoting the usertocomplaint edge name in mutations.
@@ -43,13 +41,6 @@ const (
 	ClubInverseTable = "clubs"
 	// ClubColumn is the table column denoting the club relation/edge.
 	ClubColumn = "UserID"
-	// ActivitiesTable is the table the holds the activities relation/edge.
-	ActivitiesTable = "activities"
-	// ActivitiesInverseTable is the table name for the Activities entity.
-	// It exists in this package in order to avoid circular dependency with the "activities" package.
-	ActivitiesInverseTable = "activities"
-	// ActivitiesColumn is the table column denoting the activities relation/edge.
-	ActivitiesColumn = "UserID"
 	// ClubapplicationTable is the table the holds the clubapplication relation/edge.
 	ClubapplicationTable = "clubapplications"
 	// ClubapplicationInverseTable is the table name for the Clubapplication entity.

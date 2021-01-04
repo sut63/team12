@@ -424,15 +424,15 @@ func (c *ActivitiesClient) QueryAcademicyear(a *Activities) *AcademicYearQuery {
 	return query
 }
 
-// QueryUser queries the user edge of a Activities.
-func (c *ActivitiesClient) QueryUser(a *Activities) *UserQuery {
-	query := &UserQuery{config: c.config}
+// QueryClub queries the club edge of a Activities.
+func (c *ActivitiesClient) QueryClub(a *Activities) *ClubQuery {
+	query := &ClubQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := a.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(activities.Table, activities.FieldID, id),
-			sqlgraph.To(user.Table, user.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, activities.UserTable, activities.UserColumn),
+			sqlgraph.To(club.Table, club.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, activities.ClubTable, activities.ClubColumn),
 		)
 		fromV = sqlgraph.Neighbors(a.driver.Dialect(), step)
 		return fromV, nil
@@ -695,6 +695,22 @@ func (c *ClubClient) QueryClubToComplaint(cl *Club) *ComplaintQuery {
 			sqlgraph.From(club.Table, club.FieldID, id),
 			sqlgraph.To(complaint.Table, complaint.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, club.ClubToComplaintTable, club.ClubToComplaintColumn),
+		)
+		fromV = sqlgraph.Neighbors(cl.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryActivities queries the activities edge of a Club.
+func (c *ClubClient) QueryActivities(cl *Club) *ActivitiesQuery {
+	query := &ActivitiesQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := cl.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(club.Table, club.FieldID, id),
+			sqlgraph.To(activities.Table, activities.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, club.ActivitiesTable, club.ActivitiesColumn),
 		)
 		fromV = sqlgraph.Neighbors(cl.driver.Dialect(), step)
 		return fromV, nil
@@ -1797,22 +1813,6 @@ func (c *UserClient) QueryClub(u *User) *ClubQuery {
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(club.Table, club.FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, user.ClubTable, user.ClubColumn),
-		)
-		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// QueryActivities queries the activities edge of a User.
-func (c *UserClient) QueryActivities(u *User) *ActivitiesQuery {
-	query := &ActivitiesQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := u.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(user.Table, user.FieldID, id),
-			sqlgraph.To(activities.Table, activities.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, user.ActivitiesTable, user.ActivitiesColumn),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil

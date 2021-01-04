@@ -24,6 +24,8 @@ const (
 	EdgeClubapplication = "clubapplication"
 	// EdgeClubToComplaint holds the string denoting the clubtocomplaint edge name in mutations.
 	EdgeClubToComplaint = "ClubToComplaint"
+	// EdgeActivities holds the string denoting the activities edge name in mutations.
+	EdgeActivities = "activities"
 
 	// Table holds the table name of the club in the database.
 	Table = "clubs"
@@ -62,6 +64,13 @@ const (
 	ClubToComplaintInverseTable = "complaints"
 	// ClubToComplaintColumn is the table column denoting the ClubToComplaint relation/edge.
 	ClubToComplaintColumn = "ClubID"
+	// ActivitiesTable is the table the holds the activities relation/edge.
+	ActivitiesTable = "activities"
+	// ActivitiesInverseTable is the table name for the Activities entity.
+	// It exists in this package in order to avoid circular dependency with the "activities" package.
+	ActivitiesInverseTable = "activities"
+	// ActivitiesColumn is the table column denoting the activities relation/edge.
+	ActivitiesColumn = "ClubID"
 )
 
 // Columns holds all SQL columns for club fields.

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/clubapplication"
 	"github.com/OMENX/app/ent/clubbranch"
@@ -138,6 +139,21 @@ func (cu *ClubUpdate) AddClubToComplaint(c ...*Complaint) *ClubUpdate {
 	return cu.AddClubToComplaintIDs(ids...)
 }
 
+// AddActivityIDs adds the activities edge to Activities by ids.
+func (cu *ClubUpdate) AddActivityIDs(ids ...int) *ClubUpdate {
+	cu.mutation.AddActivityIDs(ids...)
+	return cu
+}
+
+// AddActivities adds the activities edges to Activities.
+func (cu *ClubUpdate) AddActivities(a ...*Activities) *ClubUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return cu.AddActivityIDs(ids...)
+}
+
 // Mutation returns the ClubMutation object of the builder.
 func (cu *ClubUpdate) Mutation() *ClubMutation {
 	return cu.mutation
@@ -189,6 +205,21 @@ func (cu *ClubUpdate) RemoveClubToComplaint(c ...*Complaint) *ClubUpdate {
 		ids[i] = c[i].ID
 	}
 	return cu.RemoveClubToComplaintIDs(ids...)
+}
+
+// RemoveActivityIDs removes the activities edge to Activities by ids.
+func (cu *ClubUpdate) RemoveActivityIDs(ids ...int) *ClubUpdate {
+	cu.mutation.RemoveActivityIDs(ids...)
+	return cu
+}
+
+// RemoveActivities removes activities edges to Activities.
+func (cu *ClubUpdate) RemoveActivities(a ...*Activities) *ClubUpdate {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return cu.RemoveActivityIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -473,6 +504,44 @@ func (cu *ClubUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := cu.mutation.RemovedActivitiesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   club.ActivitiesTable,
+			Columns: []string{club.ActivitiesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: activities.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.ActivitiesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   club.ActivitiesTable,
+			Columns: []string{club.ActivitiesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: activities.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{club.Label}
@@ -596,6 +665,21 @@ func (cuo *ClubUpdateOne) AddClubToComplaint(c ...*Complaint) *ClubUpdateOne {
 	return cuo.AddClubToComplaintIDs(ids...)
 }
 
+// AddActivityIDs adds the activities edge to Activities by ids.
+func (cuo *ClubUpdateOne) AddActivityIDs(ids ...int) *ClubUpdateOne {
+	cuo.mutation.AddActivityIDs(ids...)
+	return cuo
+}
+
+// AddActivities adds the activities edges to Activities.
+func (cuo *ClubUpdateOne) AddActivities(a ...*Activities) *ClubUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return cuo.AddActivityIDs(ids...)
+}
+
 // Mutation returns the ClubMutation object of the builder.
 func (cuo *ClubUpdateOne) Mutation() *ClubMutation {
 	return cuo.mutation
@@ -647,6 +731,21 @@ func (cuo *ClubUpdateOne) RemoveClubToComplaint(c ...*Complaint) *ClubUpdateOne 
 		ids[i] = c[i].ID
 	}
 	return cuo.RemoveClubToComplaintIDs(ids...)
+}
+
+// RemoveActivityIDs removes the activities edge to Activities by ids.
+func (cuo *ClubUpdateOne) RemoveActivityIDs(ids ...int) *ClubUpdateOne {
+	cuo.mutation.RemoveActivityIDs(ids...)
+	return cuo
+}
+
+// RemoveActivities removes activities edges to Activities.
+func (cuo *ClubUpdateOne) RemoveActivities(a ...*Activities) *ClubUpdateOne {
+	ids := make([]int, len(a))
+	for i := range a {
+		ids[i] = a[i].ID
+	}
+	return cuo.RemoveActivityIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -921,6 +1020,44 @@ func (cuo *ClubUpdateOne) sqlSave(ctx context.Context) (c *Club, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: complaint.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := cuo.mutation.RemovedActivitiesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   club.ActivitiesTable,
+			Columns: []string{club.ActivitiesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: activities.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.ActivitiesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   club.ActivitiesTable,
+			Columns: []string{club.ActivitiesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: activities.FieldID,
 				},
 			},
 		}

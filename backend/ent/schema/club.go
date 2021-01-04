@@ -2,8 +2,8 @@ package schema
 
 import (
 	"github.com/facebookincubator/ent"
-    "github.com/facebookincubator/ent/schema/edge"
-    "github.com/facebookincubator/ent/schema/field"
+	"github.com/facebookincubator/ent/schema/edge"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // Club holds the schema definition for the Club entity.
@@ -29,5 +29,6 @@ func (Club) Edges() []ent.Edge {
 
 		edge.To("clubapplication", Clubapplication.Type).StorageKey(edge.Column("ClubID")),
 		edge.To("ClubToComplaint", Complaint.Type).StorageKey(edge.Column("ClubID")),
+		edge.To("activities",Activities.Type).StorageKey(edge.Column("ClubID")),
 	}
 }

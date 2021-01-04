@@ -34,8 +34,6 @@ type UserEdges struct {
 	Usertype *Usertype
 	// Club holds the value of the club edge.
 	Club []*Club
-	// Activities holds the value of the activities edge.
-	Activities []*Activities
 	// Clubapplication holds the value of the clubapplication edge.
 	Clubapplication []*Clubapplication
 	// UserToComplaint holds the value of the UserToComplaint edge.
@@ -44,7 +42,7 @@ type UserEdges struct {
 	Roomuse []*Roomuse
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [6]bool
+	loadedTypes [5]bool
 }
 
 // UsertypeOrErr returns the Usertype value or an error if the edge
@@ -70,19 +68,10 @@ func (e UserEdges) ClubOrErr() ([]*Club, error) {
 	return nil, &NotLoadedError{edge: "club"}
 }
 
-// ActivitiesOrErr returns the Activities value or an error if the edge
-// was not loaded in eager-loading.
-func (e UserEdges) ActivitiesOrErr() ([]*Activities, error) {
-	if e.loadedTypes[2] {
-		return e.Activities, nil
-	}
-	return nil, &NotLoadedError{edge: "activities"}
-}
-
 // ClubapplicationOrErr returns the Clubapplication value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) ClubapplicationOrErr() ([]*Clubapplication, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[2] {
 		return e.Clubapplication, nil
 	}
 	return nil, &NotLoadedError{edge: "clubapplication"}
@@ -91,7 +80,7 @@ func (e UserEdges) ClubapplicationOrErr() ([]*Clubapplication, error) {
 // UserToComplaintOrErr returns the UserToComplaint value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) UserToComplaintOrErr() ([]*Complaint, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[3] {
 		return e.UserToComplaint, nil
 	}
 	return nil, &NotLoadedError{edge: "UserToComplaint"}
@@ -100,7 +89,7 @@ func (e UserEdges) UserToComplaintOrErr() ([]*Complaint, error) {
 // RoomuseOrErr returns the Roomuse value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) RoomuseOrErr() ([]*Roomuse, error) {
-	if e.loadedTypes[5] {
+	if e.loadedTypes[4] {
 		return e.Roomuse, nil
 	}
 	return nil, &NotLoadedError{edge: "Roomuse"}
@@ -170,11 +159,6 @@ func (u *User) QueryUsertype() *UsertypeQuery {
 // QueryClub queries the club edge of the User.
 func (u *User) QueryClub() *ClubQuery {
 	return (&UserClient{config: u.config}).QueryClub(u)
-}
-
-// QueryActivities queries the activities edge of the User.
-func (u *User) QueryActivities() *ActivitiesQuery {
-	return (&UserClient{config: u.config}).QueryActivities(u)
 }
 
 // QueryClubapplication queries the clubapplication edge of the User.
