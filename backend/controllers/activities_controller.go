@@ -52,7 +52,7 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 		return
 	}
 
-	S, err := time.Parse(time.RFC3339, obj.Starttime)
+	St, err := time.Parse(time.RFC3339, obj.Starttime)
 	E, err := time.Parse(time.RFC3339, obj.Endtime)
 
 	acy, err := ctl.client.AcademicYear.
@@ -111,7 +111,7 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 		SetDetail(obj.Detail).
 		SetEndtime(E).
 		SetName(obj.Name).
-		SetStarttime(S).
+		SetStarttime(St).
 		Save(context.Background())
 		 
 	if err != nil {
