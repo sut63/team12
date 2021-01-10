@@ -16,7 +16,6 @@ func (Club) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").NotEmpty(),
 		field.String("purpose").NotEmpty(),
-		field.Time("foundingdate"),
 	}
 }
 
@@ -26,9 +25,10 @@ func (Club) Edges() []ent.Edge {
 		edge.From("user", User.Type).Ref("club").Unique(),
 		edge.From("clubtype", ClubType.Type).Ref("club").Unique(),
 		edge.From("clubbranch", ClubBranch.Type).Ref("club").Unique(),
-
+		
 		edge.To("clubapplication", Clubapplication.Type).StorageKey(edge.Column("ClubID")),
 		edge.To("ClubToComplaint", Complaint.Type).StorageKey(edge.Column("ClubID")),
 		edge.To("activities",Activities.Type).StorageKey(edge.Column("ClubID")),
+	 	edge.To("userclub",User.Type).StorageKey(edge.Column("ClubID")), 
 	}
 }

@@ -2,8 +2,8 @@ package schema
 
 import (
 	"github.com/facebookincubator/ent"
-    "github.com/facebookincubator/ent/schema/edge"
-    "github.com/facebookincubator/ent/schema/field"
+	"github.com/facebookincubator/ent/schema/edge"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // AcademicYear holds the schema definition for the AcademicYear entity.

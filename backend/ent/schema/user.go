@@ -14,9 +14,9 @@ type User struct {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name").NotEmpty(),
+		field.String("name").NotEmpty().Unique(),
 		field.String("email").NotEmpty(),
-		field.Int("password"),
+		field.String("password"),
 	}
 }
 
@@ -24,6 +24,7 @@ func (User) Fields() []ent.Field {
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("usertype", Usertype.Type).Ref("user").Unique(),
+		edge.From("clubuser", Club.Type).Ref("userclub").Unique(),
 
 		edge.To("club",Club.Type).StorageKey(edge.Column("UserID")),
 		edge.To("clubapplication", Clubapplication.Type).StorageKey(edge.Column("UserID")),
