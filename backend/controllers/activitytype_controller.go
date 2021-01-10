@@ -36,7 +36,7 @@ func (ctl *ActivityTypeController) CreateActivityType(c *gin.Context) {
 		return
 	}
   
-	u, err := ctl.client.ActivityType.
+	ue, err := ctl.client.ActivityType.
 		Create().
 		SetName(obj.Name).
 		Save(context.Background())
@@ -47,7 +47,7 @@ func (ctl *ActivityTypeController) CreateActivityType(c *gin.Context) {
 		return
 	}
   
-	c.JSON(200, u)
+	c.JSON(200, ue)
  }
 
 // GetActivityType handles GET requests to retrieve a ActivityType entity
