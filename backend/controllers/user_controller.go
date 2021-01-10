@@ -36,7 +36,7 @@ type User struct {
 // @Failure 500 {object} gin.H
 // @Router /users [post]
 func (ctl *UserController) CreateUser(c *gin.Context) {
-	obj := ent.User{}
+	obj := User{}
 	if err := c.ShouldBind(&obj); err != nil {
 		c.JSON(400, gin.H{
 			"error": "user binding failed",
@@ -46,7 +46,7 @@ func (ctl *UserController) CreateUser(c *gin.Context) {
 
 	t, err := ctl.client.Usertype.
 		Query().
-		Where(usertype.IDEQ(int(*obj.UserTypeID))).
+		Where(usertype.IDEQ(int(obj.userdtype))).
 		Only(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
@@ -57,9 +57,9 @@ func (ctl *UserController) CreateUser(c *gin.Context) {
   
 	u, err := ctl.client.User.
 		Create().
-		SetName(obj.Name).
-		SetEmail(obj.Email).
-		SetPassword(obj.Password).
+		SetName(obj.name).
+		SetEmail(obj.email).
+		SetPassword(obj.password).
 		SetUsertype(t).
 		Save(context.Background())
 	if err != nil {
