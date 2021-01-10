@@ -10,7 +10,9 @@ import (
 	"github.com/OMENX/app/ent/academicyear"
 	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/activitytype"
+	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/user"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,29 +22,29 @@ type ActivitiesController struct {
    router gin.IRouter
 }
 
-type Promotionofmonth struct {
-	name string
-	detail string
-	starttime    string
-	endtime      string
+type Activities struct {
 	AcademicYearID   int
-	ActivityTypeID int
-	UserID       int
+	ActivityTypeID	 int
+	ClubID	int
+	Name 		string
+	Detail 		string
+	Endtime     string
+	Starttime   string
 }
 
-// CreateActivities handles POST requests for adding Activities entities
-// @Summary Create Activities
-// @Description Create Activities
-// @ID create-Activities
+// CreateActivities handles POST requests for adding activities entities
+// @Summary Create activities
+// @Description Create activities
+// @ID create-activities
 // @Accept   json
 // @Produce  json
-// @Param Activities body ent.Activities true "Activities entity"
+// @Param activities body ent.Activities true "Activities entity"
 // @Success 200 {object} ent.Activities
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /Activitiess [post]
+// @Router /activities [post]
 func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
-	obj := ent.Activities{}
+	obj := Activities{}
 	if err := c.ShouldBind(&obj); err != nil {
 		c.JSON(400, gin.H{
 			"error": "Activities binding failed",
@@ -50,26 +52,14 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 		return
 	}
 
-	S, err := time.Parse(time.RFC3339, obj.Starttime.String())
-	E, err := time.Parse(time.RFC3339, obj.Endtime.String())
+	S, err := time.Parse(time.RFC3339, obj.Starttime)
+	E, err := time.Parse(time.RFC3339, obj.Endtime)
 
-	user, err := ctl.client.User.
+	acy, err := ctl.client.AcademicYear.
 		Query().
-		Where(user.IDEQ(int(*obj.UserID))).
+		Where(academicyear.IDEQ(int(obj.AcademicYearID))).
 		Only(context.Background())
-
-	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "user not found",
-		})
-		return
-	}
-
-	aca, err := ctl.client.AcademicYear.
-		Query().
-		Where(academicyear.IDEQ(int(*obj.AcademicYearID))).
-		Only(context.Background())
-
+ 
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "academicyear not found",
@@ -79,7 +69,7 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 
 	act, err := ctl.client.ActivityType.
 		Query().
-		Where(activitytype.IDEQ(int(*obj.ActivityTypeID))).
+		Where(activitytype.IDEQ(int(obj.ActivityTypeID))).
 		Only(context.Background())
 
 	if err != nil {
@@ -88,25 +78,50 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 		})
 		return
 	}
+		
 
-	u, err := ctl.client.Activities.
-		Create().
-		SetName(obj.Name).
-		SetDetail(obj.Detail).
-		SetStarttime(S).
-		SetEndtime(E).
-		SetUser(user).
-		SetAcademicyear(aca).
-		SetActivitytype(act).
-		Save(context.Background())
+	findclub, err := ctl.client.User.
+	Query().
+	Where(user.IDEQ(int(obj.ClubID))).
+	Only(context.Background())
+
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"error": "this user not found",
+		})
+		return
+	} 
+
+	/* cl, err:= ctl.client.User.
+	Query().
+	Select(user.).
+	String(context.Background()) */
+	
+
+	club, err := ctl.client.Club.
+	Query().
+	Where(club.IDEQ(int(findclub.ID))).
+	Only(context.Background())
+	
+	at, err := ctl.client.Activities.
+		Create().
+		SetAcademicyear(acy).
+		SetActivitytype(act).
+		SetClub(club).
+		SetDetail(obj.Detail).
+		SetEndtime(E).
+		SetName(obj.Name).
+		SetStarttime(S).
+		Save(context.Background())
+		 
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "saving failed", 
 		})
 		return
 	}
   
-	c.JSON(200, u)
+	c.JSON(200, at)
  }
 
 // GetActivities handles GET requests to retrieve a Activities entity
@@ -267,14 +282,14 @@ func NewActivitiesController(router gin.IRouter, client *ent.Client) *Activities
   
  // InitActivitiesController registers routes to the main engine
  func (ctl *ActivitiesController) register() {
-	Activitiess := ctl.router.Group("/Activitiess")
+	activities := ctl.router.Group("/activities")
   
-	Activitiess.GET("", ctl.ListActivities)
+	activities.GET("", ctl.ListActivities)
   
 	// CRUD
-	Activitiess.POST("", ctl.CreateActivities)
-	Activitiess.GET(":id", ctl.GetActivities)
-	Activitiess.PUT(":id", ctl.UpdateActivities)
-	Activitiess.DELETE(":id", ctl.DeleteActivities)
+	activities.POST("", ctl.CreateActivities)
+	activities.GET(":id", ctl.GetActivities)
+	activities.PUT(":id", ctl.UpdateActivities)
+	activities.DELETE(":id", ctl.DeleteActivities)
  }
  
