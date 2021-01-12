@@ -1,8 +1,6 @@
 package schema
 
 import (
-	"time"
-
 	"github.com/facebookincubator/ent"
 	"github.com/facebookincubator/ent/schema/edge"
 	"github.com/facebookincubator/ent/schema/field"
@@ -16,12 +14,14 @@ type Clubapplication struct {
 // Fields of the Clubapplication.
 func (Clubapplication) Fields() []ent.Field {
 	return []ent.Field{
-
-		field.String("applyname").NotEmpty(),
-
-		field.String("contact"),
+		field.String("contact").NotEmpty(),
 		field.String("reason"),
-		field.Time("created_at").Default(time.Now),
+		field.Time("addeddatetime"),
+		field.String("addername").NotEmpty(),
+		field.String("discipline").NotEmpty(),
+		field.String("gender").NotEmpty(),
+		field.Int("age").Positive(),
+		field.Int("yaer").Positive(),
 	}
 }
 
