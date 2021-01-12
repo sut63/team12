@@ -14,13 +14,13 @@ type ClubappStatus struct {
 // Fields of the ClubappStatus.
 func (ClubappStatus) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("apply_status").Unique(),
+		field.String("clubstatus").Unique(),
 	}
 }
 
 // Edges of the ClubappStatus.
 func (ClubappStatus) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("clubapplication", Clubapplication.Type).StorageKey(edge.Column("clubappstatus_id")),
+		edge.To("clubapplication", Clubapplication.Type).StorageKey(edge.Column("clubappstatusID")),
 	}
 }
