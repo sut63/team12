@@ -14,7 +14,7 @@ type ComplaintType struct {
 // Fields of the ComplaintType.
 func (ComplaintType) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("descriptions"),
+		field.String("description"),
 	}
 }
 
