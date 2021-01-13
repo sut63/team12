@@ -22,7 +22,7 @@ func (Roomuse) Fields() []ent.Field {
 func (Roomuse) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("rooms", Room.Type).Ref("roomuses").Unique(),
-		edge.From("purposes", Roompurpose.Type).Ref("roompurpose").Unique(),
+		edge.From("purposes", Purpose.Type).Ref("roompuses").Unique(),
 		edge.From("users", User.Type).Ref("Roomuse").Unique(),
 
 	}
