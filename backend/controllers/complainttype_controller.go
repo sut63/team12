@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/OMENX/app/ent"
-	"github.com/OMENX/app/ent/complainttype"
+	"github.com/bluepsm/app/ent"
+	"github.com/bluepsm/app/ent/complainttype"
 	"github.com/gin-gonic/gin"
 )
 
@@ -28,7 +28,7 @@ type Complainttype struct {
 // @Accept   json
 // @Produce  json
 // @Param complainttype body Complainttype true "Complainttype entity"
-// @Success 200 {object} ent.Complainttype
+// @Success 200 {object} ent.ComplaintType
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /complainttypes [post]
@@ -62,7 +62,7 @@ func (ctl *ComplainttypeController) CreateComplainttype(c *gin.Context) {
 // @ID get-complainttype
 // @Produce  json
 // @Param id path int true "Complainttype ID"
-// @Success 200 {object} ent.Complainttype
+// @Success 200 {object} ent.ComplaintType
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
@@ -97,7 +97,7 @@ func (ctl *ComplainttypeController) GetComplainttype(c *gin.Context) {
 // @Produce json
 // @Param limit  query int false "Limit"
 // @Param offset query int false "Offset"
-// @Success 200 {array} ent.Complainttype
+// @Success 200 {array} ent.ComplaintType
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /complainttypes [get]
@@ -173,8 +173,8 @@ func (ctl *ComplainttypeController) DeleteComplainttype(c *gin.Context) {
 // @Accept   json
 // @Produce  json
 // @Param id path int true "Complainttype ID"
-// @Param complainttype body ent.Complainttype true "Complainttype entity"
-// @Success 200 {object} ent.Complainttype
+// @Param complainttype body ent.ComplaintType true "Complainttype entity"
+// @Success 200 {object} ent.ComplaintType
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
 // @Router /complainttypes/{id} [put]
