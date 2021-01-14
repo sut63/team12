@@ -34,6 +34,12 @@ func (uc *UserCreate) SetName(s string) *UserCreate {
 	return uc
 }
 
+// SetAge sets the age field.
+func (uc *UserCreate) SetAge(i int) *UserCreate {
+	uc.mutation.SetAge(i)
+	return uc
+}
+
 // SetEmail sets the email field.
 func (uc *UserCreate) SetEmail(s string) *UserCreate {
 	uc.mutation.SetEmail(s)
@@ -235,6 +241,14 @@ func (uc *UserCreate) Save(ctx context.Context) (*User, error) {
 			return nil, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
 		}
 	}
+	if _, ok := uc.mutation.Age(); !ok {
+		return nil, &ValidationError{Name: "age", err: errors.New("ent: missing required field \"age\"")}
+	}
+	if v, ok := uc.mutation.Age(); ok {
+		if err := user.AgeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+		}
+	}
 	if _, ok := uc.mutation.Email(); !ok {
 		return nil, &ValidationError{Name: "email", err: errors.New("ent: missing required field \"email\"")}
 	}
@@ -313,6 +327,14 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldName,
 		})
 		u.Name = value
+	}
+	if value, ok := uc.mutation.Age(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: user.FieldAge,
+		})
+		u.Age = value
 	}
 	if value, ok := uc.mutation.Email(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

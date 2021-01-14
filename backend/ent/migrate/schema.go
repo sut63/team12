@@ -352,6 +352,7 @@ var (
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString, Unique: true},
+		{Name: "age", Type: field.TypeInt},
 		{Name: "email", Type: field.TypeString},
 		{Name: "password", Type: field.TypeString},
 		{Name: "ClubID", Type: field.TypeInt, Nullable: true},
@@ -369,42 +370,42 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "users_clubs_userclub",
-				Columns: []*schema.Column{UsersColumns[4]},
+				Columns: []*schema.Column{UsersColumns[5]},
 
 				RefColumns: []*schema.Column{ClubsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "users_disciplines_users",
-				Columns: []*schema.Column{UsersColumns[5]},
+				Columns: []*schema.Column{UsersColumns[6]},
 
 				RefColumns: []*schema.Column{DisciplinesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "users_genders_users",
-				Columns: []*schema.Column{UsersColumns[6]},
+				Columns: []*schema.Column{UsersColumns[7]},
 
 				RefColumns: []*schema.Column{GendersColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "users_user_status_users",
-				Columns: []*schema.Column{UsersColumns[7]},
+				Columns: []*schema.Column{UsersColumns[8]},
 
 				RefColumns: []*schema.Column{UserStatusColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "users_usertypes_user",
-				Columns: []*schema.Column{UsersColumns[8]},
+				Columns: []*schema.Column{UsersColumns[9]},
 
 				RefColumns: []*schema.Column{UsertypesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "users_years_users",
-				Columns: []*schema.Column{UsersColumns[9]},
+				Columns: []*schema.Column{UsersColumns[10]},
 
 				RefColumns: []*schema.Column{YearsColumns[0]},
 				OnDelete:   schema.SetNull,
