@@ -17,18 +17,18 @@ import (
 
 // ActivitiesController defines the struct for the Activities controller
 type ActivitiesController struct {
-   client *ent.Client
-   router gin.IRouter
+	client *ent.Client
+	router gin.IRouter
 }
 
 type Activities struct {
-	AcademicYearID   int
-	ActivityTypeID	 int
-	ClubID	int
-	Name 		string
-	Detail 		string
-	Endtime     string
-	Starttime   string
+	AcademicYearID int
+	ActivityTypeID int
+	ClubID         int
+	Name           string
+	Detail         string
+	Endtime        string
+	Starttime      string
 }
 
 // CreateActivities handles POST requests for adding activities entities
@@ -58,7 +58,7 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 		Query().
 		Where(academicyear.IDEQ(int(obj.AcademicYearID))).
 		Only(context.Background())
- 
+
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "academicyear not found",
@@ -78,26 +78,23 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 		return
 	}
 
-	
-	
 	getClub, err := ctl.client.User.
-	Query().
-	WithFromClub().
-	Where(user.IDEQ(int(obj.ClubID))).
-	Only(context.Background())
+		Query().
+		WithFromClub().
+		Where(user.IDEQ(int(obj.ClubID))).
+		Only(context.Background())
 
 	club, err := ctl.client.Club.
-	Query().
-	Where(club.IDEQ(int(*getClub.ClubID))).
-	Only(context.Background())
+		Query().
+		Where(club.IDEQ(int(*getClub.ClubID))).
+		Only(context.Background())
 
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "club not found",
 		})
 		return
-	}  
-
+	}
 
 	at, err := ctl.client.Activities.
 		Create().
@@ -109,16 +106,16 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 		SetName(obj.Name).
 		SetStarttime(St).
 		Save(context.Background())
-		 
+
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "saving failed", 
+			"error": "saving failed",
 		})
-		return 
+		return
 	}
-  
+
 	c.JSON(200, at)
- }
+}
 
 // GetActivities handles GET requests to retrieve a Activities entity
 // @Summary Get a Activities entity by ID
@@ -139,7 +136,7 @@ func (ctl *ActivitiesController) GetActivities(c *gin.Context) {
 		})
 		return
 	}
-  
+
 	u, err := ctl.client.Activities.
 		Query().
 		Where(activities.IDEQ(int(id))).
@@ -150,11 +147,11 @@ func (ctl *ActivitiesController) GetActivities(c *gin.Context) {
 		})
 		return
 	}
-  
+
 	c.JSON(200, u)
- }
- 
- // ListActivities handles request to get a list of activities entities
+}
+
+// ListActivities handles request to get a list of activities entities
 // @Summary List activities entities
 // @Description list activities entities
 // @ID list-activities
@@ -170,16 +167,20 @@ func (ctl *ActivitiesController) ListActivities(c *gin.Context) {
 	limit := 10
 	if limitQuery != "" {
 		limit64, err := strconv.ParseInt(limitQuery, 10, 64)
-		if err == nil {limit = int(limit64)}
+		if err == nil {
+			limit = int(limit64)
+		}
 	}
-  
+
 	offsetQuery := c.Query("offset")
 	offset := 0
 	if offsetQuery != "" {
 		offset64, err := strconv.ParseInt(offsetQuery, 10, 64)
-		if err == nil {offset = int(offset64)}
+		if err == nil {
+			offset = int(offset64)
+		}
 	}
-  
+
 	Activitiess, err := ctl.client.Activities.
 		Query().
 		WithAcademicyear().
@@ -188,13 +189,13 @@ func (ctl *ActivitiesController) ListActivities(c *gin.Context) {
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())
-		if err != nil {
-		c.JSON(400, gin.H{"error": err.Error(),})
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
-  
+
 	c.JSON(200, Activitiess)
- }
+}
 
 // DeleteActivities handles DELETE requests to delete a activities entity
 // @Summary Delete a activities entity by ID
@@ -215,7 +216,7 @@ func (ctl *ActivitiesController) DeleteActivities(c *gin.Context) {
 		})
 		return
 	}
-  
+
 	err = ctl.client.Activities.
 		DeleteOneID(int(id)).
 		Exec(context.Background())
@@ -225,11 +226,11 @@ func (ctl *ActivitiesController) DeleteActivities(c *gin.Context) {
 		})
 		return
 	}
-  
-	c.JSON(200, gin.H{"result": fmt.Sprintf("ok deleted %v", id)})
- }
 
- // UpdateActivities handles PUT requests to update a Activities entity
+	c.JSON(200, gin.H{"result": fmt.Sprintf("ok deleted %v", id)})
+}
+
+// UpdateActivities handles PUT requests to update a Activities entity
 // @Summary Update a Activities entity by ID
 // @Description update Activities by ID
 // @ID update-Activities
@@ -242,31 +243,31 @@ func (ctl *ActivitiesController) DeleteActivities(c *gin.Context) {
 // @Failure 500 {object} gin.H
 // @Router /Activities/{id} [put]
 func (ctl *ActivitiesController) UpdateActivities(c *gin.Context) {
-   id, err := strconv.ParseInt(c.Param("id"), 10, 64)
-   if err != nil {
-       c.JSON(400, gin.H{
-           "error": err.Error(),
-       })
-       return
-   }
- 
-   obj := ent.Activities{}
-   if err := c.ShouldBind(&obj); err != nil {
-       c.JSON(400, gin.H{
-           "error": "Activities binding failed",
-       })
-       return
-   }
-   obj.ID = int(id)
-   u, err := ctl.client.Activities.
-       UpdateOne(&obj).
-       Save(context.Background())
-   if err != nil {
-       c.JSON(400, gin.H{"error": "update failed",})
-       return
-   }
- 
-   c.JSON(200, u)
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	obj := ent.Activities{}
+	if err := c.ShouldBind(&obj); err != nil {
+		c.JSON(400, gin.H{
+			"error": "Activities binding failed",
+		})
+		return
+	}
+	obj.ID = int(id)
+	u, err := ctl.client.Activities.
+		UpdateOne(&obj).
+		Save(context.Background())
+	if err != nil {
+		c.JSON(400, gin.H{"error": "update failed"})
+		return
+	}
+
+	c.JSON(200, u)
 }
 
 // NewActivitiesController creates and registers handles for the Activities controller
@@ -277,18 +278,17 @@ func NewActivitiesController(router gin.IRouter, client *ent.Client) *Activities
 	}
 	uc.register()
 	return uc
- }
-  
- // InitActivitiesController registers routes to the main engine
- func (ctl *ActivitiesController) register() {
+}
+
+// InitActivitiesController registers routes to the main engine
+func (ctl *ActivitiesController) register() {
 	activities := ctl.router.Group("/activities")
-  
+
 	activities.GET("", ctl.ListActivities)
-  
+
 	// CRUD
 	activities.POST("", ctl.CreateActivities)
 	activities.GET(":id", ctl.GetActivities)
 	activities.PUT(":id", ctl.UpdateActivities)
 	activities.DELETE(":id", ctl.DeleteActivities)
- }
- 
+}

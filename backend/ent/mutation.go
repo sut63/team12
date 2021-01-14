@@ -7716,8 +7716,8 @@ type UserMutation struct {
 	clearedFields           map[string]struct{}
 	usertype                *int
 	clearedusertype         bool
-	clubuser                *int
-	clearedclubuser         bool
+	_FromClub               *int
+	cleared_FromClub        bool
 	gender                  *int
 	clearedgender           bool
 	userstatus              *int
@@ -8024,43 +8024,43 @@ func (m *UserMutation) ResetUsertype() {
 	m.clearedusertype = false
 }
 
-// SetClubuserID sets the clubuser edge to Club by id.
-func (m *UserMutation) SetClubuserID(id int) {
-	m.clubuser = &id
+// SetFromClubID sets the FromClub edge to Club by id.
+func (m *UserMutation) SetFromClubID(id int) {
+	m._FromClub = &id
 }
 
-// ClearClubuser clears the clubuser edge to Club.
-func (m *UserMutation) ClearClubuser() {
-	m.clearedclubuser = true
+// ClearFromClub clears the FromClub edge to Club.
+func (m *UserMutation) ClearFromClub() {
+	m.cleared_FromClub = true
 }
 
-// ClubuserCleared returns if the edge clubuser was cleared.
-func (m *UserMutation) ClubuserCleared() bool {
-	return m.clearedclubuser
+// FromClubCleared returns if the edge FromClub was cleared.
+func (m *UserMutation) FromClubCleared() bool {
+	return m.cleared_FromClub
 }
 
-// ClubuserID returns the clubuser id in the mutation.
-func (m *UserMutation) ClubuserID() (id int, exists bool) {
-	if m.clubuser != nil {
-		return *m.clubuser, true
+// FromClubID returns the FromClub id in the mutation.
+func (m *UserMutation) FromClubID() (id int, exists bool) {
+	if m._FromClub != nil {
+		return *m._FromClub, true
 	}
 	return
 }
 
-// ClubuserIDs returns the clubuser ids in the mutation.
+// FromClubIDs returns the FromClub ids in the mutation.
 // Note that ids always returns len(ids) <= 1 for unique edges, and you should use
-// ClubuserID instead. It exists only for internal usage by the builders.
-func (m *UserMutation) ClubuserIDs() (ids []int) {
-	if id := m.clubuser; id != nil {
+// FromClubID instead. It exists only for internal usage by the builders.
+func (m *UserMutation) FromClubIDs() (ids []int) {
+	if id := m._FromClub; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetClubuser reset all changes of the "clubuser" edge.
-func (m *UserMutation) ResetClubuser() {
-	m.clubuser = nil
-	m.clearedclubuser = false
+// ResetFromClub reset all changes of the "FromClub" edge.
+func (m *UserMutation) ResetFromClub() {
+	m._FromClub = nil
+	m.cleared_FromClub = false
 }
 
 // SetGenderID sets the gender edge to Gender by id.
@@ -8572,8 +8572,8 @@ func (m *UserMutation) AddedEdges() []string {
 	if m.usertype != nil {
 		edges = append(edges, user.EdgeUsertype)
 	}
-	if m.clubuser != nil {
-		edges = append(edges, user.EdgeClubuser)
+	if m._FromClub != nil {
+		edges = append(edges, user.EdgeFromClub)
 	}
 	if m.gender != nil {
 		edges = append(edges, user.EdgeGender)
@@ -8610,8 +8610,8 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 		if id := m.usertype; id != nil {
 			return []ent.Value{*id}
 		}
-	case user.EdgeClubuser:
-		if id := m.clubuser; id != nil {
+	case user.EdgeFromClub:
+		if id := m._FromClub; id != nil {
 			return []ent.Value{*id}
 		}
 	case user.EdgeGender:
@@ -8716,8 +8716,8 @@ func (m *UserMutation) ClearedEdges() []string {
 	if m.clearedusertype {
 		edges = append(edges, user.EdgeUsertype)
 	}
-	if m.clearedclubuser {
-		edges = append(edges, user.EdgeClubuser)
+	if m.cleared_FromClub {
+		edges = append(edges, user.EdgeFromClub)
 	}
 	if m.clearedgender {
 		edges = append(edges, user.EdgeGender)
@@ -8740,8 +8740,8 @@ func (m *UserMutation) EdgeCleared(name string) bool {
 	switch name {
 	case user.EdgeUsertype:
 		return m.clearedusertype
-	case user.EdgeClubuser:
-		return m.clearedclubuser
+	case user.EdgeFromClub:
+		return m.cleared_FromClub
 	case user.EdgeGender:
 		return m.clearedgender
 	case user.EdgeUserstatus:
@@ -8761,8 +8761,8 @@ func (m *UserMutation) ClearEdge(name string) error {
 	case user.EdgeUsertype:
 		m.ClearUsertype()
 		return nil
-	case user.EdgeClubuser:
-		m.ClearClubuser()
+	case user.EdgeFromClub:
+		m.ClearFromClub()
 		return nil
 	case user.EdgeGender:
 		m.ClearGender()
@@ -8788,8 +8788,8 @@ func (m *UserMutation) ResetEdge(name string) error {
 	case user.EdgeUsertype:
 		m.ResetUsertype()
 		return nil
-	case user.EdgeClubuser:
-		m.ResetClubuser()
+	case user.EdgeFromClub:
+		m.ResetFromClub()
 		return nil
 	case user.EdgeGender:
 		m.ResetGender()

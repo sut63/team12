@@ -94,7 +94,7 @@ func (ctl *ClubapplicationController) CreateClubapplication(c *gin.Context) {
 
 	time, err := time.Parse(time.RFC3339, obj.Addedtime)
 
-	ca, err := ctl.client.ClubApplication.
+	ca, err := ctl.client.Clubapplication.
 		Create().
 		SetOwner(u).
 		SetAddername(obj.AdderName).

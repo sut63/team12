@@ -86,23 +86,23 @@ func (uu *UserUpdate) SetUsertype(u *Usertype) *UserUpdate {
 	return uu.SetUsertypeID(u.ID)
 }
 
-// SetClubuserID sets the clubuser edge to Club by id.
-func (uu *UserUpdate) SetClubuserID(id int) *UserUpdate {
-	uu.mutation.SetClubuserID(id)
+// SetFromClubID sets the FromClub edge to Club by id.
+func (uu *UserUpdate) SetFromClubID(id int) *UserUpdate {
+	uu.mutation.SetFromClubID(id)
 	return uu
 }
 
-// SetNillableClubuserID sets the clubuser edge to Club by id if the given value is not nil.
-func (uu *UserUpdate) SetNillableClubuserID(id *int) *UserUpdate {
+// SetNillableFromClubID sets the FromClub edge to Club by id if the given value is not nil.
+func (uu *UserUpdate) SetNillableFromClubID(id *int) *UserUpdate {
 	if id != nil {
-		uu = uu.SetClubuserID(*id)
+		uu = uu.SetFromClubID(*id)
 	}
 	return uu
 }
 
-// SetClubuser sets the clubuser edge to Club.
-func (uu *UserUpdate) SetClubuser(c *Club) *UserUpdate {
-	return uu.SetClubuserID(c.ID)
+// SetFromClub sets the FromClub edge to Club.
+func (uu *UserUpdate) SetFromClub(c *Club) *UserUpdate {
+	return uu.SetFromClubID(c.ID)
 }
 
 // SetGenderID sets the gender edge to Gender by id.
@@ -252,9 +252,9 @@ func (uu *UserUpdate) ClearUsertype() *UserUpdate {
 	return uu
 }
 
-// ClearClubuser clears the clubuser edge to Club.
-func (uu *UserUpdate) ClearClubuser() *UserUpdate {
-	uu.mutation.ClearClubuser()
+// ClearFromClub clears the FromClub edge to Club.
+func (uu *UserUpdate) ClearFromClub() *UserUpdate {
+	uu.mutation.ClearFromClub()
 	return uu
 }
 
@@ -497,12 +497,12 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if uu.mutation.ClubuserCleared() {
+	if uu.mutation.FromClubCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   user.ClubuserTable,
-			Columns: []string{user.ClubuserColumn},
+			Table:   user.FromClubTable,
+			Columns: []string{user.FromClubColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -513,12 +513,12 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := uu.mutation.ClubuserIDs(); len(nodes) > 0 {
+	if nodes := uu.mutation.FromClubIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   user.ClubuserTable,
-			Columns: []string{user.ClubuserColumn},
+			Table:   user.FromClubTable,
+			Columns: []string{user.FromClubColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -892,23 +892,23 @@ func (uuo *UserUpdateOne) SetUsertype(u *Usertype) *UserUpdateOne {
 	return uuo.SetUsertypeID(u.ID)
 }
 
-// SetClubuserID sets the clubuser edge to Club by id.
-func (uuo *UserUpdateOne) SetClubuserID(id int) *UserUpdateOne {
-	uuo.mutation.SetClubuserID(id)
+// SetFromClubID sets the FromClub edge to Club by id.
+func (uuo *UserUpdateOne) SetFromClubID(id int) *UserUpdateOne {
+	uuo.mutation.SetFromClubID(id)
 	return uuo
 }
 
-// SetNillableClubuserID sets the clubuser edge to Club by id if the given value is not nil.
-func (uuo *UserUpdateOne) SetNillableClubuserID(id *int) *UserUpdateOne {
+// SetNillableFromClubID sets the FromClub edge to Club by id if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableFromClubID(id *int) *UserUpdateOne {
 	if id != nil {
-		uuo = uuo.SetClubuserID(*id)
+		uuo = uuo.SetFromClubID(*id)
 	}
 	return uuo
 }
 
-// SetClubuser sets the clubuser edge to Club.
-func (uuo *UserUpdateOne) SetClubuser(c *Club) *UserUpdateOne {
-	return uuo.SetClubuserID(c.ID)
+// SetFromClub sets the FromClub edge to Club.
+func (uuo *UserUpdateOne) SetFromClub(c *Club) *UserUpdateOne {
+	return uuo.SetFromClubID(c.ID)
 }
 
 // SetGenderID sets the gender edge to Gender by id.
@@ -1058,9 +1058,9 @@ func (uuo *UserUpdateOne) ClearUsertype() *UserUpdateOne {
 	return uuo
 }
 
-// ClearClubuser clears the clubuser edge to Club.
-func (uuo *UserUpdateOne) ClearClubuser() *UserUpdateOne {
-	uuo.mutation.ClearClubuser()
+// ClearFromClub clears the FromClub edge to Club.
+func (uuo *UserUpdateOne) ClearFromClub() *UserUpdateOne {
+	uuo.mutation.ClearFromClub()
 	return uuo
 }
 
@@ -1301,12 +1301,12 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (u *User, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
-	if uuo.mutation.ClubuserCleared() {
+	if uuo.mutation.FromClubCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   user.ClubuserTable,
-			Columns: []string{user.ClubuserColumn},
+			Table:   user.FromClubTable,
+			Columns: []string{user.FromClubColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
@@ -1317,12 +1317,12 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (u *User, err error) {
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := uuo.mutation.ClubuserIDs(); len(nodes) > 0 {
+	if nodes := uuo.mutation.FromClubIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   user.ClubuserTable,
-			Columns: []string{user.ClubuserColumn},
+			Table:   user.FromClubTable,
+			Columns: []string{user.FromClubColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

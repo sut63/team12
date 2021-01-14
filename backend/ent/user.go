@@ -44,8 +44,8 @@ type User struct {
 type UserEdges struct {
 	// Usertype holds the value of the usertype edge.
 	Usertype *Usertype
-	// Clubuser holds the value of the clubuser edge.
-	Clubuser *Club
+	// FromClub holds the value of the FromClub edge.
+	FromClub *Club
 	// Gender holds the value of the gender edge.
 	Gender *Gender
 	// Userstatus holds the value of the userstatus edge.
@@ -81,18 +81,18 @@ func (e UserEdges) UsertypeOrErr() (*Usertype, error) {
 	return nil, &NotLoadedError{edge: "usertype"}
 }
 
-// ClubuserOrErr returns the Clubuser value or an error if the edge
+// FromClubOrErr returns the FromClub value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e UserEdges) ClubuserOrErr() (*Club, error) {
+func (e UserEdges) FromClubOrErr() (*Club, error) {
 	if e.loadedTypes[1] {
-		if e.Clubuser == nil {
-			// The edge clubuser was loaded in eager-loading,
+		if e.FromClub == nil {
+			// The edge FromClub was loaded in eager-loading,
 			// but was not found.
 			return nil, &NotFoundError{label: club.Label}
 		}
-		return e.Clubuser, nil
+		return e.FromClub, nil
 	}
-	return nil, &NotLoadedError{edge: "clubuser"}
+	return nil, &NotLoadedError{edge: "FromClub"}
 }
 
 // GenderOrErr returns the Gender value or an error if the edge
@@ -289,9 +289,9 @@ func (u *User) QueryUsertype() *UsertypeQuery {
 	return (&UserClient{config: u.config}).QueryUsertype(u)
 }
 
-// QueryClubuser queries the clubuser edge of the User.
-func (u *User) QueryClubuser() *ClubQuery {
-	return (&UserClient{config: u.config}).QueryClubuser(u)
+// QueryFromClub queries the FromClub edge of the User.
+func (u *User) QueryFromClub() *ClubQuery {
+	return (&UserClient{config: u.config}).QueryFromClub(u)
 }
 
 // QueryGender queries the gender edge of the User.
