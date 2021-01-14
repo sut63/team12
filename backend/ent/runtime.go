@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/OMENX/app/ent/academicyear"
+	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/activitytype"
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/clubapplication"
@@ -30,6 +31,16 @@ func init() {
 	academicyearDescSemester := academicyearFields[0].Descriptor()
 	// academicyear.SemesterValidator is a validator for the "semester" field. It is called by the builders before save.
 	academicyear.SemesterValidator = academicyearDescSemester.Validators[0].(func(string) error)
+	activitiesFields := schema.Activities{}.Fields()
+	_ = activitiesFields
+	// activitiesDescName is the schema descriptor for name field.
+	activitiesDescName := activitiesFields[0].Descriptor()
+	// activities.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	activities.NameValidator = activitiesDescName.Validators[0].(func(string) error)
+	// activitiesDescDetail is the schema descriptor for detail field.
+	activitiesDescDetail := activitiesFields[1].Descriptor()
+	// activities.DetailValidator is a validator for the "detail" field. It is called by the builders before save.
+	activities.DetailValidator = activitiesDescDetail.Validators[0].(func(string) error)
 	activitytypeFields := schema.ActivityType{}.Fields()
 	_ = activitytypeFields
 	// activitytypeDescName is the schema descriptor for name field.
@@ -126,8 +137,12 @@ func init() {
 	userDescName := userFields[0].Descriptor()
 	// user.NameValidator is a validator for the "name" field. It is called by the builders before save.
 	user.NameValidator = userDescName.Validators[0].(func(string) error)
+	// userDescAge is the schema descriptor for age field.
+	userDescAge := userFields[1].Descriptor()
+	// user.AgeValidator is a validator for the "age" field. It is called by the builders before save.
+	user.AgeValidator = userDescAge.Validators[0].(func(int) error)
 	// userDescEmail is the schema descriptor for email field.
-	userDescEmail := userFields[1].Descriptor()
+	userDescEmail := userFields[2].Descriptor()
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	user.EmailValidator = userDescEmail.Validators[0].(func(string) error)
 	usertypeFields := schema.Usertype{}.Fields()

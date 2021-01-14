@@ -137,6 +137,16 @@ func (au *ActivitiesUpdate) ClearClub() *ActivitiesUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (au *ActivitiesUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := au.mutation.Name(); ok {
+		if err := activities.NameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
+		}
+	}
+	if v, ok := au.mutation.Detail(); ok {
+		if err := activities.DetailValidator(v); err != nil {
+			return 0, &ValidationError{Name: "detail", err: fmt.Errorf("ent: validator failed for field \"detail\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -462,6 +472,16 @@ func (auo *ActivitiesUpdateOne) ClearClub() *ActivitiesUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (auo *ActivitiesUpdateOne) Save(ctx context.Context) (*Activities, error) {
+	if v, ok := auo.mutation.Name(); ok {
+		if err := activities.NameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
+		}
+	}
+	if v, ok := auo.mutation.Detail(); ok {
+		if err := activities.DetailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "detail", err: fmt.Errorf("ent: validator failed for field \"detail\": %w", err)}
+		}
+	}
 
 	var (
 		err  error

@@ -114,8 +114,18 @@ func (ac *ActivitiesCreate) Save(ctx context.Context) (*Activities, error) {
 	if _, ok := ac.mutation.Name(); !ok {
 		return nil, &ValidationError{Name: "name", err: errors.New("ent: missing required field \"name\"")}
 	}
+	if v, ok := ac.mutation.Name(); ok {
+		if err := activities.NameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
+		}
+	}
 	if _, ok := ac.mutation.Detail(); !ok {
 		return nil, &ValidationError{Name: "detail", err: errors.New("ent: missing required field \"detail\"")}
+	}
+	if v, ok := ac.mutation.Detail(); ok {
+		if err := activities.DetailValidator(v); err != nil {
+			return nil, &ValidationError{Name: "detail", err: fmt.Errorf("ent: validator failed for field \"detail\": %w", err)}
+		}
 	}
 	if _, ok := ac.mutation.Starttime(); !ok {
 		return nil, &ValidationError{Name: "starttime", err: errors.New("ent: missing required field \"starttime\"")}

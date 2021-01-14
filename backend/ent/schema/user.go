@@ -15,6 +15,7 @@ type User struct {
 func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("name").NotEmpty().Unique(),
+		field.Int("age").Positive(),
 		field.String("email").NotEmpty(),
 		field.String("password"),
 	}
@@ -25,13 +26,13 @@ func (User) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("usertype", Usertype.Type).Ref("user").Unique(),
 		edge.From("clubuser", Club.Type).Ref("userclub").Unique(),
-		
+
 		edge.From("gender", Gender.Type).Ref("users").Unique(),
 		edge.From("userstatus", UserStatus.Type).Ref("users").Unique(),
 		edge.From("discipline", Discipline.Type).Ref("users").Unique(),
 		edge.From("year", Year.Type).Ref("users").Unique(),
 
-		edge.To("club",Club.Type).StorageKey(edge.Column("UserID")),
+		edge.To("club", Club.Type).StorageKey(edge.Column("UserID")),
 		edge.To("clubapplication", Clubapplication.Type).StorageKey(edge.Column("UserID")),
 		edge.To("UserToComplaint", Complaint.Type).StorageKey(edge.Column("UserID")),
 		edge.To("Roomuse", Roomuse.Type).StorageKey(edge.Column("UserID")),
