@@ -142,6 +142,25 @@ type ComplaintTypes struct {
 	ComplaintType []ComplaintType
 }
 
+type Rooms struct {
+	Room []Room
+}
+
+type Room struct {
+	ROOMNAME     string
+	ROOMLOCATION string
+	ROOMFLOOR    string
+	MAXCONTAIN   int
+}
+
+type Purposes struct {
+	Purpose []Purpose
+}
+
+type Purpose struct {
+	PURPOSE string
+}
+
 // @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -212,10 +231,14 @@ func main() {
 	controllers.NewClubapplicationController(v1, client)
 	controllers.NewComplaintController(v1, client)
 	controllers.NewComplainttypeController(v1, client)
-	// พึ่งอัพใหม่ล่าสุด
 	controllers.NewClubBranchController(v1, client)
 	controllers.NewClubTypeController(v1, client)
 	controllers.NewClubController(v1, client)
+	//เพิ่มล่าสุด
+	controllers.NewRoomController(v1, client)
+	controllers.NewPurposeController(v1, client)
+	controllers.NewRoomuseController(v1, client)
+
 	// Set Types Data
 	typedata := Usertypes{
 		Usertype: []Usertype{
@@ -365,6 +388,40 @@ func main() {
 			SetComplaintToComplaintTypeID(cp.TypeID).
 			SetInfo(cp.Info).
 			SetDate(cp.Date).
+			Save(context.Background())
+	}
+
+	// Set Room Data
+	rooms := Rooms{
+		Room: []Room{
+			Room{"Meeting room", "Building A", "floor G", 10},
+			Room{"Relax room", "Building A", "floor 1", 20},
+		},
+	}
+
+	for _, r := range rooms.Room {
+		client.Room.
+			Create().
+			SetRoomName(r.ROOMNAME).
+			SetRoomLocation(r.ROOMLOCATION).
+			SetRoomFloor(r.ROOMFLOOR).
+			SetMaxContain(r.MAXCONTAIN).
+			Save(context.Background())
+	}
+
+	// Set Purpose Data
+	purposes := Purposes{
+		Purpose: []Purpose{
+			Purpose{"ประชุม"},
+			Purpose{"ทำชมรม"},
+			Purpose{"จัดกิจกรรมชมรม"},
+		},
+	}
+
+	for _, p := range purposes.Purpose {
+		client.Purpose.
+			Create().
+			SetPurpose(p.PURPOSE).
 			Save(context.Background())
 	}
 
