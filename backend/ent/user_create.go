@@ -71,23 +71,23 @@ func (uc *UserCreate) SetUsertype(u *Usertype) *UserCreate {
 	return uc.SetUsertypeID(u.ID)
 }
 
-// SetClubuserID sets the clubuser edge to Club by id.
-func (uc *UserCreate) SetClubuserID(id int) *UserCreate {
-	uc.mutation.SetClubuserID(id)
+// SetFromClubID sets the FromClub edge to Club by id.
+func (uc *UserCreate) SetFromClubID(id int) *UserCreate {
+	uc.mutation.SetFromClubID(id)
 	return uc
 }
 
-// SetNillableClubuserID sets the clubuser edge to Club by id if the given value is not nil.
-func (uc *UserCreate) SetNillableClubuserID(id *int) *UserCreate {
+// SetNillableFromClubID sets the FromClub edge to Club by id if the given value is not nil.
+func (uc *UserCreate) SetNillableFromClubID(id *int) *UserCreate {
 	if id != nil {
-		uc = uc.SetClubuserID(*id)
+		uc = uc.SetFromClubID(*id)
 	}
 	return uc
 }
 
-// SetClubuser sets the clubuser edge to Club.
-func (uc *UserCreate) SetClubuser(c *Club) *UserCreate {
-	return uc.SetClubuserID(c.ID)
+// SetFromClub sets the FromClub edge to Club.
+func (uc *UserCreate) SetFromClub(c *Club) *UserCreate {
+	return uc.SetFromClubID(c.ID)
 }
 
 // SetGenderID sets the gender edge to Gender by id.
@@ -371,12 +371,12 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
-	if nodes := uc.mutation.ClubuserIDs(); len(nodes) > 0 {
+	if nodes := uc.mutation.FromClubIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: true,
-			Table:   user.ClubuserTable,
-			Columns: []string{user.ClubuserColumn},
+			Table:   user.FromClubTable,
+			Columns: []string{user.FromClubColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{

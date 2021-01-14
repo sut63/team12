@@ -35,7 +35,7 @@ type UserQuery struct {
 	predicates []predicate.User
 	// eager-loading edges.
 	withUsertype        *UsertypeQuery
-	withClubuser        *ClubQuery
+	withFromClub        *ClubQuery
 	withGender          *GenderQuery
 	withUserstatus      *UserStatusQuery
 	withDiscipline      *DisciplineQuery
@@ -92,8 +92,8 @@ func (uq *UserQuery) QueryUsertype() *UsertypeQuery {
 	return query
 }
 
-// QueryClubuser chains the current query on the clubuser edge.
-func (uq *UserQuery) QueryClubuser() *ClubQuery {
+// QueryFromClub chains the current query on the FromClub edge.
+func (uq *UserQuery) QueryFromClub() *ClubQuery {
 	query := &ClubQuery{config: uq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := uq.prepareQuery(ctx); err != nil {
@@ -102,7 +102,7 @@ func (uq *UserQuery) QueryClubuser() *ClubQuery {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, uq.sqlQuery()),
 			sqlgraph.To(club.Table, club.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, user.ClubuserTable, user.ClubuserColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, user.FromClubTable, user.FromClubColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
@@ -444,14 +444,14 @@ func (uq *UserQuery) WithUsertype(opts ...func(*UsertypeQuery)) *UserQuery {
 	return uq
 }
 
-//  WithClubuser tells the query-builder to eager-loads the nodes that are connected to
-// the "clubuser" edge. The optional arguments used to configure the query builder of the edge.
-func (uq *UserQuery) WithClubuser(opts ...func(*ClubQuery)) *UserQuery {
+//  WithFromClub tells the query-builder to eager-loads the nodes that are connected to
+// the "FromClub" edge. The optional arguments used to configure the query builder of the edge.
+func (uq *UserQuery) WithFromClub(opts ...func(*ClubQuery)) *UserQuery {
 	query := &ClubQuery{config: uq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
-	uq.withClubuser = query
+	uq.withFromClub = query
 	return uq
 }
 
@@ -612,7 +612,7 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		_spec       = uq.querySpec()
 		loadedTypes = [10]bool{
 			uq.withUsertype != nil,
-			uq.withClubuser != nil,
+			uq.withFromClub != nil,
 			uq.withGender != nil,
 			uq.withUserstatus != nil,
 			uq.withDiscipline != nil,
@@ -623,7 +623,7 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 			uq.withRoomuse != nil,
 		}
 	)
-	if uq.withUsertype != nil || uq.withClubuser != nil || uq.withGender != nil || uq.withUserstatus != nil || uq.withDiscipline != nil || uq.withYear != nil {
+	if uq.withUsertype != nil || uq.withFromClub != nil || uq.withGender != nil || uq.withUserstatus != nil || uq.withDiscipline != nil || uq.withYear != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -678,7 +678,7 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		}
 	}
 
-	if query := uq.withClubuser; query != nil {
+	if query := uq.withFromClub; query != nil {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*User)
 		for i := range nodes {
@@ -698,7 +698,7 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 				return nil, fmt.Errorf(`unexpected foreign-key "ClubID" returned %v`, n.ID)
 			}
 			for i := range nodes {
-				nodes[i].Edges.Clubuser = n
+				nodes[i].Edges.FromClub = n
 			}
 		}
 	}

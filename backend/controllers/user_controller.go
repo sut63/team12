@@ -204,7 +204,7 @@ func (ctl *UserController) ListUser(c *gin.Context) {
 		Query().
 		WithClubapplication().
 		WithClub().
-		WithClubuser().
+		WithFromClub().
 		WithDiscipline().
 		WithGender().
 		WithRoomuse().

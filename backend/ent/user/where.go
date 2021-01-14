@@ -556,25 +556,25 @@ func HasUsertypeWith(preds ...predicate.Usertype) predicate.User {
 	})
 }
 
-// HasClubuser applies the HasEdge predicate on the "clubuser" edge.
-func HasClubuser() predicate.User {
+// HasFromClub applies the HasEdge predicate on the "FromClub" edge.
+func HasFromClub() predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(ClubuserTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, ClubuserTable, ClubuserColumn),
+			sqlgraph.To(FromClubTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, FromClubTable, FromClubColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasClubuserWith applies the HasEdge predicate on the "clubuser" edge with a given conditions (other predicates).
-func HasClubuserWith(preds ...predicate.Club) predicate.User {
+// HasFromClubWith applies the HasEdge predicate on the "FromClub" edge with a given conditions (other predicates).
+func HasFromClubWith(preds ...predicate.Club) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(ClubuserInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, ClubuserTable, ClubuserColumn),
+			sqlgraph.To(FromClubInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, FromClubTable, FromClubColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

@@ -2152,15 +2152,15 @@ func (c *UserClient) QueryUsertype(u *User) *UsertypeQuery {
 	return query
 }
 
-// QueryClubuser queries the clubuser edge of a User.
-func (c *UserClient) QueryClubuser(u *User) *ClubQuery {
+// QueryFromClub queries the FromClub edge of a User.
+func (c *UserClient) QueryFromClub(u *User) *ClubQuery {
 	query := &ClubQuery{config: c.config}
 	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(club.Table, club.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, user.ClubuserTable, user.ClubuserColumn),
+			sqlgraph.Edge(sqlgraph.M2O, true, user.FromClubTable, user.FromClubColumn),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil

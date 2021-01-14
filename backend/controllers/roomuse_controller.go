@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Teeth/app/ent"
-	"github.com/Teeth/app/ent/purpose"
-	"github.com/Teeth/app/ent/room"
-	"github.com/Teeth/app/ent/user"
+	"github.com/OMENX/app/ent"
+	"github.com/OMENX/app/ent/purpose"
+	"github.com/OMENX/app/ent/room"
+	"github.com/OMENX/app/ent/user"
 	"github.com/gin-gonic/gin"
 )
 

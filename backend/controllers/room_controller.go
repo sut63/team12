@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/Teeth/app/ent"
-	"github.com/Teeth/app/ent/room"
+	"github.com/OMENX/app/ent"
+	"github.com/OMENX/app/ent/room"
 	"github.com/gin-gonic/gin"
 )
 

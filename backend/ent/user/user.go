@@ -18,8 +18,8 @@ const (
 
 	// EdgeUsertype holds the string denoting the usertype edge name in mutations.
 	EdgeUsertype = "usertype"
-	// EdgeClubuser holds the string denoting the clubuser edge name in mutations.
-	EdgeClubuser = "clubuser"
+	// EdgeFromClub holds the string denoting the fromclub edge name in mutations.
+	EdgeFromClub = "FromClub"
 	// EdgeGender holds the string denoting the gender edge name in mutations.
 	EdgeGender = "gender"
 	// EdgeUserstatus holds the string denoting the userstatus edge name in mutations.
@@ -46,13 +46,13 @@ const (
 	UsertypeInverseTable = "usertypes"
 	// UsertypeColumn is the table column denoting the usertype relation/edge.
 	UsertypeColumn = "UserTypeID"
-	// ClubuserTable is the table the holds the clubuser relation/edge.
-	ClubuserTable = "users"
-	// ClubuserInverseTable is the table name for the Club entity.
+	// FromClubTable is the table the holds the FromClub relation/edge.
+	FromClubTable = "users"
+	// FromClubInverseTable is the table name for the Club entity.
 	// It exists in this package in order to avoid circular dependency with the "club" package.
-	ClubuserInverseTable = "clubs"
-	// ClubuserColumn is the table column denoting the clubuser relation/edge.
-	ClubuserColumn = "ClubID"
+	FromClubInverseTable = "clubs"
+	// FromClubColumn is the table column denoting the FromClub relation/edge.
+	FromClubColumn = "ClubID"
 	// GenderTable is the table the holds the gender relation/edge.
 	GenderTable = "users"
 	// GenderInverseTable is the table name for the Gender entity.
