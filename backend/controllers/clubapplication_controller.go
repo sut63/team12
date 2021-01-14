@@ -41,7 +41,7 @@ type Clubapplication struct {
 // @ID create-clubapplication
 // @Accept   json
 // @Produce  json
-// @Param clubapplication body ent.Clubapplication true "Clubapplication entity"
+// @Param clubapplication body Clubapplication true "Clubapplication entity"
 // @Success 200 {object} ent.Clubapplication
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
@@ -68,7 +68,7 @@ func (ctl *ClubapplicationController) CreateClubapplication(c *gin.Context) {
 		return
 	}
 
-	cb, err := ctl.client.Club.
+	l, err := ctl.client.Club.
 		Query().
 		Where(club.IDEQ(int(obj.ClubID))).
 		Only(context.Background())
@@ -80,7 +80,7 @@ func (ctl *ClubapplicationController) CreateClubapplication(c *gin.Context) {
 		return
 	}
 
-	cas, err := ctl.client.ClubappStatus.
+	a, err := ctl.client.ClubappStatus.
 		Query().
 		Where(clubappstatus.IDEQ(int(obj.AppstatusID))).
 		Only(context.Background())
@@ -94,7 +94,7 @@ func (ctl *ClubapplicationController) CreateClubapplication(c *gin.Context) {
 
 	time, err := time.Parse(time.RFC3339, obj.Addedtime)
 
-	ca, err := ctl.client.Clubapplication.
+	ca, err := ctl.client.ClubApplication.
 		Create().
 		SetOwner(u).
 		SetAddername(obj.AdderName).
@@ -104,9 +104,9 @@ func (ctl *ClubapplicationController) CreateClubapplication(c *gin.Context) {
 		SetDiscipline(obj.Discipline).
 		SetContact(obj.Contact).
 		SetReason(obj.Reason).
-		SetClub(cb).
-		SetClubappstatus(cas).
-		SetDatetime(time).
+		SetClub(l).
+		SetClubappstatus(a).
+		SetAddeddatetime(time).
 		Save(context.Background())
 
 	if err != nil {
@@ -185,6 +185,9 @@ func (ctl *ClubapplicationController) ListClubapplication(c *gin.Context) {
 
 	clubapplications, err := ctl.client.Clubapplication.
 		Query().
+		WithOwner().
+		WithClub().
+		WithClubappstatus().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())
