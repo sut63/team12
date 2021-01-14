@@ -38,7 +38,6 @@ type hooks struct {
 	Gender          []ent.Hook
 	Purpose         []ent.Hook
 	Room            []ent.Hook
-	Roompurpose     []ent.Hook
 	Roomuse         []ent.Hook
 	User            []ent.Hook
 	UserStatus      []ent.Hook

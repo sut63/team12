@@ -2112,12 +2112,12 @@
                 "operationId": "create-complainttype",
                 "parameters": [
                     {
-                        "description": "ComplaintType entity",
+                        "description": "Complainttype entity",
                         "name": "complainttype",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.ComplaintType"
+                            "$ref": "#/definitions/controllers.Complainttype"
                         }
                     }
                 ],
@@ -2154,7 +2154,7 @@
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ComplaintType ID",
+                        "description": "Complainttype ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -2200,13 +2200,13 @@
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ComplaintType ID",
+                        "description": "Complainttype ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "ComplaintType entity",
+                        "description": "Complainttype entity",
                         "name": "complainttype",
                         "in": "body",
                         "required": true,
@@ -2246,7 +2246,7 @@
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ComplaintType ID",
+                        "description": "Complainttype ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -4228,7 +4228,7 @@
                 }
             }
         },
-        "controllers.ComplaintType": {
+        "controllers.Complainttype": {
             "type": "object",
             "properties": {
                 "description": {

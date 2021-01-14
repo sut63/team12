@@ -40,8 +40,6 @@ type Tx struct {
 	Purpose *PurposeClient
 	// Room is the client for interacting with the Room builders.
 	Room *RoomClient
-	// Roompurpose is the client for interacting with the Roompurpose builders.
-	Roompurpose *RoompurposeClient
 	// Roomuse is the client for interacting with the Roomuse builders.
 	Roomuse *RoomuseClient
 	// User is the client for interacting with the User builders.
@@ -201,7 +199,6 @@ func (tx *Tx) init() {
 	tx.Gender = NewGenderClient(tx.config)
 	tx.Purpose = NewPurposeClient(tx.config)
 	tx.Room = NewRoomClient(tx.config)
-	tx.Roompurpose = NewRoompurposeClient(tx.config)
 	tx.Roomuse = NewRoomuseClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 	tx.UserStatus = NewUserStatusClient(tx.config)

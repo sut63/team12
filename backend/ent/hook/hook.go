@@ -191,19 +191,6 @@ func (f RoomFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return f(ctx, mv)
 }
 
-// The RoompurposeFunc type is an adapter to allow the use of ordinary
-// function as Roompurpose mutator.
-type RoompurposeFunc func(context.Context, *ent.RoompurposeMutation) (ent.Value, error)
-
-// Mutate calls f(ctx, m).
-func (f RoompurposeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.RoompurposeMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.RoompurposeMutation", m)
-	}
-	return f(ctx, mv)
-}
-
 // The RoomuseFunc type is an adapter to allow the use of ordinary
 // function as Roomuse mutator.
 type RoomuseFunc func(context.Context, *ent.RoomuseMutation) (ent.Value, error)

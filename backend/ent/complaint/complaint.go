@@ -2,10 +2,6 @@
 
 package complaint
 
-import (
-	"time"
-)
-
 const (
 	// Label holds the string label denoting the complaint type in the database.
 	Label = "complaint"
@@ -61,8 +57,3 @@ var ForeignKeys = []string{
 	"Type",
 	"UserID",
 }
-
-var (
-	// DefaultDate holds the default value on creation for the date field.
-	DefaultDate func() time.Time
-)

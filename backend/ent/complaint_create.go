@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/complaint"
@@ -30,16 +29,8 @@ func (cc *ComplaintCreate) SetInfo(s string) *ComplaintCreate {
 }
 
 // SetDate sets the date field.
-func (cc *ComplaintCreate) SetDate(t time.Time) *ComplaintCreate {
-	cc.mutation.SetDate(t)
-	return cc
-}
-
-// SetNillableDate sets the date field if the given value is not nil.
-func (cc *ComplaintCreate) SetNillableDate(t *time.Time) *ComplaintCreate {
-	if t != nil {
-		cc.SetDate(*t)
-	}
+func (cc *ComplaintCreate) SetDate(s string) *ComplaintCreate {
+	cc.mutation.SetDate(s)
 	return cc
 }
 
@@ -111,8 +102,7 @@ func (cc *ComplaintCreate) Save(ctx context.Context) (*Complaint, error) {
 		return nil, &ValidationError{Name: "info", err: errors.New("ent: missing required field \"info\"")}
 	}
 	if _, ok := cc.mutation.Date(); !ok {
-		v := complaint.DefaultDate()
-		cc.mutation.SetDate(v)
+		return nil, &ValidationError{Name: "date", err: errors.New("ent: missing required field \"date\"")}
 	}
 	var (
 		err  error
@@ -184,7 +174,7 @@ func (cc *ComplaintCreate) createSpec() (*Complaint, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := cc.mutation.Date(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: complaint.FieldDate,
 		})

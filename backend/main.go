@@ -2,14 +2,11 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/OMENX/app/controllers"
 	_ "github.com/OMENX/app/docs"
 	"github.com/OMENX/app/ent"
-	"github.com/OMENX/app/ent/club"
-	"github.com/OMENX/app/ent/usertype"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
@@ -17,17 +14,21 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-type Users struct {
-	User []User
-}
+// type Users struct {
+// 	User []User
+// }
 
-type User struct {
-	name     string
-	email    string
-	password string
-	usertype int
-	club     int
-}
+// type User struct {
+// 	Name         string
+// 	Email        string
+// 	Password     string
+// 	UserdtypeID  int
+// 	Age          int
+// 	GenderID     int
+// 	UserstatusID int
+// 	DisciplineID int
+// 	YearID       int
+// }
 
 type Usertypes struct {
 	Usertype []Usertype
@@ -222,7 +223,6 @@ func main() {
 	controllers.NewActivitiesController(v1, client)
 	controllers.NewActivityTypeController(v1, client)
 	controllers.NewUsertypeController(v1, client)
-
 	controllers.NewDisciplineController(v1, client)
 	controllers.NewYearController(v1, client)
 	controllers.NewGenderController(v1, client)
@@ -234,10 +234,88 @@ func main() {
 	controllers.NewClubBranchController(v1, client)
 	controllers.NewClubTypeController(v1, client)
 	controllers.NewClubController(v1, client)
-	//เพิ่มล่าสุด
 	controllers.NewRoomController(v1, client)
 	controllers.NewPurposeController(v1, client)
 	controllers.NewRoomuseController(v1, client)
+
+	// Set Discipline Data
+	Disciplines := Disciplines{
+		Discipline: []Discipline{
+			Discipline{"วิศวกรรมคอมพิวเตอร์"},
+			Discipline{"วิศวกรรมเครื่องกล"},
+			Discipline{"วิทยาศาสตร์การแพทย์"},
+		},
+	}
+
+	for _, d := range Disciplines.Discipline {
+		client.Discipline.
+			Create().
+			SetDiscipline(d.Discip).
+			Save(context.Background())
+	}
+
+	// Set Years Data
+	Years := Years{
+		Year: []Year{
+			Year{1},
+			Year{2},
+			Year{3},
+			Year{4},
+		},
+	}
+
+	for _, y := range Years.Year {
+		client.Year.
+			Create().
+			SetYear(y.Year).
+			Save(context.Background())
+	}
+
+	// Set Gender Data
+	Genders := Genders{
+		Gender: []Gender{
+			Gender{"ชาย"},
+			Gender{"หญิง"},
+			Gender{"-"},
+		},
+	}
+
+	for _, g := range Genders.Gender {
+		client.Gender.
+			Create().
+			SetGender(g.Gender).
+			Save(context.Background())
+	}
+
+	// Set Userstatus Data
+	UserStatuss := UserStatuss{
+		UserStatus: []UserStatus{
+			UserStatus{"Have Club"},
+			UserStatus{"Unknow"},
+		},
+	}
+	for _, us := range UserStatuss.UserStatus {
+		client.UserStatus.
+			Create().
+			SetUserstatus(us.UserStatus).
+			Save(context.Background())
+	}
+
+	// Set ClubappStatus Data
+	cas := ClubappStatuses{
+		ClubappStatus: []ClubappStatus{
+			ClubappStatus{"รอการอนุมัติ"},
+			ClubappStatus{"อนุมัติคำร้อง"},
+			ClubappStatus{"ปฐิเสธคำร้อง"},
+		},
+	}
+
+	for _, c := range cas.ClubappStatus {
+		client.ClubappStatus.
+			Create().
+			SetClubstatus(c.Status).
+			Save(context.Background())
+	}
 
 	// Set Types Data
 	typedata := Usertypes{
@@ -254,7 +332,7 @@ func main() {
 			Save(context.Background())
 	}
 
-		// Set ClubBranch Data
+	// Set ClubBranch Data
 	ClubBranchs := ClubBranchs{
 		ClubBranch: []ClubBranch{
 			ClubBranch{"B4101"},
@@ -269,7 +347,8 @@ func main() {
 			SetName(cb.name).
 			Save(context.Background())
 	}
-		// Set ClubType Data
+
+	// Set ClubType Data
 	ClubTypes := ClubTypes{
 		ClubType: []ClubType{
 			ClubType{"กีฬา"},
@@ -285,45 +364,45 @@ func main() {
 			Save(context.Background())
 	}
 
-	// Set Users Data
-	users := Users{
-		User: []User{
-			User{"Suphasin", "Suphasin@gmail.com", "123456789A", 1, 2},
-			User{"Yosang", "Yosang@gmail.com", "0000FUSE", 2, 1},
-		},
-	}
+	// // Set Users Data
+	// users := Users{
+	// 	User: []User{
+	// 		User{"Suphasin", "Suphasin@gmail.com", "123456789A", 1, 22},
+	// 		User{"Yosang", "Yosang@gmail.com", "0000FUSE", 2, 22,},
+	// 	},
+	// }
 
-	for _, u := range users.User {
+	// for _, u := range users.User {
 
-		t, err := client.Usertype.
-			Query().
-			Where(usertype.IDEQ(int(u.usertype))).
-			Only(context.Background())
+	// 	t, err := client.Usertype.
+	// 		Query().
+	// 		Where(usertype.IDEQ(int(u.usertype))).
+	// 		Only(context.Background())
 
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
+	// 	if err != nil {
+	// 		fmt.Println(err.Error())
+	// 		return
+	// 	}
 
-		c, err := client.Club.
-			Query().
-			Where(club.IDEQ(int(u.club))).
-			Only(context.Background())
+	// 	c, err := client.Club.
+	// 		Query().
+	// 		Where(club.IDEQ(int(u.club))).
+	// 		Only(context.Background())
 
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
+	// 	if err != nil {
+	// 		fmt.Println(err.Error())
+	// 		return
+	// 	}
 
-		client.User.
-			Create().
-			SetName(u.name).
-			SetEmail(u.email).
-			SetPassword(u.password).
-			SetUsertype(t).
-			SetClubuser(c).
-			Save(context.Background())
-	}
+	// 	client.User.
+	// 		Create().
+	// 		SetName(u.name).
+	// 		SetEmail(u.email).
+	// 		SetPassword(u.password).
+	// 		SetUsertype(t).
+	// 		SetClubuser(c).
+	// 		Save(context.Background())
+	// }
 
 	// Set ActivityType Data
 	activitytypes := ActivityTypes{

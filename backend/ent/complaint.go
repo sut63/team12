@@ -5,7 +5,6 @@ package ent
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/complaint"
@@ -22,7 +21,7 @@ type Complaint struct {
 	// Info holds the value of the "info" field.
 	Info string `json:"info,omitempty"`
 	// Date holds the value of the "date" field.
-	Date time.Time `json:"date,omitempty"`
+	Date string `json:"date,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ComplaintQuery when eager-loading is set.
 	Edges  ComplaintEdges `json:"edges"`
@@ -91,7 +90,7 @@ func (*Complaint) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // info
-		&sql.NullTime{},   // date
+		&sql.NullString{}, // date
 	}
 }
 
@@ -121,10 +120,10 @@ func (c *Complaint) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		c.Info = value.String
 	}
-	if value, ok := values[1].(*sql.NullTime); !ok {
+	if value, ok := values[1].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field date", values[1])
 	} else if value.Valid {
-		c.Date = value.Time
+		c.Date = value.String
 	}
 	values = values[2:]
 	if len(values) == len(complaint.ForeignKeys) {
@@ -191,7 +190,7 @@ func (c *Complaint) String() string {
 	builder.WriteString(", info=")
 	builder.WriteString(c.Info)
 	builder.WriteString(", date=")
-	builder.WriteString(c.Date.Format(time.ANSIC))
+	builder.WriteString(c.Date)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -194,7 +194,7 @@ var (
 	ComplaintsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "info", Type: field.TypeString},
-		{Name: "date", Type: field.TypeTime},
+		{Name: "date", Type: field.TypeString},
 		{Name: "ClubID", Type: field.TypeInt, Nullable: true},
 		{Name: "Type", Type: field.TypeInt, Nullable: true},
 		{Name: "UserID", Type: field.TypeInt, Nullable: true},
@@ -291,25 +291,12 @@ var (
 		PrimaryKey:  []*schema.Column{RoomsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
-	// RoompurposesColumns holds the columns for the "roompurposes" table.
-	RoompurposesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "purpose", Type: field.TypeString},
-	}
-	// RoompurposesTable holds the schema information for the "roompurposes" table.
-	RoompurposesTable = &schema.Table{
-		Name:        "roompurposes",
-		Columns:     RoompurposesColumns,
-		PrimaryKey:  []*schema.Column{RoompurposesColumns[0]},
-		ForeignKeys: []*schema.ForeignKey{},
-	}
 	// RoomusesColumns holds the columns for the "roomuses" table.
 	RoomusesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "added_time", Type: field.TypeTime},
 		{Name: "purpose_id", Type: field.TypeInt, Nullable: true},
 		{Name: "room_id", Type: field.TypeInt, Nullable: true},
-		{Name: "purpose_id", Type: field.TypeInt, Nullable: true},
 		{Name: "UserID", Type: field.TypeInt, Nullable: true},
 	}
 	// RoomusesTable holds the schema information for the "roomuses" table.
@@ -320,7 +307,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "roomuses_purposes_roomuses",
-				Columns: []*schema.Column{RoomusesColumns[2], RoomusesColumns[4]},
+				Columns: []*schema.Column{RoomusesColumns[2]},
 
 				RefColumns: []*schema.Column{PurposesColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -333,15 +320,8 @@ var (
 				OnDelete:   schema.SetNull,
 			},
 			{
-				Symbol:  "roomuses_roompurposes_roompurpose",
-				Columns: []*schema.Column{RoomusesColumns[2], RoomusesColumns[4]},
-
-				RefColumns: []*schema.Column{RoompurposesColumns[0]},
-				OnDelete:   schema.SetNull,
-			},
-			{
 				Symbol:  "roomuses_users_Roomuse",
-				Columns: []*schema.Column{RoomusesColumns[5]},
+				Columns: []*schema.Column{RoomusesColumns[4]},
 
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -464,7 +444,6 @@ var (
 		GendersTable,
 		PurposesTable,
 		RoomsTable,
-		RoompurposesTable,
 		RoomusesTable,
 		UsersTable,
 		UserStatusTable,
@@ -488,8 +467,7 @@ func init() {
 	ComplaintsTable.ForeignKeys[2].RefTable = UsersTable
 	RoomusesTable.ForeignKeys[0].RefTable = PurposesTable
 	RoomusesTable.ForeignKeys[1].RefTable = RoomsTable
-	RoomusesTable.ForeignKeys[2].RefTable = RoompurposesTable
-	RoomusesTable.ForeignKeys[3].RefTable = UsersTable
+	RoomusesTable.ForeignKeys[2].RefTable = UsersTable
 	UsersTable.ForeignKeys[0].RefTable = ClubsTable
 	UsersTable.ForeignKeys[1].RefTable = DisciplinesTable
 	UsersTable.ForeignKeys[2].RefTable = GendersTable
