@@ -17,17 +17,16 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-
 type Users struct {
 	User []User
 }
 
 type User struct {
-	name string
+	name     string
 	email    string
 	password string
 	usertype int
-	club int
+	club     int
 }
 
 type Usertypes struct {
@@ -43,7 +42,7 @@ type Clubs struct {
 }
 
 type Club struct {
-	name string
+	name    string
 	purpose string
 }
 
@@ -52,7 +51,7 @@ type ActivityTypes struct {
 }
 
 type ActivityType struct {
-	name        string
+	name string
 }
 
 type AcademicYears struct {
@@ -60,7 +59,7 @@ type AcademicYears struct {
 }
 
 type AcademicYear struct {
-	semester        string
+	semester string
 }
 
 // Disciplines is ...
@@ -113,6 +112,30 @@ type ClubappStatus struct {
 	Status string
 }
 
+// Complaint struct
+type Complaint struct {
+	UserID int
+	ClubID int
+	TypeID int
+	Info   string
+	Date   string
+}
+
+// Complaints struct
+type Complaints struct {
+	Complaint []Complaint
+}
+
+// ComplaintType struct
+type ComplaintType struct {
+	Description string
+}
+
+// ComplaintTypes struct
+type ComplaintTypes struct {
+	ComplaintType []ComplaintType
+}
+
 // @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -155,7 +178,7 @@ type ClubappStatus struct {
 // @scope.admin Grants read and write access to administrative information
 
 func main() {
-    router := gin.Default()
+	router := gin.Default()
 	router.Use(cors.Default())
 
 	client, err := ent.Open("sqlite3", "file:ent.db?cache=shared&_fk=1")
@@ -167,23 +190,24 @@ func main() {
 	if err := client.Schema.Create(context.Background()); err != nil {
 		log.Fatalf("failed creating schema resources: %v", err)
 	}
- 
-   v1 := router.Group("/api/v1")
-   controllers.NewUserController(v1, client)
-   controllers.NewAcademicYearController(v1, client)
-   controllers.NewActivitiesController(v1, client)
-   controllers.NewActivityTypeController(v1, client)
-   controllers.NewUsertypeController(v1, client)
-// new controller หากมีใหม่กว่า ลบcomment ออกด้วย 
-   controllers.NewDisciplineController(v1, client)
+
+	v1 := router.Group("/api/v1")
+	controllers.NewUserController(v1, client)
+	controllers.NewAcademicYearController(v1, client)
+	controllers.NewActivitiesController(v1, client)
+	controllers.NewActivityTypeController(v1, client)
+	controllers.NewUsertypeController(v1, client)
+	// new controller หากมีใหม่กว่า ลบcomment ออกด้วย
+	controllers.NewDisciplineController(v1, client)
 	controllers.NewYearController(v1, client)
 	controllers.NewGenderController(v1, client)
 	controllers.NewUserstatusController(v1, client)
-	controllers.NewClubappStatusController(v1,client)
-	controllers.NewClubapplicationController(v1,client)
+	controllers.NewClubappStatusController(v1, client)
+	controllers.NewClubapplicationController(v1, client)
+	controllers.NewComplaintController(v1, client)
+	controllers.NewComplainttypeController(v1, client)
 
-
-   // Set Types Data
+	// Set Types Data
 	typedata := Usertypes{
 		Usertype: []Usertype{
 			Usertype{"นักศึกษา"},
@@ -198,13 +222,12 @@ func main() {
 			Save(context.Background())
 	}
 
-	
 	// Set Club Data
 	clubs := Clubs{
 		Club: []Club{
-			Club{"ONE","Suphasin"},
-			Club{"TWO","BBB"},
-			Club{"THREE","CCC"},
+			Club{"ONE", "Suphasin"},
+			Club{"TWO", "BBB"},
+			Club{"THREE", "CCC"},
 		},
 	}
 
@@ -244,7 +267,7 @@ func main() {
 		if err != nil {
 			fmt.Println(err.Error())
 			return
-		}		
+		}
 
 		client.User.
 			Create().
@@ -255,7 +278,7 @@ func main() {
 			SetClubuser(c).
 			Save(context.Background())
 	}
- 
+
 	// Set ActivityType Data
 	activitytypes := ActivityTypes{
 		ActivityType: []ActivityType{
@@ -288,7 +311,40 @@ func main() {
 			Save(context.Background())
 	}
 
+	// Set ComplaintType Data
+	complainttypes := ComplaintTypes{
+		ComplaintType: []ComplaintType{
+			ComplaintType{"TestType1"},
+			ComplaintType{"TestType2"},
+		},
+	}
 
-   router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-   router.Run()
+	for _, cpt := range complainttypes.ComplaintType {
+		client.ComplaintType.
+			Create().
+			SetDescription(cpt.Description).
+			Save(context.Background())
+	}
+
+	// Set Complaint Data
+	complaints := Complaints{
+		Complaint: []Complaint{
+			Complaint{1, 1, 1, "Test1", "Test1"},
+			Complaint{2, 2, 2, "Test2", "Test2"},
+		},
+	}
+
+	for _, cp := range complaints.Complaint {
+		client.Complaint.
+			Create().
+			SetComplaintToUserID(cp.UserID).
+			SetComplaintToClubID(cp.ClubID).
+			SetComplaintToComplaintTypeID(cp.TypeID).
+			SetInfo(cp.Info).
+			SetDate(cp.Date).
+			Save(context.Background())
+	}
+
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	router.Run()
 }

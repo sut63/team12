@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/bluepsm/app/ent"
-	"github.com/bluepsm/app/ent/complainttype"
+	"github.com/OMENX/app/ent"
+	"github.com/OMENX/app/ent/complainttype"
 	"github.com/gin-gonic/gin"
 )
 
