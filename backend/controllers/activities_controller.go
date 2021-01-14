@@ -12,7 +12,6 @@ import (
 	"github.com/OMENX/app/ent/activitytype"
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/user"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -78,31 +77,28 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 		})
 		return
 	}
-		
 
-	findclub, err := ctl.client.User.
+	
+	
+	getClub, err := ctl.client.User.
 	Query().
+	WithFromClub().
 	Where(user.IDEQ(int(obj.ClubID))).
+	Only(context.Background())
+
+	club, err := ctl.client.Club.
+	Query().
+	Where(club.IDEQ(int(*getClub.ClubID))).
 	Only(context.Background())
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "this user not found",
+			"error": "club not found",
 		})
 		return
-	} 
+	}  
 
-	/* cl, err:= ctl.client.User.
-	Query().
-	Select(user.).
-	String(context.Background()) */
-	
 
-	club, err := ctl.client.Club.
-	Query().
-	Where(club.IDEQ(int(findclub.ID))).
-	Only(context.Background())
-	
 	at, err := ctl.client.Activities.
 		Create().
 		SetAcademicyear(acy).
@@ -118,7 +114,7 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 		c.JSON(400, gin.H{
 			"error": "saving failed", 
 		})
-		return
+		return 
 	}
   
 	c.JSON(200, at)
@@ -134,7 +130,7 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /Activitiess/{id} [get]
+// @Router /activities/{id} [get]
 func (ctl *ActivitiesController) GetActivities(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
@@ -158,17 +154,17 @@ func (ctl *ActivitiesController) GetActivities(c *gin.Context) {
 	c.JSON(200, u)
  }
  
- // ListActivities handles request to get a list of Activities entities
-// @Summary List Activities entities
-// @Description list Activities entities
-// @ID list-Activities
+ // ListActivities handles request to get a list of activities entities
+// @Summary List activities entities
+// @Description list activities entities
+// @ID list-activities
 // @Produce json
 // @Param limit  query int false "Limit"
 // @Param offset query int false "Offset"
 // @Success 200 {array} ent.Activities
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /Activitiess [get]
+// @Router /activities [get]
 func (ctl *ActivitiesController) ListActivities(c *gin.Context) {
 	limitQuery := c.Query("limit")
 	limit := 10
@@ -186,6 +182,9 @@ func (ctl *ActivitiesController) ListActivities(c *gin.Context) {
   
 	Activitiess, err := ctl.client.Activities.
 		Query().
+		WithAcademicyear().
+		WithActivitytype().
+		WithClub().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())
@@ -197,17 +196,17 @@ func (ctl *ActivitiesController) ListActivities(c *gin.Context) {
 	c.JSON(200, Activitiess)
  }
 
-// DeleteActivities handles DELETE requests to delete a Activities entity
-// @Summary Delete a Activities entity by ID
-// @Description get Activities by ID
-// @ID delete-Activities
+// DeleteActivities handles DELETE requests to delete a activities entity
+// @Summary Delete a activities entity by ID
+// @Description get activities by ID
+// @ID delete-activities
 // @Produce  json
 // @Param id path int true "Activities ID"
 // @Success 200 {object} gin.H
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /Activitiess/{id} [delete]
+// @Router /activities/{id} [delete]
 func (ctl *ActivitiesController) DeleteActivities(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
@@ -241,7 +240,7 @@ func (ctl *ActivitiesController) DeleteActivities(c *gin.Context) {
 // @Success 200 {object} ent.Activities
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
-// @Router /Activitiess/{id} [put]
+// @Router /Activities/{id} [put]
 func (ctl *ActivitiesController) UpdateActivities(c *gin.Context) {
    id, err := strconv.ParseInt(c.Param("id"), 10, 64)
    if err != nil {
