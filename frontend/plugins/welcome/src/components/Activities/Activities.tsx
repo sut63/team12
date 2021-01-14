@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Content, Header, Page, pageTheme } from '@backstage/core';
+import {
+  Content,
+  Header,
+  Page,
+  pageTheme,
+  ContentHeader,
+} from '@backstage/core';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Container,
@@ -8,6 +14,7 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  Link,
   TextField,
   Avatar,
   Button,
@@ -18,6 +25,8 @@ import { EntAcademicYear } from '../../api/models/EntAcademicYear';
 import { EntClub } from '../../api/models/EntClub';
 import { EntActivities } from '../../api/models/EntActivities';
 import { DefaultApi } from '../../api/apis';
+import { Link as RouterLink } from 'react-router-dom';
+import Alert from '@material-ui/lab/Alert';
 
 // header css
 const HeaderCustom = {
@@ -46,6 +55,12 @@ const useStyles = makeStyles(theme => ({
   textField: {
     width: 300,
   },
+  alert: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
 }));
 
 function Activities() {
@@ -59,8 +74,10 @@ function Activities() {
 
   const [status, setStatus] = useState(false);
   const [alert, setAlert] = useState(true);
+
   const [loading, setLoading] = useState(true);
   const [UserID, setUserID] = useState(Number);
+  const [KK, setKK] = useState(Number);
   const [ActivitytypeID, setActivitytypeID] = useState(Number);
   const [AcademicyearID, setAcademicyearID] = useState(Number);
   const [name, setName] = React.useState(String);
@@ -92,29 +109,42 @@ function Activities() {
   }, [loading]);
 
   const CreateActivities = async () => {
-    const Activities = {
-      academicYearID: AcademicyearID,
-      activityTypeID: ActivitytypeID,
-      clubID: UserID,
-      detail: detail,
-      endTime: endtime + ':00+07:00',
-      name: name,
-      starttime: starttime + ':00+07:00',
-    };
-    console.log(Activities);
-    const res: any = await api.createActivities({
-      activities: Activities,
-    });
-    setStatus(true);
-    if (res.id != '') {
-      setAlert(true);
+    if (
+      AcademicyearID != null &&
+      ActivitytypeID != null &&
+      UserID != null &&
+      detail != '' &&
+      name != '' &&
+      starttime != '' &&
+      endtime != ''
+    ) {
+      const Activities = {
+        academicYearID: AcademicyearID,
+        activityTypeID: ActivitytypeID,
+        clubID: UserID,
+        detail: detail,
+        endtime: endtime + ':00+07:00',
+        name: name,
+        starttime: starttime + ':00+07:00',
+      };
+
+      console.log(Activities);
+      const res: any = await api.createActivities({
+        activities: Activities,
+      });
+      setStatus(true);
+      setKK(res.id);
+      if (res.id != '') {
+        setAlert(true);
+      }
     } else {
+      setStatus(true);
       setAlert(false);
     }
 
     const timer = setTimeout(() => {
       setStatus(false);
-    }, 1000);
+    }, 5000);
   };
 
   const handleStarttimeChange = (event: any) => {
@@ -160,6 +190,22 @@ function Activities() {
         <div style={{ marginLeft: 10 }}></div>
       </Header>
       <Content>
+        <ContentHeader title="">
+          {status ? (
+            <div style={{ margin: 0, position: 'relative', width: 1500 }}>
+              {alert ? (
+                <Alert severity="success">บันทึกสำเร็จ </Alert>
+              ) : (
+                <Alert severity="error">บันทึกไม่สำเร็จ</Alert>
+              )}
+            </div>
+          ) : null}
+          <Link component={RouterLink} to="/ActivityTable">
+            <Button variant="contained" color="primary">
+              ตารางข้อมูลกิจกรรม
+            </Button>
+          </Link>
+        </ContentHeader>
         <Container maxWidth="sm">
           <Grid container spacing={2}>
             <Grid item xs={12}></Grid>
@@ -203,6 +249,7 @@ function Activities() {
                   เลือกประเภทของกิจกรรม
                 </InputLabel>
                 <Select
+                  id="type"
                   name="activitytype"
                   value={ActivitytypeID} // (undefined || '') = ''
                   onChange={activitytype_id_handleChange}
@@ -224,6 +271,7 @@ function Activities() {
                   เลือกภาคการศึกษา
                 </InputLabel>
                 <Select
+                  id="acadamicyear"
                   name="AcademicYear"
                   value={AcademicyearID} // (undefined || '') = ''
                   onChange={academicyear_id_handleChange}
@@ -241,15 +289,16 @@ function Activities() {
             </Grid>
             <Grid item xs={9}>
               <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-mutiple-name-label">SUPHASIN</InputLabel>
+                <InputLabel id="demo-mutiple-name-label">ผู้ใช้งาน</InputLabel>
                 <Select
+                  id="userid"
                   name="user"
                   value={UserID} // (undefined || '') = ''
                   onChange={user_id_handleChange}
                   style={{ width: 350 }}
                 >
                   {users.map((item: EntUser) => (
-                    <MenuItem value={item.id}>{item.email}</MenuItem>
+                    <MenuItem value={item.id}>{item.name}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -261,6 +310,7 @@ function Activities() {
             <Grid item xs={9}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <TextField
+                  id="startdate"
                   type="datetime-local"
                   value={starttime}
                   onChange={handleStarttimeChange}
@@ -280,6 +330,7 @@ function Activities() {
             <Grid item xs={8}>
               <FormControl variant="outlined" className={classes.formControl}>
                 <TextField
+                  id="enddate"
                   type="datetime-local"
                   value={endtime}
                   onChange={handleEndtimeChange}
