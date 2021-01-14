@@ -21,6 +21,6 @@ func (ClubappStatus) Fields() []ent.Field {
 // Edges of the ClubappStatus.
 func (ClubappStatus) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("clubapplication", Clubapplication.Type).StorageKey(edge.Column("clubappstatusID")),
+		edge.To("clubapplication", Clubapplication.Type).StorageKey(edge.Column("clubstatusID")),
 	}
 }
