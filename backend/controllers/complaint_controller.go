@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/OMENX/app/ent"
-	"github.com/OMENX/app/ent/club"
-	"github.com/OMENX/app/ent/complaint"
-	"github.com/OMENX/app/ent/complainttype"
-	"github.com/OMENX/app/ent/user"
+	"github.com/bluepsm/app/ent"
+	"github.com/bluepsm/app/ent/club"
+	"github.com/bluepsm/app/ent/complaint"
+	"github.com/bluepsm/app/ent/complainttype"
+	"github.com/bluepsm/app/ent/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -94,7 +94,7 @@ func (ctl *ComplaintController) CreateComplaint(c *gin.Context) {
 		SetComplaintToClub(cb).
 		SetComplaintToComplaintType(ct).
 		SetInfo(obj.Info).
-		SetDate(time).
+		SetDate(time.Format("30-12-2020 15:04:05")).
 		Save(context.Background())
 
 	if err != nil {
