@@ -12,10 +12,14 @@ import (
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/clubapplication"
 	"github.com/OMENX/app/ent/complaint"
+	"github.com/OMENX/app/ent/discipline"
+	"github.com/OMENX/app/ent/gender"
 	"github.com/OMENX/app/ent/predicate"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
+	"github.com/OMENX/app/ent/userstatus"
 	"github.com/OMENX/app/ent/usertype"
+	"github.com/OMENX/app/ent/year"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
@@ -31,6 +35,11 @@ type UserQuery struct {
 	predicates []predicate.User
 	// eager-loading edges.
 	withUsertype        *UsertypeQuery
+	withClubuser        *ClubQuery
+	withGender          *GenderQuery
+	withUserstatus      *UserStatusQuery
+	withDiscipline      *DisciplineQuery
+	withYear            *YearQuery
 	withClub            *ClubQuery
 	withClubapplication *ClubapplicationQuery
 	withUserToComplaint *ComplaintQuery
@@ -76,6 +85,96 @@ func (uq *UserQuery) QueryUsertype() *UsertypeQuery {
 			sqlgraph.From(user.Table, user.FieldID, uq.sqlQuery()),
 			sqlgraph.To(usertype.Table, usertype.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, user.UsertypeTable, user.UsertypeColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryClubuser chains the current query on the clubuser edge.
+func (uq *UserQuery) QueryClubuser() *ClubQuery {
+	query := &ClubQuery{config: uq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := uq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, uq.sqlQuery()),
+			sqlgraph.To(club.Table, club.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, user.ClubuserTable, user.ClubuserColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryGender chains the current query on the gender edge.
+func (uq *UserQuery) QueryGender() *GenderQuery {
+	query := &GenderQuery{config: uq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := uq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, uq.sqlQuery()),
+			sqlgraph.To(gender.Table, gender.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, user.GenderTable, user.GenderColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryUserstatus chains the current query on the userstatus edge.
+func (uq *UserQuery) QueryUserstatus() *UserStatusQuery {
+	query := &UserStatusQuery{config: uq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := uq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, uq.sqlQuery()),
+			sqlgraph.To(userstatus.Table, userstatus.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, user.UserstatusTable, user.UserstatusColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryDiscipline chains the current query on the discipline edge.
+func (uq *UserQuery) QueryDiscipline() *DisciplineQuery {
+	query := &DisciplineQuery{config: uq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := uq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, uq.sqlQuery()),
+			sqlgraph.To(discipline.Table, discipline.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, user.DisciplineTable, user.DisciplineColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryYear chains the current query on the year edge.
+func (uq *UserQuery) QueryYear() *YearQuery {
+	query := &YearQuery{config: uq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := uq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, uq.sqlQuery()),
+			sqlgraph.To(year.Table, year.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, user.YearTable, user.YearColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
@@ -345,6 +444,61 @@ func (uq *UserQuery) WithUsertype(opts ...func(*UsertypeQuery)) *UserQuery {
 	return uq
 }
 
+//  WithClubuser tells the query-builder to eager-loads the nodes that are connected to
+// the "clubuser" edge. The optional arguments used to configure the query builder of the edge.
+func (uq *UserQuery) WithClubuser(opts ...func(*ClubQuery)) *UserQuery {
+	query := &ClubQuery{config: uq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	uq.withClubuser = query
+	return uq
+}
+
+//  WithGender tells the query-builder to eager-loads the nodes that are connected to
+// the "gender" edge. The optional arguments used to configure the query builder of the edge.
+func (uq *UserQuery) WithGender(opts ...func(*GenderQuery)) *UserQuery {
+	query := &GenderQuery{config: uq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	uq.withGender = query
+	return uq
+}
+
+//  WithUserstatus tells the query-builder to eager-loads the nodes that are connected to
+// the "userstatus" edge. The optional arguments used to configure the query builder of the edge.
+func (uq *UserQuery) WithUserstatus(opts ...func(*UserStatusQuery)) *UserQuery {
+	query := &UserStatusQuery{config: uq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	uq.withUserstatus = query
+	return uq
+}
+
+//  WithDiscipline tells the query-builder to eager-loads the nodes that are connected to
+// the "discipline" edge. The optional arguments used to configure the query builder of the edge.
+func (uq *UserQuery) WithDiscipline(opts ...func(*DisciplineQuery)) *UserQuery {
+	query := &DisciplineQuery{config: uq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	uq.withDiscipline = query
+	return uq
+}
+
+//  WithYear tells the query-builder to eager-loads the nodes that are connected to
+// the "year" edge. The optional arguments used to configure the query builder of the edge.
+func (uq *UserQuery) WithYear(opts ...func(*YearQuery)) *UserQuery {
+	query := &YearQuery{config: uq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	uq.withYear = query
+	return uq
+}
+
 //  WithClub tells the query-builder to eager-loads the nodes that are connected to
 // the "club" edge. The optional arguments used to configure the query builder of the edge.
 func (uq *UserQuery) WithClub(opts ...func(*ClubQuery)) *UserQuery {
@@ -456,15 +610,20 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		nodes       = []*User{}
 		withFKs     = uq.withFKs
 		_spec       = uq.querySpec()
-		loadedTypes = [5]bool{
+		loadedTypes = [10]bool{
 			uq.withUsertype != nil,
+			uq.withClubuser != nil,
+			uq.withGender != nil,
+			uq.withUserstatus != nil,
+			uq.withDiscipline != nil,
+			uq.withYear != nil,
 			uq.withClub != nil,
 			uq.withClubapplication != nil,
 			uq.withUserToComplaint != nil,
 			uq.withRoomuse != nil,
 		}
 	)
-	if uq.withUsertype != nil {
+	if uq.withUsertype != nil || uq.withClubuser != nil || uq.withGender != nil || uq.withUserstatus != nil || uq.withDiscipline != nil || uq.withYear != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -515,6 +674,131 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.Usertype = n
+			}
+		}
+	}
+
+	if query := uq.withClubuser; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*User)
+		for i := range nodes {
+			if fk := nodes[i].ClubID; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(club.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "ClubID" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Clubuser = n
+			}
+		}
+	}
+
+	if query := uq.withGender; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*User)
+		for i := range nodes {
+			if fk := nodes[i].gender_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(gender.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "gender_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Gender = n
+			}
+		}
+	}
+
+	if query := uq.withUserstatus; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*User)
+		for i := range nodes {
+			if fk := nodes[i].userstatus_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(userstatus.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "userstatus_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Userstatus = n
+			}
+		}
+	}
+
+	if query := uq.withDiscipline; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*User)
+		for i := range nodes {
+			if fk := nodes[i].discipline_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(discipline.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "discipline_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Discipline = n
+			}
+		}
+	}
+
+	if query := uq.withYear; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*User)
+		for i := range nodes {
+			if fk := nodes[i].year_id; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(year.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "year_id" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Year = n
 			}
 		}
 	}

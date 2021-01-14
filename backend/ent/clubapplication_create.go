@@ -23,12 +23,6 @@ type ClubapplicationCreate struct {
 	hooks    []Hook
 }
 
-// SetApplyname sets the applyname field.
-func (cc *ClubapplicationCreate) SetApplyname(s string) *ClubapplicationCreate {
-	cc.mutation.SetApplyname(s)
-	return cc
-}
-
 // SetContact sets the contact field.
 func (cc *ClubapplicationCreate) SetContact(s string) *ClubapplicationCreate {
 	cc.mutation.SetContact(s)
@@ -41,17 +35,39 @@ func (cc *ClubapplicationCreate) SetReason(s string) *ClubapplicationCreate {
 	return cc
 }
 
-// SetCreatedAt sets the created_at field.
-func (cc *ClubapplicationCreate) SetCreatedAt(t time.Time) *ClubapplicationCreate {
-	cc.mutation.SetCreatedAt(t)
+// SetAddeddatetime sets the addeddatetime field.
+func (cc *ClubapplicationCreate) SetAddeddatetime(t time.Time) *ClubapplicationCreate {
+	cc.mutation.SetAddeddatetime(t)
 	return cc
 }
 
-// SetNillableCreatedAt sets the created_at field if the given value is not nil.
-func (cc *ClubapplicationCreate) SetNillableCreatedAt(t *time.Time) *ClubapplicationCreate {
-	if t != nil {
-		cc.SetCreatedAt(*t)
-	}
+// SetAddername sets the addername field.
+func (cc *ClubapplicationCreate) SetAddername(s string) *ClubapplicationCreate {
+	cc.mutation.SetAddername(s)
+	return cc
+}
+
+// SetDiscipline sets the discipline field.
+func (cc *ClubapplicationCreate) SetDiscipline(s string) *ClubapplicationCreate {
+	cc.mutation.SetDiscipline(s)
+	return cc
+}
+
+// SetGender sets the gender field.
+func (cc *ClubapplicationCreate) SetGender(s string) *ClubapplicationCreate {
+	cc.mutation.SetGender(s)
+	return cc
+}
+
+// SetAge sets the age field.
+func (cc *ClubapplicationCreate) SetAge(i int) *ClubapplicationCreate {
+	cc.mutation.SetAge(i)
+	return cc
+}
+
+// SetYaer sets the yaer field.
+func (cc *ClubapplicationCreate) SetYaer(i int) *ClubapplicationCreate {
+	cc.mutation.SetYaer(i)
 	return cc
 }
 
@@ -119,23 +135,59 @@ func (cc *ClubapplicationCreate) Mutation() *ClubapplicationMutation {
 
 // Save creates the Clubapplication in the database.
 func (cc *ClubapplicationCreate) Save(ctx context.Context) (*Clubapplication, error) {
-	if _, ok := cc.mutation.Applyname(); !ok {
-		return nil, &ValidationError{Name: "applyname", err: errors.New("ent: missing required field \"applyname\"")}
-	}
-	if v, ok := cc.mutation.Applyname(); ok {
-		if err := clubapplication.ApplynameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "applyname", err: fmt.Errorf("ent: validator failed for field \"applyname\": %w", err)}
-		}
-	}
 	if _, ok := cc.mutation.Contact(); !ok {
 		return nil, &ValidationError{Name: "contact", err: errors.New("ent: missing required field \"contact\"")}
+	}
+	if v, ok := cc.mutation.Contact(); ok {
+		if err := clubapplication.ContactValidator(v); err != nil {
+			return nil, &ValidationError{Name: "contact", err: fmt.Errorf("ent: validator failed for field \"contact\": %w", err)}
+		}
 	}
 	if _, ok := cc.mutation.Reason(); !ok {
 		return nil, &ValidationError{Name: "reason", err: errors.New("ent: missing required field \"reason\"")}
 	}
-	if _, ok := cc.mutation.CreatedAt(); !ok {
-		v := clubapplication.DefaultCreatedAt()
-		cc.mutation.SetCreatedAt(v)
+	if _, ok := cc.mutation.Addeddatetime(); !ok {
+		return nil, &ValidationError{Name: "addeddatetime", err: errors.New("ent: missing required field \"addeddatetime\"")}
+	}
+	if _, ok := cc.mutation.Addername(); !ok {
+		return nil, &ValidationError{Name: "addername", err: errors.New("ent: missing required field \"addername\"")}
+	}
+	if v, ok := cc.mutation.Addername(); ok {
+		if err := clubapplication.AddernameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "addername", err: fmt.Errorf("ent: validator failed for field \"addername\": %w", err)}
+		}
+	}
+	if _, ok := cc.mutation.Discipline(); !ok {
+		return nil, &ValidationError{Name: "discipline", err: errors.New("ent: missing required field \"discipline\"")}
+	}
+	if v, ok := cc.mutation.Discipline(); ok {
+		if err := clubapplication.DisciplineValidator(v); err != nil {
+			return nil, &ValidationError{Name: "discipline", err: fmt.Errorf("ent: validator failed for field \"discipline\": %w", err)}
+		}
+	}
+	if _, ok := cc.mutation.Gender(); !ok {
+		return nil, &ValidationError{Name: "gender", err: errors.New("ent: missing required field \"gender\"")}
+	}
+	if v, ok := cc.mutation.Gender(); ok {
+		if err := clubapplication.GenderValidator(v); err != nil {
+			return nil, &ValidationError{Name: "gender", err: fmt.Errorf("ent: validator failed for field \"gender\": %w", err)}
+		}
+	}
+	if _, ok := cc.mutation.Age(); !ok {
+		return nil, &ValidationError{Name: "age", err: errors.New("ent: missing required field \"age\"")}
+	}
+	if v, ok := cc.mutation.Age(); ok {
+		if err := clubapplication.AgeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+		}
+	}
+	if _, ok := cc.mutation.Yaer(); !ok {
+		return nil, &ValidationError{Name: "yaer", err: errors.New("ent: missing required field \"yaer\"")}
+	}
+	if v, ok := cc.mutation.Yaer(); ok {
+		if err := clubapplication.YaerValidator(v); err != nil {
+			return nil, &ValidationError{Name: "yaer", err: fmt.Errorf("ent: validator failed for field \"yaer\": %w", err)}
+		}
 	}
 	var (
 		err  error
@@ -197,14 +249,6 @@ func (cc *ClubapplicationCreate) createSpec() (*Clubapplication, *sqlgraph.Creat
 			},
 		}
 	)
-	if value, ok := cc.mutation.Applyname(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: clubapplication.FieldApplyname,
-		})
-		c.Applyname = value
-	}
 	if value, ok := cc.mutation.Contact(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -221,13 +265,53 @@ func (cc *ClubapplicationCreate) createSpec() (*Clubapplication, *sqlgraph.Creat
 		})
 		c.Reason = value
 	}
-	if value, ok := cc.mutation.CreatedAt(); ok {
+	if value, ok := cc.mutation.Addeddatetime(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: clubapplication.FieldCreatedAt,
+			Column: clubapplication.FieldAddeddatetime,
 		})
-		c.CreatedAt = value
+		c.Addeddatetime = value
+	}
+	if value, ok := cc.mutation.Addername(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: clubapplication.FieldAddername,
+		})
+		c.Addername = value
+	}
+	if value, ok := cc.mutation.Discipline(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: clubapplication.FieldDiscipline,
+		})
+		c.Discipline = value
+	}
+	if value, ok := cc.mutation.Gender(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: clubapplication.FieldGender,
+		})
+		c.Gender = value
+	}
+	if value, ok := cc.mutation.Age(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: clubapplication.FieldAge,
+		})
+		c.Age = value
+	}
+	if value, ok := cc.mutation.Yaer(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: clubapplication.FieldYaer,
+		})
+		c.Yaer = value
 	}
 	if nodes := cc.mutation.OwnerIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

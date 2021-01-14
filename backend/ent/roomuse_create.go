@@ -8,8 +8,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
-	"github.com/OMENX/app/ent/roompurpose"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
@@ -48,13 +48,13 @@ func (rc *RoomuseCreate) SetRooms(r *Room) *RoomuseCreate {
 	return rc.SetRoomsID(r.ID)
 }
 
-// SetPurposesID sets the purposes edge to Roompurpose by id.
+// SetPurposesID sets the purposes edge to Purpose by id.
 func (rc *RoomuseCreate) SetPurposesID(id int) *RoomuseCreate {
 	rc.mutation.SetPurposesID(id)
 	return rc
 }
 
-// SetNillablePurposesID sets the purposes edge to Roompurpose by id if the given value is not nil.
+// SetNillablePurposesID sets the purposes edge to Purpose by id if the given value is not nil.
 func (rc *RoomuseCreate) SetNillablePurposesID(id *int) *RoomuseCreate {
 	if id != nil {
 		rc = rc.SetPurposesID(*id)
@@ -62,9 +62,9 @@ func (rc *RoomuseCreate) SetNillablePurposesID(id *int) *RoomuseCreate {
 	return rc
 }
 
-// SetPurposes sets the purposes edge to Roompurpose.
-func (rc *RoomuseCreate) SetPurposes(r *Roompurpose) *RoomuseCreate {
-	return rc.SetPurposesID(r.ID)
+// SetPurposes sets the purposes edge to Purpose.
+func (rc *RoomuseCreate) SetPurposes(p *Purpose) *RoomuseCreate {
+	return rc.SetPurposesID(p.ID)
 }
 
 // SetUsersID sets the users edge to User by id.
@@ -193,7 +193,7 @@ func (rc *RoomuseCreate) createSpec() (*Roomuse, *sqlgraph.CreateSpec) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: roompurpose.FieldID,
+					Column: purpose.FieldID,
 				},
 			},
 		}

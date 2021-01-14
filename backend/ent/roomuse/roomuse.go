@@ -28,9 +28,9 @@ const (
 	RoomsColumn = "room_id"
 	// PurposesTable is the table the holds the purposes relation/edge.
 	PurposesTable = "roomuses"
-	// PurposesInverseTable is the table name for the Roompurpose entity.
-	// It exists in this package in order to avoid circular dependency with the "roompurpose" package.
-	PurposesInverseTable = "roompurposes"
+	// PurposesInverseTable is the table name for the Purpose entity.
+	// It exists in this package in order to avoid circular dependency with the "purpose" package.
+	PurposesInverseTable = "purposes"
 	// PurposesColumn is the table column denoting the purposes relation/edge.
 	PurposesColumn = "purpose_id"
 	// UsersTable is the table the holds the users relation/edge.
@@ -50,7 +50,7 @@ var Columns = []string{
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Roomuse type.
 var ForeignKeys = []string{
-	"room_id",
 	"purpose_id",
+	"room_id",
 	"UserID",
 }

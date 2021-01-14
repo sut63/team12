@@ -217,7 +217,7 @@ func HasPurposes() predicate.Roomuse {
 }
 
 // HasPurposesWith applies the HasEdge predicate on the "purposes" edge with a given conditions (other predicates).
-func HasPurposesWith(preds ...predicate.Roompurpose) predicate.Roomuse {
+func HasPurposesWith(preds ...predicate.Purpose) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),

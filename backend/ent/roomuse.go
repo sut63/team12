@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
-	"github.com/OMENX/app/ent/roompurpose"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -24,8 +24,8 @@ type Roomuse struct {
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoomuseQuery when eager-loading is set.
 	Edges      RoomuseEdges `json:"edges"`
-	room_id    *int
 	purpose_id *int
+	room_id    *int
 	UserID     *int
 }
 
@@ -34,7 +34,7 @@ type RoomuseEdges struct {
 	// Rooms holds the value of the rooms edge.
 	Rooms *Room
 	// Purposes holds the value of the purposes edge.
-	Purposes *Roompurpose
+	Purposes *Purpose
 	// Users holds the value of the users edge.
 	Users *User
 	// loadedTypes holds the information for reporting if a
@@ -58,12 +58,12 @@ func (e RoomuseEdges) RoomsOrErr() (*Room, error) {
 
 // PurposesOrErr returns the Purposes value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e RoomuseEdges) PurposesOrErr() (*Roompurpose, error) {
+func (e RoomuseEdges) PurposesOrErr() (*Purpose, error) {
 	if e.loadedTypes[1] {
 		if e.Purposes == nil {
 			// The edge purposes was loaded in eager-loading,
 			// but was not found.
-			return nil, &NotFoundError{label: roompurpose.Label}
+			return nil, &NotFoundError{label: purpose.Label}
 		}
 		return e.Purposes, nil
 	}
@@ -95,8 +95,8 @@ func (*Roomuse) scanValues() []interface{} {
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
 func (*Roomuse) fkValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // room_id
 		&sql.NullInt64{}, // purpose_id
+		&sql.NullInt64{}, // room_id
 		&sql.NullInt64{}, // UserID
 	}
 }
@@ -121,16 +121,16 @@ func (r *Roomuse) assignValues(values ...interface{}) error {
 	values = values[1:]
 	if len(values) == len(roomuse.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field room_id", value)
-		} else if value.Valid {
-			r.room_id = new(int)
-			*r.room_id = int(value.Int64)
-		}
-		if value, ok := values[1].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field purpose_id", value)
 		} else if value.Valid {
 			r.purpose_id = new(int)
 			*r.purpose_id = int(value.Int64)
+		}
+		if value, ok := values[1].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field room_id", value)
+		} else if value.Valid {
+			r.room_id = new(int)
+			*r.room_id = int(value.Int64)
 		}
 		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field UserID", value)
@@ -148,7 +148,7 @@ func (r *Roomuse) QueryRooms() *RoomQuery {
 }
 
 // QueryPurposes queries the purposes edge of the Roomuse.
-func (r *Roomuse) QueryPurposes() *RoompurposeQuery {
+func (r *Roomuse) QueryPurposes() *PurposeQuery {
 	return (&RoomuseClient{config: r.config}).QueryPurposes(r)
 }
 

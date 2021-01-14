@@ -34,11 +34,16 @@ type hooks struct {
 	Clubapplication []ent.Hook
 	Complaint       []ent.Hook
 	ComplaintType   []ent.Hook
+	Discipline      []ent.Hook
+	Gender          []ent.Hook
+	Purpose         []ent.Hook
 	Room            []ent.Hook
 	Roompurpose     []ent.Hook
 	Roomuse         []ent.Hook
 	User            []ent.Hook
+	UserStatus      []ent.Hook
 	Usertype        []ent.Hook
+	Year            []ent.Hook
 }
 
 // Options applies the options on the config object.

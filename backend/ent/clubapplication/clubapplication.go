@@ -2,23 +2,27 @@
 
 package clubapplication
 
-import (
-	"time"
-)
-
 const (
 	// Label holds the string label denoting the clubapplication type in the database.
 	Label = "clubapplication"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldApplyname holds the string denoting the applyname field in the database.
-	FieldApplyname = "applyname"
 	// FieldContact holds the string denoting the contact field in the database.
 	FieldContact = "contact"
 	// FieldReason holds the string denoting the reason field in the database.
 	FieldReason = "reason"
-	// FieldCreatedAt holds the string denoting the created_at field in the database.
-	FieldCreatedAt = "created_at"
+	// FieldAddeddatetime holds the string denoting the addeddatetime field in the database.
+	FieldAddeddatetime = "addeddatetime"
+	// FieldAddername holds the string denoting the addername field in the database.
+	FieldAddername = "addername"
+	// FieldDiscipline holds the string denoting the discipline field in the database.
+	FieldDiscipline = "discipline"
+	// FieldGender holds the string denoting the gender field in the database.
+	FieldGender = "gender"
+	// FieldAge holds the string denoting the age field in the database.
+	FieldAge = "age"
+	// FieldYaer holds the string denoting the yaer field in the database.
+	FieldYaer = "yaer"
 
 	// EdgeOwner holds the string denoting the owner edge name in mutations.
 	EdgeOwner = "owner"
@@ -42,7 +46,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "clubappstatus" package.
 	ClubappstatusInverseTable = "clubapp_status"
 	// ClubappstatusColumn is the table column denoting the clubappstatus relation/edge.
-	ClubappstatusColumn = "clubappstatus_id"
+	ClubappstatusColumn = "clubstatusID"
 	// ClubTable is the table the holds the club relation/edge.
 	ClubTable = "clubapplications"
 	// ClubInverseTable is the table name for the Club entity.
@@ -55,22 +59,34 @@ const (
 // Columns holds all SQL columns for clubapplication fields.
 var Columns = []string{
 	FieldID,
-	FieldApplyname,
 	FieldContact,
 	FieldReason,
-	FieldCreatedAt,
+	FieldAddeddatetime,
+	FieldAddername,
+	FieldDiscipline,
+	FieldGender,
+	FieldAge,
+	FieldYaer,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Clubapplication type.
 var ForeignKeys = []string{
 	"ClubID",
-	"clubappstatus_id",
+	"clubstatusID",
 	"UserID",
 }
 
 var (
-	// ApplynameValidator is a validator for the "applyname" field. It is called by the builders before save.
-	ApplynameValidator func(string) error
-	// DefaultCreatedAt holds the default value on creation for the created_at field.
-	DefaultCreatedAt func() time.Time
+	// ContactValidator is a validator for the "contact" field. It is called by the builders before save.
+	ContactValidator func(string) error
+	// AddernameValidator is a validator for the "addername" field. It is called by the builders before save.
+	AddernameValidator func(string) error
+	// DisciplineValidator is a validator for the "discipline" field. It is called by the builders before save.
+	DisciplineValidator func(string) error
+	// GenderValidator is a validator for the "gender" field. It is called by the builders before save.
+	GenderValidator func(string) error
+	// AgeValidator is a validator for the "age" field. It is called by the builders before save.
+	AgeValidator func(int) error
+	// YaerValidator is a validator for the "yaer" field. It is called by the builders before save.
+	YaerValidator func(int) error
 )

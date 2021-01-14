@@ -28,9 +28,9 @@ func (csu *ClubappStatusUpdate) Where(ps ...predicate.ClubappStatus) *ClubappSta
 	return csu
 }
 
-// SetApplyStatus sets the apply_status field.
-func (csu *ClubappStatusUpdate) SetApplyStatus(s string) *ClubappStatusUpdate {
-	csu.mutation.SetApplyStatus(s)
+// SetClubstatus sets the clubstatus field.
+func (csu *ClubappStatusUpdate) SetClubstatus(s string) *ClubappStatusUpdate {
+	csu.mutation.SetClubstatus(s)
 	return csu
 }
 
@@ -139,11 +139,11 @@ func (csu *ClubappStatusUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			}
 		}
 	}
-	if value, ok := csu.mutation.ApplyStatus(); ok {
+	if value, ok := csu.mutation.Clubstatus(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: clubappstatus.FieldApplyStatus,
+			Column: clubappstatus.FieldClubstatus,
 		})
 	}
 	if nodes := csu.mutation.RemovedClubapplicationIDs(); len(nodes) > 0 {
@@ -202,9 +202,9 @@ type ClubappStatusUpdateOne struct {
 	mutation *ClubappStatusMutation
 }
 
-// SetApplyStatus sets the apply_status field.
-func (csuo *ClubappStatusUpdateOne) SetApplyStatus(s string) *ClubappStatusUpdateOne {
-	csuo.mutation.SetApplyStatus(s)
+// SetClubstatus sets the clubstatus field.
+func (csuo *ClubappStatusUpdateOne) SetClubstatus(s string) *ClubappStatusUpdateOne {
+	csuo.mutation.SetClubstatus(s)
 	return csuo
 }
 
@@ -311,11 +311,11 @@ func (csuo *ClubappStatusUpdateOne) sqlSave(ctx context.Context) (cs *ClubappSta
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing ClubappStatus.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := csuo.mutation.ApplyStatus(); ok {
+	if value, ok := csuo.mutation.Clubstatus(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: clubappstatus.FieldApplyStatus,
+			Column: clubappstatus.FieldClubstatus,
 		})
 	}
 	if nodes := csuo.mutation.RemovedClubapplicationIDs(); len(nodes) > 0 {

@@ -5,7 +5,6 @@ package ent
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/club"
@@ -43,12 +42,6 @@ func (cu *ClubUpdate) SetName(s string) *ClubUpdate {
 // SetPurpose sets the purpose field.
 func (cu *ClubUpdate) SetPurpose(s string) *ClubUpdate {
 	cu.mutation.SetPurpose(s)
-	return cu
-}
-
-// SetFoundingdate sets the foundingdate field.
-func (cu *ClubUpdate) SetFoundingdate(t time.Time) *ClubUpdate {
-	cu.mutation.SetFoundingdate(t)
 	return cu
 }
 
@@ -154,6 +147,21 @@ func (cu *ClubUpdate) AddActivities(a ...*Activities) *ClubUpdate {
 	return cu.AddActivityIDs(ids...)
 }
 
+// AddUserclubIDs adds the userclub edge to User by ids.
+func (cu *ClubUpdate) AddUserclubIDs(ids ...int) *ClubUpdate {
+	cu.mutation.AddUserclubIDs(ids...)
+	return cu
+}
+
+// AddUserclub adds the userclub edges to User.
+func (cu *ClubUpdate) AddUserclub(u ...*User) *ClubUpdate {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cu.AddUserclubIDs(ids...)
+}
+
 // Mutation returns the ClubMutation object of the builder.
 func (cu *ClubUpdate) Mutation() *ClubMutation {
 	return cu.mutation
@@ -220,6 +228,21 @@ func (cu *ClubUpdate) RemoveActivities(a ...*Activities) *ClubUpdate {
 		ids[i] = a[i].ID
 	}
 	return cu.RemoveActivityIDs(ids...)
+}
+
+// RemoveUserclubIDs removes the userclub edge to User by ids.
+func (cu *ClubUpdate) RemoveUserclubIDs(ids ...int) *ClubUpdate {
+	cu.mutation.RemoveUserclubIDs(ids...)
+	return cu
+}
+
+// RemoveUserclub removes userclub edges to User.
+func (cu *ClubUpdate) RemoveUserclub(u ...*User) *ClubUpdate {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cu.RemoveUserclubIDs(ids...)
 }
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
@@ -314,13 +337,6 @@ func (cu *ClubUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: club.FieldPurpose,
-		})
-	}
-	if value, ok := cu.mutation.Foundingdate(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: club.FieldFoundingdate,
 		})
 	}
 	if cu.mutation.UserCleared() {
@@ -542,6 +558,44 @@ func (cu *ClubUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if nodes := cu.mutation.RemovedUserclubIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   club.UserclubTable,
+			Columns: []string{club.UserclubColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cu.mutation.UserclubIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   club.UserclubTable,
+			Columns: []string{club.UserclubColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{club.Label}
@@ -569,12 +623,6 @@ func (cuo *ClubUpdateOne) SetName(s string) *ClubUpdateOne {
 // SetPurpose sets the purpose field.
 func (cuo *ClubUpdateOne) SetPurpose(s string) *ClubUpdateOne {
 	cuo.mutation.SetPurpose(s)
-	return cuo
-}
-
-// SetFoundingdate sets the foundingdate field.
-func (cuo *ClubUpdateOne) SetFoundingdate(t time.Time) *ClubUpdateOne {
-	cuo.mutation.SetFoundingdate(t)
 	return cuo
 }
 
@@ -680,6 +728,21 @@ func (cuo *ClubUpdateOne) AddActivities(a ...*Activities) *ClubUpdateOne {
 	return cuo.AddActivityIDs(ids...)
 }
 
+// AddUserclubIDs adds the userclub edge to User by ids.
+func (cuo *ClubUpdateOne) AddUserclubIDs(ids ...int) *ClubUpdateOne {
+	cuo.mutation.AddUserclubIDs(ids...)
+	return cuo
+}
+
+// AddUserclub adds the userclub edges to User.
+func (cuo *ClubUpdateOne) AddUserclub(u ...*User) *ClubUpdateOne {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cuo.AddUserclubIDs(ids...)
+}
+
 // Mutation returns the ClubMutation object of the builder.
 func (cuo *ClubUpdateOne) Mutation() *ClubMutation {
 	return cuo.mutation
@@ -746,6 +809,21 @@ func (cuo *ClubUpdateOne) RemoveActivities(a ...*Activities) *ClubUpdateOne {
 		ids[i] = a[i].ID
 	}
 	return cuo.RemoveActivityIDs(ids...)
+}
+
+// RemoveUserclubIDs removes the userclub edge to User by ids.
+func (cuo *ClubUpdateOne) RemoveUserclubIDs(ids ...int) *ClubUpdateOne {
+	cuo.mutation.RemoveUserclubIDs(ids...)
+	return cuo
+}
+
+// RemoveUserclub removes userclub edges to User.
+func (cuo *ClubUpdateOne) RemoveUserclub(u ...*User) *ClubUpdateOne {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cuo.RemoveUserclubIDs(ids...)
 }
 
 // Save executes the query and returns the updated entity.
@@ -838,13 +916,6 @@ func (cuo *ClubUpdateOne) sqlSave(ctx context.Context) (c *Club, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: club.FieldPurpose,
-		})
-	}
-	if value, ok := cuo.mutation.Foundingdate(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: club.FieldFoundingdate,
 		})
 	}
 	if cuo.mutation.UserCleared() {
@@ -1058,6 +1129,44 @@ func (cuo *ClubUpdateOne) sqlSave(ctx context.Context) (c *Club, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: activities.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if nodes := cuo.mutation.RemovedUserclubIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   club.UserclubTable,
+			Columns: []string{club.UserclubColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := cuo.mutation.UserclubIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   club.UserclubTable,
+			Columns: []string{club.UserclubColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
 				},
 			},
 		}

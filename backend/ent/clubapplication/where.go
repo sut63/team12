@@ -93,13 +93,6 @@ func IDLTE(id int) predicate.Clubapplication {
 	})
 }
 
-// Applyname applies equality check predicate on the "applyname" field. It's identical to ApplynameEQ.
-func Applyname(v string) predicate.Clubapplication {
-	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldApplyname), v))
-	})
-}
-
 // Contact applies equality check predicate on the "contact" field. It's identical to ContactEQ.
 func Contact(v string) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
@@ -114,121 +107,45 @@ func Reason(v string) predicate.Clubapplication {
 	})
 }
 
-// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
-func CreatedAt(v time.Time) predicate.Clubapplication {
+// Addeddatetime applies equality check predicate on the "addeddatetime" field. It's identical to AddeddatetimeEQ.
+func Addeddatetime(v time.Time) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
+		s.Where(sql.EQ(s.C(FieldAddeddatetime), v))
 	})
 }
 
-// ApplynameEQ applies the EQ predicate on the "applyname" field.
-func ApplynameEQ(v string) predicate.Clubapplication {
+// Addername applies equality check predicate on the "addername" field. It's identical to AddernameEQ.
+func Addername(v string) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldApplyname), v))
+		s.Where(sql.EQ(s.C(FieldAddername), v))
 	})
 }
 
-// ApplynameNEQ applies the NEQ predicate on the "applyname" field.
-func ApplynameNEQ(v string) predicate.Clubapplication {
+// Discipline applies equality check predicate on the "discipline" field. It's identical to DisciplineEQ.
+func Discipline(v string) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldApplyname), v))
+		s.Where(sql.EQ(s.C(FieldDiscipline), v))
 	})
 }
 
-// ApplynameIn applies the In predicate on the "applyname" field.
-func ApplynameIn(vs ...string) predicate.Clubapplication {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
+// Gender applies equality check predicate on the "gender" field. It's identical to GenderEQ.
+func Gender(v string) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldApplyname), v...))
+		s.Where(sql.EQ(s.C(FieldGender), v))
 	})
 }
 
-// ApplynameNotIn applies the NotIn predicate on the "applyname" field.
-func ApplynameNotIn(vs ...string) predicate.Clubapplication {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
+// Age applies equality check predicate on the "age" field. It's identical to AgeEQ.
+func Age(v int) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldApplyname), v...))
+		s.Where(sql.EQ(s.C(FieldAge), v))
 	})
 }
 
-// ApplynameGT applies the GT predicate on the "applyname" field.
-func ApplynameGT(v string) predicate.Clubapplication {
+// Yaer applies equality check predicate on the "yaer" field. It's identical to YaerEQ.
+func Yaer(v int) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldApplyname), v))
-	})
-}
-
-// ApplynameGTE applies the GTE predicate on the "applyname" field.
-func ApplynameGTE(v string) predicate.Clubapplication {
-	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldApplyname), v))
-	})
-}
-
-// ApplynameLT applies the LT predicate on the "applyname" field.
-func ApplynameLT(v string) predicate.Clubapplication {
-	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldApplyname), v))
-	})
-}
-
-// ApplynameLTE applies the LTE predicate on the "applyname" field.
-func ApplynameLTE(v string) predicate.Clubapplication {
-	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldApplyname), v))
-	})
-}
-
-// ApplynameContains applies the Contains predicate on the "applyname" field.
-func ApplynameContains(v string) predicate.Clubapplication {
-	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldApplyname), v))
-	})
-}
-
-// ApplynameHasPrefix applies the HasPrefix predicate on the "applyname" field.
-func ApplynameHasPrefix(v string) predicate.Clubapplication {
-	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldApplyname), v))
-	})
-}
-
-// ApplynameHasSuffix applies the HasSuffix predicate on the "applyname" field.
-func ApplynameHasSuffix(v string) predicate.Clubapplication {
-	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldApplyname), v))
-	})
-}
-
-// ApplynameEqualFold applies the EqualFold predicate on the "applyname" field.
-func ApplynameEqualFold(v string) predicate.Clubapplication {
-	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldApplyname), v))
-	})
-}
-
-// ApplynameContainsFold applies the ContainsFold predicate on the "applyname" field.
-func ApplynameContainsFold(v string) predicate.Clubapplication {
-	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldApplyname), v))
+		s.Where(sql.EQ(s.C(FieldYaer), v))
 	})
 }
 
@@ -454,22 +371,22 @@ func ReasonContainsFold(v string) predicate.Clubapplication {
 	})
 }
 
-// CreatedAtEQ applies the EQ predicate on the "created_at" field.
-func CreatedAtEQ(v time.Time) predicate.Clubapplication {
+// AddeddatetimeEQ applies the EQ predicate on the "addeddatetime" field.
+func AddeddatetimeEQ(v time.Time) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldCreatedAt), v))
+		s.Where(sql.EQ(s.C(FieldAddeddatetime), v))
 	})
 }
 
-// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
-func CreatedAtNEQ(v time.Time) predicate.Clubapplication {
+// AddeddatetimeNEQ applies the NEQ predicate on the "addeddatetime" field.
+func AddeddatetimeNEQ(v time.Time) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldCreatedAt), v))
+		s.Where(sql.NEQ(s.C(FieldAddeddatetime), v))
 	})
 }
 
-// CreatedAtIn applies the In predicate on the "created_at" field.
-func CreatedAtIn(vs ...time.Time) predicate.Clubapplication {
+// AddeddatetimeIn applies the In predicate on the "addeddatetime" field.
+func AddeddatetimeIn(vs ...time.Time) predicate.Clubapplication {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -481,12 +398,12 @@ func CreatedAtIn(vs ...time.Time) predicate.Clubapplication {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldCreatedAt), v...))
+		s.Where(sql.In(s.C(FieldAddeddatetime), v...))
 	})
 }
 
-// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
-func CreatedAtNotIn(vs ...time.Time) predicate.Clubapplication {
+// AddeddatetimeNotIn applies the NotIn predicate on the "addeddatetime" field.
+func AddeddatetimeNotIn(vs ...time.Time) predicate.Clubapplication {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -498,35 +415,520 @@ func CreatedAtNotIn(vs ...time.Time) predicate.Clubapplication {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldCreatedAt), v...))
+		s.Where(sql.NotIn(s.C(FieldAddeddatetime), v...))
 	})
 }
 
-// CreatedAtGT applies the GT predicate on the "created_at" field.
-func CreatedAtGT(v time.Time) predicate.Clubapplication {
+// AddeddatetimeGT applies the GT predicate on the "addeddatetime" field.
+func AddeddatetimeGT(v time.Time) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldCreatedAt), v))
+		s.Where(sql.GT(s.C(FieldAddeddatetime), v))
 	})
 }
 
-// CreatedAtGTE applies the GTE predicate on the "created_at" field.
-func CreatedAtGTE(v time.Time) predicate.Clubapplication {
+// AddeddatetimeGTE applies the GTE predicate on the "addeddatetime" field.
+func AddeddatetimeGTE(v time.Time) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldCreatedAt), v))
+		s.Where(sql.GTE(s.C(FieldAddeddatetime), v))
 	})
 }
 
-// CreatedAtLT applies the LT predicate on the "created_at" field.
-func CreatedAtLT(v time.Time) predicate.Clubapplication {
+// AddeddatetimeLT applies the LT predicate on the "addeddatetime" field.
+func AddeddatetimeLT(v time.Time) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldCreatedAt), v))
+		s.Where(sql.LT(s.C(FieldAddeddatetime), v))
 	})
 }
 
-// CreatedAtLTE applies the LTE predicate on the "created_at" field.
-func CreatedAtLTE(v time.Time) predicate.Clubapplication {
+// AddeddatetimeLTE applies the LTE predicate on the "addeddatetime" field.
+func AddeddatetimeLTE(v time.Time) predicate.Clubapplication {
 	return predicate.Clubapplication(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldCreatedAt), v))
+		s.Where(sql.LTE(s.C(FieldAddeddatetime), v))
+	})
+}
+
+// AddernameEQ applies the EQ predicate on the "addername" field.
+func AddernameEQ(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAddername), v))
+	})
+}
+
+// AddernameNEQ applies the NEQ predicate on the "addername" field.
+func AddernameNEQ(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAddername), v))
+	})
+}
+
+// AddernameIn applies the In predicate on the "addername" field.
+func AddernameIn(vs ...string) predicate.Clubapplication {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldAddername), v...))
+	})
+}
+
+// AddernameNotIn applies the NotIn predicate on the "addername" field.
+func AddernameNotIn(vs ...string) predicate.Clubapplication {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldAddername), v...))
+	})
+}
+
+// AddernameGT applies the GT predicate on the "addername" field.
+func AddernameGT(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAddername), v))
+	})
+}
+
+// AddernameGTE applies the GTE predicate on the "addername" field.
+func AddernameGTE(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAddername), v))
+	})
+}
+
+// AddernameLT applies the LT predicate on the "addername" field.
+func AddernameLT(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAddername), v))
+	})
+}
+
+// AddernameLTE applies the LTE predicate on the "addername" field.
+func AddernameLTE(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAddername), v))
+	})
+}
+
+// AddernameContains applies the Contains predicate on the "addername" field.
+func AddernameContains(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldAddername), v))
+	})
+}
+
+// AddernameHasPrefix applies the HasPrefix predicate on the "addername" field.
+func AddernameHasPrefix(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldAddername), v))
+	})
+}
+
+// AddernameHasSuffix applies the HasSuffix predicate on the "addername" field.
+func AddernameHasSuffix(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldAddername), v))
+	})
+}
+
+// AddernameEqualFold applies the EqualFold predicate on the "addername" field.
+func AddernameEqualFold(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldAddername), v))
+	})
+}
+
+// AddernameContainsFold applies the ContainsFold predicate on the "addername" field.
+func AddernameContainsFold(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldAddername), v))
+	})
+}
+
+// DisciplineEQ applies the EQ predicate on the "discipline" field.
+func DisciplineEQ(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldDiscipline), v))
+	})
+}
+
+// DisciplineNEQ applies the NEQ predicate on the "discipline" field.
+func DisciplineNEQ(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldDiscipline), v))
+	})
+}
+
+// DisciplineIn applies the In predicate on the "discipline" field.
+func DisciplineIn(vs ...string) predicate.Clubapplication {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldDiscipline), v...))
+	})
+}
+
+// DisciplineNotIn applies the NotIn predicate on the "discipline" field.
+func DisciplineNotIn(vs ...string) predicate.Clubapplication {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldDiscipline), v...))
+	})
+}
+
+// DisciplineGT applies the GT predicate on the "discipline" field.
+func DisciplineGT(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldDiscipline), v))
+	})
+}
+
+// DisciplineGTE applies the GTE predicate on the "discipline" field.
+func DisciplineGTE(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldDiscipline), v))
+	})
+}
+
+// DisciplineLT applies the LT predicate on the "discipline" field.
+func DisciplineLT(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldDiscipline), v))
+	})
+}
+
+// DisciplineLTE applies the LTE predicate on the "discipline" field.
+func DisciplineLTE(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldDiscipline), v))
+	})
+}
+
+// DisciplineContains applies the Contains predicate on the "discipline" field.
+func DisciplineContains(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldDiscipline), v))
+	})
+}
+
+// DisciplineHasPrefix applies the HasPrefix predicate on the "discipline" field.
+func DisciplineHasPrefix(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldDiscipline), v))
+	})
+}
+
+// DisciplineHasSuffix applies the HasSuffix predicate on the "discipline" field.
+func DisciplineHasSuffix(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldDiscipline), v))
+	})
+}
+
+// DisciplineEqualFold applies the EqualFold predicate on the "discipline" field.
+func DisciplineEqualFold(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldDiscipline), v))
+	})
+}
+
+// DisciplineContainsFold applies the ContainsFold predicate on the "discipline" field.
+func DisciplineContainsFold(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldDiscipline), v))
+	})
+}
+
+// GenderEQ applies the EQ predicate on the "gender" field.
+func GenderEQ(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldGender), v))
+	})
+}
+
+// GenderNEQ applies the NEQ predicate on the "gender" field.
+func GenderNEQ(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldGender), v))
+	})
+}
+
+// GenderIn applies the In predicate on the "gender" field.
+func GenderIn(vs ...string) predicate.Clubapplication {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldGender), v...))
+	})
+}
+
+// GenderNotIn applies the NotIn predicate on the "gender" field.
+func GenderNotIn(vs ...string) predicate.Clubapplication {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldGender), v...))
+	})
+}
+
+// GenderGT applies the GT predicate on the "gender" field.
+func GenderGT(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldGender), v))
+	})
+}
+
+// GenderGTE applies the GTE predicate on the "gender" field.
+func GenderGTE(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldGender), v))
+	})
+}
+
+// GenderLT applies the LT predicate on the "gender" field.
+func GenderLT(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldGender), v))
+	})
+}
+
+// GenderLTE applies the LTE predicate on the "gender" field.
+func GenderLTE(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldGender), v))
+	})
+}
+
+// GenderContains applies the Contains predicate on the "gender" field.
+func GenderContains(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldGender), v))
+	})
+}
+
+// GenderHasPrefix applies the HasPrefix predicate on the "gender" field.
+func GenderHasPrefix(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldGender), v))
+	})
+}
+
+// GenderHasSuffix applies the HasSuffix predicate on the "gender" field.
+func GenderHasSuffix(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldGender), v))
+	})
+}
+
+// GenderEqualFold applies the EqualFold predicate on the "gender" field.
+func GenderEqualFold(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldGender), v))
+	})
+}
+
+// GenderContainsFold applies the ContainsFold predicate on the "gender" field.
+func GenderContainsFold(v string) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldGender), v))
+	})
+}
+
+// AgeEQ applies the EQ predicate on the "age" field.
+func AgeEQ(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAge), v))
+	})
+}
+
+// AgeNEQ applies the NEQ predicate on the "age" field.
+func AgeNEQ(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAge), v))
+	})
+}
+
+// AgeIn applies the In predicate on the "age" field.
+func AgeIn(vs ...int) predicate.Clubapplication {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldAge), v...))
+	})
+}
+
+// AgeNotIn applies the NotIn predicate on the "age" field.
+func AgeNotIn(vs ...int) predicate.Clubapplication {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldAge), v...))
+	})
+}
+
+// AgeGT applies the GT predicate on the "age" field.
+func AgeGT(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldAge), v))
+	})
+}
+
+// AgeGTE applies the GTE predicate on the "age" field.
+func AgeGTE(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldAge), v))
+	})
+}
+
+// AgeLT applies the LT predicate on the "age" field.
+func AgeLT(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldAge), v))
+	})
+}
+
+// AgeLTE applies the LTE predicate on the "age" field.
+func AgeLTE(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldAge), v))
+	})
+}
+
+// YaerEQ applies the EQ predicate on the "yaer" field.
+func YaerEQ(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldYaer), v))
+	})
+}
+
+// YaerNEQ applies the NEQ predicate on the "yaer" field.
+func YaerNEQ(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldYaer), v))
+	})
+}
+
+// YaerIn applies the In predicate on the "yaer" field.
+func YaerIn(vs ...int) predicate.Clubapplication {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldYaer), v...))
+	})
+}
+
+// YaerNotIn applies the NotIn predicate on the "yaer" field.
+func YaerNotIn(vs ...int) predicate.Clubapplication {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldYaer), v...))
+	})
+}
+
+// YaerGT applies the GT predicate on the "yaer" field.
+func YaerGT(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldYaer), v))
+	})
+}
+
+// YaerGTE applies the GTE predicate on the "yaer" field.
+func YaerGTE(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldYaer), v))
+	})
+}
+
+// YaerLT applies the LT predicate on the "yaer" field.
+func YaerLT(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldYaer), v))
+	})
+}
+
+// YaerLTE applies the LTE predicate on the "yaer" field.
+func YaerLTE(v int) predicate.Clubapplication {
+	return predicate.Clubapplication(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldYaer), v))
 	})
 }
 

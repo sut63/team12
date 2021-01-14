@@ -15,8 +15,8 @@ type ClubappStatus struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// ApplyStatus holds the value of the "apply_status" field.
-	ApplyStatus string `json:"apply_status,omitempty"`
+	// Clubstatus holds the value of the "clubstatus" field.
+	Clubstatus string `json:"clubstatus,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ClubappStatusQuery when eager-loading is set.
 	Edges ClubappStatusEdges `json:"edges"`
@@ -44,7 +44,7 @@ func (e ClubappStatusEdges) ClubapplicationOrErr() ([]*Clubapplication, error) {
 func (*ClubappStatus) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // apply_status
+		&sql.NullString{}, // clubstatus
 	}
 }
 
@@ -61,9 +61,9 @@ func (cs *ClubappStatus) assignValues(values ...interface{}) error {
 	cs.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field apply_status", values[0])
+		return fmt.Errorf("unexpected type %T for field clubstatus", values[0])
 	} else if value.Valid {
-		cs.ApplyStatus = value.String
+		cs.Clubstatus = value.String
 	}
 	return nil
 }
@@ -96,8 +96,8 @@ func (cs *ClubappStatus) String() string {
 	var builder strings.Builder
 	builder.WriteString("ClubappStatus(")
 	builder.WriteString(fmt.Sprintf("id=%v", cs.ID))
-	builder.WriteString(", apply_status=")
-	builder.WriteString(cs.ApplyStatus)
+	builder.WriteString(", clubstatus=")
+	builder.WriteString(cs.Clubstatus)
 	builder.WriteByte(')')
 	return builder.String()
 }

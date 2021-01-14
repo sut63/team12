@@ -19,20 +19,28 @@ type Clubapplication struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Applyname holds the value of the "applyname" field.
-	Applyname string `json:"applyname,omitempty"`
 	// Contact holds the value of the "contact" field.
 	Contact string `json:"contact,omitempty"`
 	// Reason holds the value of the "reason" field.
 	Reason string `json:"reason,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
+	// Addeddatetime holds the value of the "addeddatetime" field.
+	Addeddatetime time.Time `json:"addeddatetime,omitempty"`
+	// Addername holds the value of the "addername" field.
+	Addername string `json:"addername,omitempty"`
+	// Discipline holds the value of the "discipline" field.
+	Discipline string `json:"discipline,omitempty"`
+	// Gender holds the value of the "gender" field.
+	Gender string `json:"gender,omitempty"`
+	// Age holds the value of the "age" field.
+	Age int `json:"age,omitempty"`
+	// Yaer holds the value of the "yaer" field.
+	Yaer int `json:"yaer,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ClubapplicationQuery when eager-loading is set.
-	Edges            ClubapplicationEdges `json:"edges"`
-	ClubID           *int
-	clubappstatus_id *int
-	UserID           *int
+	Edges        ClubapplicationEdges `json:"edges"`
+	ClubID       *int
+	clubstatusID *int
+	UserID       *int
 }
 
 // ClubapplicationEdges holds the relations/edges for other nodes in the graph.
@@ -94,10 +102,14 @@ func (e ClubapplicationEdges) ClubOrErr() (*Club, error) {
 func (*Clubapplication) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullString{}, // applyname
 		&sql.NullString{}, // contact
 		&sql.NullString{}, // reason
-		&sql.NullTime{},   // created_at
+		&sql.NullTime{},   // addeddatetime
+		&sql.NullString{}, // addername
+		&sql.NullString{}, // discipline
+		&sql.NullString{}, // gender
+		&sql.NullInt64{},  // age
+		&sql.NullInt64{},  // yaer
 	}
 }
 
@@ -105,7 +117,7 @@ func (*Clubapplication) scanValues() []interface{} {
 func (*Clubapplication) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // ClubID
-		&sql.NullInt64{}, // clubappstatus_id
+		&sql.NullInt64{}, // clubstatusID
 		&sql.NullInt64{}, // UserID
 	}
 }
@@ -123,26 +135,46 @@ func (c *Clubapplication) assignValues(values ...interface{}) error {
 	c.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field applyname", values[0])
-	} else if value.Valid {
-		c.Applyname = value.String
-	}
-	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field contact", values[1])
+		return fmt.Errorf("unexpected type %T for field contact", values[0])
 	} else if value.Valid {
 		c.Contact = value.String
 	}
-	if value, ok := values[2].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field reason", values[2])
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field reason", values[1])
 	} else if value.Valid {
 		c.Reason = value.String
 	}
-	if value, ok := values[3].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field created_at", values[3])
+	if value, ok := values[2].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field addeddatetime", values[2])
 	} else if value.Valid {
-		c.CreatedAt = value.Time
+		c.Addeddatetime = value.Time
 	}
-	values = values[4:]
+	if value, ok := values[3].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field addername", values[3])
+	} else if value.Valid {
+		c.Addername = value.String
+	}
+	if value, ok := values[4].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field discipline", values[4])
+	} else if value.Valid {
+		c.Discipline = value.String
+	}
+	if value, ok := values[5].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field gender", values[5])
+	} else if value.Valid {
+		c.Gender = value.String
+	}
+	if value, ok := values[6].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field age", values[6])
+	} else if value.Valid {
+		c.Age = int(value.Int64)
+	}
+	if value, ok := values[7].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field yaer", values[7])
+	} else if value.Valid {
+		c.Yaer = int(value.Int64)
+	}
+	values = values[8:]
 	if len(values) == len(clubapplication.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field ClubID", value)
@@ -151,10 +183,10 @@ func (c *Clubapplication) assignValues(values ...interface{}) error {
 			*c.ClubID = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field clubappstatus_id", value)
+			return fmt.Errorf("unexpected type %T for edge-field clubstatusID", value)
 		} else if value.Valid {
-			c.clubappstatus_id = new(int)
-			*c.clubappstatus_id = int(value.Int64)
+			c.clubstatusID = new(int)
+			*c.clubstatusID = int(value.Int64)
 		}
 		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field UserID", value)
@@ -204,14 +236,22 @@ func (c *Clubapplication) String() string {
 	var builder strings.Builder
 	builder.WriteString("Clubapplication(")
 	builder.WriteString(fmt.Sprintf("id=%v", c.ID))
-	builder.WriteString(", applyname=")
-	builder.WriteString(c.Applyname)
 	builder.WriteString(", contact=")
 	builder.WriteString(c.Contact)
 	builder.WriteString(", reason=")
 	builder.WriteString(c.Reason)
-	builder.WriteString(", created_at=")
-	builder.WriteString(c.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", addeddatetime=")
+	builder.WriteString(c.Addeddatetime.Format(time.ANSIC))
+	builder.WriteString(", addername=")
+	builder.WriteString(c.Addername)
+	builder.WriteString(", discipline=")
+	builder.WriteString(c.Discipline)
+	builder.WriteString(", gender=")
+	builder.WriteString(c.Gender)
+	builder.WriteString(", age=")
+	builder.WriteString(fmt.Sprintf("%v", c.Age))
+	builder.WriteString(", yaer=")
+	builder.WriteString(fmt.Sprintf("%v", c.Yaer))
 	builder.WriteByte(')')
 	return builder.String()
 }

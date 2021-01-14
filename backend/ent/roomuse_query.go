@@ -9,8 +9,8 @@ import (
 	"math"
 
 	"github.com/OMENX/app/ent/predicate"
+	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
-	"github.com/OMENX/app/ent/roompurpose"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -28,7 +28,7 @@ type RoomuseQuery struct {
 	predicates []predicate.Roomuse
 	// eager-loading edges.
 	withRooms    *RoomQuery
-	withPurposes *RoompurposeQuery
+	withPurposes *PurposeQuery
 	withUsers    *UserQuery
 	withFKs      bool
 	// intermediate query (i.e. traversal path).
@@ -79,15 +79,15 @@ func (rq *RoomuseQuery) QueryRooms() *RoomQuery {
 }
 
 // QueryPurposes chains the current query on the purposes edge.
-func (rq *RoomuseQuery) QueryPurposes() *RoompurposeQuery {
-	query := &RoompurposeQuery{config: rq.config}
+func (rq *RoomuseQuery) QueryPurposes() *PurposeQuery {
+	query := &PurposeQuery{config: rq.config}
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := rq.prepareQuery(ctx); err != nil {
 			return nil, err
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(roomuse.Table, roomuse.FieldID, rq.sqlQuery()),
-			sqlgraph.To(roompurpose.Table, roompurpose.FieldID),
+			sqlgraph.To(purpose.Table, purpose.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, roomuse.PurposesTable, roomuse.PurposesColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
@@ -306,8 +306,8 @@ func (rq *RoomuseQuery) WithRooms(opts ...func(*RoomQuery)) *RoomuseQuery {
 
 //  WithPurposes tells the query-builder to eager-loads the nodes that are connected to
 // the "purposes" edge. The optional arguments used to configure the query builder of the edge.
-func (rq *RoomuseQuery) WithPurposes(opts ...func(*RoompurposeQuery)) *RoomuseQuery {
-	query := &RoompurposeQuery{config: rq.config}
+func (rq *RoomuseQuery) WithPurposes(opts ...func(*PurposeQuery)) *RoomuseQuery {
+	query := &PurposeQuery{config: rq.config}
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -463,7 +463,7 @@ func (rq *RoomuseQuery) sqlAll(ctx context.Context) ([]*Roomuse, error) {
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
 		}
-		query.Where(roompurpose.IDIn(ids...))
+		query.Where(purpose.IDIn(ids...))
 		neighbors, err := query.All(ctx)
 		if err != nil {
 			return nil, err

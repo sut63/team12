@@ -332,12 +332,12 @@ func (cq *ClubapplicationQuery) WithClub(opts ...func(*ClubQuery)) *Clubapplicat
 // Example:
 //
 //	var v []struct {
-//		Applyname string `json:"applyname,omitempty"`
+//		Contact string `json:"contact,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Clubapplication.Query().
-//		GroupBy(clubapplication.FieldApplyname).
+//		GroupBy(clubapplication.FieldContact).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -358,11 +358,11 @@ func (cq *ClubapplicationQuery) GroupBy(field string, fields ...string) *Clubapp
 // Example:
 //
 //	var v []struct {
-//		Applyname string `json:"applyname,omitempty"`
+//		Contact string `json:"contact,omitempty"`
 //	}
 //
 //	client.Clubapplication.Query().
-//		Select(clubapplication.FieldApplyname).
+//		Select(clubapplication.FieldContact).
 //		Scan(ctx, &v)
 //
 func (cq *ClubapplicationQuery) Select(field string, fields ...string) *ClubapplicationSelect {
@@ -458,7 +458,7 @@ func (cq *ClubapplicationQuery) sqlAll(ctx context.Context) ([]*Clubapplication,
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Clubapplication)
 		for i := range nodes {
-			if fk := nodes[i].clubappstatus_id; fk != nil {
+			if fk := nodes[i].clubstatusID; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
@@ -471,7 +471,7 @@ func (cq *ClubapplicationQuery) sqlAll(ctx context.Context) ([]*Clubapplication,
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "clubappstatus_id" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "clubstatusID" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.Clubappstatus = n

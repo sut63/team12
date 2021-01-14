@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/OMENX/app/ent/predicate"
+	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
-	"github.com/OMENX/app/ent/roompurpose"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
 	"github.com/facebookincubator/ent/dialect/sql"
@@ -56,13 +56,13 @@ func (ru *RoomuseUpdate) SetRooms(r *Room) *RoomuseUpdate {
 	return ru.SetRoomsID(r.ID)
 }
 
-// SetPurposesID sets the purposes edge to Roompurpose by id.
+// SetPurposesID sets the purposes edge to Purpose by id.
 func (ru *RoomuseUpdate) SetPurposesID(id int) *RoomuseUpdate {
 	ru.mutation.SetPurposesID(id)
 	return ru
 }
 
-// SetNillablePurposesID sets the purposes edge to Roompurpose by id if the given value is not nil.
+// SetNillablePurposesID sets the purposes edge to Purpose by id if the given value is not nil.
 func (ru *RoomuseUpdate) SetNillablePurposesID(id *int) *RoomuseUpdate {
 	if id != nil {
 		ru = ru.SetPurposesID(*id)
@@ -70,9 +70,9 @@ func (ru *RoomuseUpdate) SetNillablePurposesID(id *int) *RoomuseUpdate {
 	return ru
 }
 
-// SetPurposes sets the purposes edge to Roompurpose.
-func (ru *RoomuseUpdate) SetPurposes(r *Roompurpose) *RoomuseUpdate {
-	return ru.SetPurposesID(r.ID)
+// SetPurposes sets the purposes edge to Purpose.
+func (ru *RoomuseUpdate) SetPurposes(p *Purpose) *RoomuseUpdate {
+	return ru.SetPurposesID(p.ID)
 }
 
 // SetUsersID sets the users edge to User by id.
@@ -105,7 +105,7 @@ func (ru *RoomuseUpdate) ClearRooms() *RoomuseUpdate {
 	return ru
 }
 
-// ClearPurposes clears the purposes edge to Roompurpose.
+// ClearPurposes clears the purposes edge to Purpose.
 func (ru *RoomuseUpdate) ClearPurposes() *RoomuseUpdate {
 	ru.mutation.ClearPurposes()
 	return ru
@@ -239,7 +239,7 @@ func (ru *RoomuseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: roompurpose.FieldID,
+					Column: purpose.FieldID,
 				},
 			},
 		}
@@ -255,7 +255,7 @@ func (ru *RoomuseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: roompurpose.FieldID,
+					Column: purpose.FieldID,
 				},
 			},
 		}
@@ -342,13 +342,13 @@ func (ruo *RoomuseUpdateOne) SetRooms(r *Room) *RoomuseUpdateOne {
 	return ruo.SetRoomsID(r.ID)
 }
 
-// SetPurposesID sets the purposes edge to Roompurpose by id.
+// SetPurposesID sets the purposes edge to Purpose by id.
 func (ruo *RoomuseUpdateOne) SetPurposesID(id int) *RoomuseUpdateOne {
 	ruo.mutation.SetPurposesID(id)
 	return ruo
 }
 
-// SetNillablePurposesID sets the purposes edge to Roompurpose by id if the given value is not nil.
+// SetNillablePurposesID sets the purposes edge to Purpose by id if the given value is not nil.
 func (ruo *RoomuseUpdateOne) SetNillablePurposesID(id *int) *RoomuseUpdateOne {
 	if id != nil {
 		ruo = ruo.SetPurposesID(*id)
@@ -356,9 +356,9 @@ func (ruo *RoomuseUpdateOne) SetNillablePurposesID(id *int) *RoomuseUpdateOne {
 	return ruo
 }
 
-// SetPurposes sets the purposes edge to Roompurpose.
-func (ruo *RoomuseUpdateOne) SetPurposes(r *Roompurpose) *RoomuseUpdateOne {
-	return ruo.SetPurposesID(r.ID)
+// SetPurposes sets the purposes edge to Purpose.
+func (ruo *RoomuseUpdateOne) SetPurposes(p *Purpose) *RoomuseUpdateOne {
+	return ruo.SetPurposesID(p.ID)
 }
 
 // SetUsersID sets the users edge to User by id.
@@ -391,7 +391,7 @@ func (ruo *RoomuseUpdateOne) ClearRooms() *RoomuseUpdateOne {
 	return ruo
 }
 
-// ClearPurposes clears the purposes edge to Roompurpose.
+// ClearPurposes clears the purposes edge to Purpose.
 func (ruo *RoomuseUpdateOne) ClearPurposes() *RoomuseUpdateOne {
 	ruo.mutation.ClearPurposes()
 	return ruo
@@ -523,7 +523,7 @@ func (ruo *RoomuseUpdateOne) sqlSave(ctx context.Context) (r *Roomuse, err error
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: roompurpose.FieldID,
+					Column: purpose.FieldID,
 				},
 			},
 		}
@@ -539,7 +539,7 @@ func (ruo *RoomuseUpdateOne) sqlSave(ctx context.Context) (r *Roomuse, err error
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
-					Column: roompurpose.FieldID,
+					Column: purpose.FieldID,
 				},
 			},
 		}

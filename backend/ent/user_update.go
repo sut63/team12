@@ -9,10 +9,14 @@ import (
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/clubapplication"
 	"github.com/OMENX/app/ent/complaint"
+	"github.com/OMENX/app/ent/discipline"
+	"github.com/OMENX/app/ent/gender"
 	"github.com/OMENX/app/ent/predicate"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
+	"github.com/OMENX/app/ent/userstatus"
 	"github.com/OMENX/app/ent/usertype"
+	"github.com/OMENX/app/ent/year"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
@@ -45,15 +49,8 @@ func (uu *UserUpdate) SetEmail(s string) *UserUpdate {
 }
 
 // SetPassword sets the password field.
-func (uu *UserUpdate) SetPassword(i int) *UserUpdate {
-	uu.mutation.ResetPassword()
-	uu.mutation.SetPassword(i)
-	return uu
-}
-
-// AddPassword adds i to password.
-func (uu *UserUpdate) AddPassword(i int) *UserUpdate {
-	uu.mutation.AddPassword(i)
+func (uu *UserUpdate) SetPassword(s string) *UserUpdate {
+	uu.mutation.SetPassword(s)
 	return uu
 }
 
@@ -74,6 +71,101 @@ func (uu *UserUpdate) SetNillableUsertypeID(id *int) *UserUpdate {
 // SetUsertype sets the usertype edge to Usertype.
 func (uu *UserUpdate) SetUsertype(u *Usertype) *UserUpdate {
 	return uu.SetUsertypeID(u.ID)
+}
+
+// SetClubuserID sets the clubuser edge to Club by id.
+func (uu *UserUpdate) SetClubuserID(id int) *UserUpdate {
+	uu.mutation.SetClubuserID(id)
+	return uu
+}
+
+// SetNillableClubuserID sets the clubuser edge to Club by id if the given value is not nil.
+func (uu *UserUpdate) SetNillableClubuserID(id *int) *UserUpdate {
+	if id != nil {
+		uu = uu.SetClubuserID(*id)
+	}
+	return uu
+}
+
+// SetClubuser sets the clubuser edge to Club.
+func (uu *UserUpdate) SetClubuser(c *Club) *UserUpdate {
+	return uu.SetClubuserID(c.ID)
+}
+
+// SetGenderID sets the gender edge to Gender by id.
+func (uu *UserUpdate) SetGenderID(id int) *UserUpdate {
+	uu.mutation.SetGenderID(id)
+	return uu
+}
+
+// SetNillableGenderID sets the gender edge to Gender by id if the given value is not nil.
+func (uu *UserUpdate) SetNillableGenderID(id *int) *UserUpdate {
+	if id != nil {
+		uu = uu.SetGenderID(*id)
+	}
+	return uu
+}
+
+// SetGender sets the gender edge to Gender.
+func (uu *UserUpdate) SetGender(g *Gender) *UserUpdate {
+	return uu.SetGenderID(g.ID)
+}
+
+// SetUserstatusID sets the userstatus edge to UserStatus by id.
+func (uu *UserUpdate) SetUserstatusID(id int) *UserUpdate {
+	uu.mutation.SetUserstatusID(id)
+	return uu
+}
+
+// SetNillableUserstatusID sets the userstatus edge to UserStatus by id if the given value is not nil.
+func (uu *UserUpdate) SetNillableUserstatusID(id *int) *UserUpdate {
+	if id != nil {
+		uu = uu.SetUserstatusID(*id)
+	}
+	return uu
+}
+
+// SetUserstatus sets the userstatus edge to UserStatus.
+func (uu *UserUpdate) SetUserstatus(u *UserStatus) *UserUpdate {
+	return uu.SetUserstatusID(u.ID)
+}
+
+// SetDisciplineID sets the discipline edge to Discipline by id.
+func (uu *UserUpdate) SetDisciplineID(id int) *UserUpdate {
+	uu.mutation.SetDisciplineID(id)
+	return uu
+}
+
+// SetNillableDisciplineID sets the discipline edge to Discipline by id if the given value is not nil.
+func (uu *UserUpdate) SetNillableDisciplineID(id *int) *UserUpdate {
+	if id != nil {
+		uu = uu.SetDisciplineID(*id)
+	}
+	return uu
+}
+
+// SetDiscipline sets the discipline edge to Discipline.
+func (uu *UserUpdate) SetDiscipline(d *Discipline) *UserUpdate {
+	return uu.SetDisciplineID(d.ID)
+}
+
+// SetYearID sets the year edge to Year by id.
+func (uu *UserUpdate) SetYearID(id int) *UserUpdate {
+	uu.mutation.SetYearID(id)
+	return uu
+}
+
+// SetNillableYearID sets the year edge to Year by id if the given value is not nil.
+func (uu *UserUpdate) SetNillableYearID(id *int) *UserUpdate {
+	if id != nil {
+		uu = uu.SetYearID(*id)
+	}
+	return uu
+}
+
+// SetYear sets the year edge to Year.
+func (uu *UserUpdate) SetYear(y *Year) *UserUpdate {
+	return uu.SetYearID(y.ID)
 }
 
 // AddClubIDs adds the club edge to Club by ids.
@@ -144,6 +236,36 @@ func (uu *UserUpdate) Mutation() *UserMutation {
 // ClearUsertype clears the usertype edge to Usertype.
 func (uu *UserUpdate) ClearUsertype() *UserUpdate {
 	uu.mutation.ClearUsertype()
+	return uu
+}
+
+// ClearClubuser clears the clubuser edge to Club.
+func (uu *UserUpdate) ClearClubuser() *UserUpdate {
+	uu.mutation.ClearClubuser()
+	return uu
+}
+
+// ClearGender clears the gender edge to Gender.
+func (uu *UserUpdate) ClearGender() *UserUpdate {
+	uu.mutation.ClearGender()
+	return uu
+}
+
+// ClearUserstatus clears the userstatus edge to UserStatus.
+func (uu *UserUpdate) ClearUserstatus() *UserUpdate {
+	uu.mutation.ClearUserstatus()
+	return uu
+}
+
+// ClearDiscipline clears the discipline edge to Discipline.
+func (uu *UserUpdate) ClearDiscipline() *UserUpdate {
+	uu.mutation.ClearDiscipline()
+	return uu
+}
+
+// ClearYear clears the year edge to Year.
+func (uu *UserUpdate) ClearYear() *UserUpdate {
+	uu.mutation.ClearYear()
 	return uu
 }
 
@@ -303,14 +425,7 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := uu.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: user.FieldPassword,
-		})
-	}
-	if value, ok := uu.mutation.AddedPassword(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: user.FieldPassword,
 		})
@@ -342,6 +457,181 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: usertype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uu.mutation.ClubuserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.ClubuserTable,
+			Columns: []string{user.ClubuserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: club.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.ClubuserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.ClubuserTable,
+			Columns: []string{user.ClubuserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: club.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uu.mutation.GenderCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.GenderTable,
+			Columns: []string{user.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.GenderIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.GenderTable,
+			Columns: []string{user.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uu.mutation.UserstatusCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.UserstatusTable,
+			Columns: []string{user.UserstatusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: userstatus.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.UserstatusIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.UserstatusTable,
+			Columns: []string{user.UserstatusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: userstatus.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uu.mutation.DisciplineCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.DisciplineTable,
+			Columns: []string{user.DisciplineColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: discipline.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.DisciplineIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.DisciplineTable,
+			Columns: []string{user.DisciplineColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: discipline.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uu.mutation.YearCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.YearTable,
+			Columns: []string{user.YearColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: year.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.YearIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.YearTable,
+			Columns: []string{user.YearColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: year.FieldID,
 				},
 			},
 		}
@@ -533,15 +823,8 @@ func (uuo *UserUpdateOne) SetEmail(s string) *UserUpdateOne {
 }
 
 // SetPassword sets the password field.
-func (uuo *UserUpdateOne) SetPassword(i int) *UserUpdateOne {
-	uuo.mutation.ResetPassword()
-	uuo.mutation.SetPassword(i)
-	return uuo
-}
-
-// AddPassword adds i to password.
-func (uuo *UserUpdateOne) AddPassword(i int) *UserUpdateOne {
-	uuo.mutation.AddPassword(i)
+func (uuo *UserUpdateOne) SetPassword(s string) *UserUpdateOne {
+	uuo.mutation.SetPassword(s)
 	return uuo
 }
 
@@ -562,6 +845,101 @@ func (uuo *UserUpdateOne) SetNillableUsertypeID(id *int) *UserUpdateOne {
 // SetUsertype sets the usertype edge to Usertype.
 func (uuo *UserUpdateOne) SetUsertype(u *Usertype) *UserUpdateOne {
 	return uuo.SetUsertypeID(u.ID)
+}
+
+// SetClubuserID sets the clubuser edge to Club by id.
+func (uuo *UserUpdateOne) SetClubuserID(id int) *UserUpdateOne {
+	uuo.mutation.SetClubuserID(id)
+	return uuo
+}
+
+// SetNillableClubuserID sets the clubuser edge to Club by id if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableClubuserID(id *int) *UserUpdateOne {
+	if id != nil {
+		uuo = uuo.SetClubuserID(*id)
+	}
+	return uuo
+}
+
+// SetClubuser sets the clubuser edge to Club.
+func (uuo *UserUpdateOne) SetClubuser(c *Club) *UserUpdateOne {
+	return uuo.SetClubuserID(c.ID)
+}
+
+// SetGenderID sets the gender edge to Gender by id.
+func (uuo *UserUpdateOne) SetGenderID(id int) *UserUpdateOne {
+	uuo.mutation.SetGenderID(id)
+	return uuo
+}
+
+// SetNillableGenderID sets the gender edge to Gender by id if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableGenderID(id *int) *UserUpdateOne {
+	if id != nil {
+		uuo = uuo.SetGenderID(*id)
+	}
+	return uuo
+}
+
+// SetGender sets the gender edge to Gender.
+func (uuo *UserUpdateOne) SetGender(g *Gender) *UserUpdateOne {
+	return uuo.SetGenderID(g.ID)
+}
+
+// SetUserstatusID sets the userstatus edge to UserStatus by id.
+func (uuo *UserUpdateOne) SetUserstatusID(id int) *UserUpdateOne {
+	uuo.mutation.SetUserstatusID(id)
+	return uuo
+}
+
+// SetNillableUserstatusID sets the userstatus edge to UserStatus by id if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableUserstatusID(id *int) *UserUpdateOne {
+	if id != nil {
+		uuo = uuo.SetUserstatusID(*id)
+	}
+	return uuo
+}
+
+// SetUserstatus sets the userstatus edge to UserStatus.
+func (uuo *UserUpdateOne) SetUserstatus(u *UserStatus) *UserUpdateOne {
+	return uuo.SetUserstatusID(u.ID)
+}
+
+// SetDisciplineID sets the discipline edge to Discipline by id.
+func (uuo *UserUpdateOne) SetDisciplineID(id int) *UserUpdateOne {
+	uuo.mutation.SetDisciplineID(id)
+	return uuo
+}
+
+// SetNillableDisciplineID sets the discipline edge to Discipline by id if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableDisciplineID(id *int) *UserUpdateOne {
+	if id != nil {
+		uuo = uuo.SetDisciplineID(*id)
+	}
+	return uuo
+}
+
+// SetDiscipline sets the discipline edge to Discipline.
+func (uuo *UserUpdateOne) SetDiscipline(d *Discipline) *UserUpdateOne {
+	return uuo.SetDisciplineID(d.ID)
+}
+
+// SetYearID sets the year edge to Year by id.
+func (uuo *UserUpdateOne) SetYearID(id int) *UserUpdateOne {
+	uuo.mutation.SetYearID(id)
+	return uuo
+}
+
+// SetNillableYearID sets the year edge to Year by id if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableYearID(id *int) *UserUpdateOne {
+	if id != nil {
+		uuo = uuo.SetYearID(*id)
+	}
+	return uuo
+}
+
+// SetYear sets the year edge to Year.
+func (uuo *UserUpdateOne) SetYear(y *Year) *UserUpdateOne {
+	return uuo.SetYearID(y.ID)
 }
 
 // AddClubIDs adds the club edge to Club by ids.
@@ -632,6 +1010,36 @@ func (uuo *UserUpdateOne) Mutation() *UserMutation {
 // ClearUsertype clears the usertype edge to Usertype.
 func (uuo *UserUpdateOne) ClearUsertype() *UserUpdateOne {
 	uuo.mutation.ClearUsertype()
+	return uuo
+}
+
+// ClearClubuser clears the clubuser edge to Club.
+func (uuo *UserUpdateOne) ClearClubuser() *UserUpdateOne {
+	uuo.mutation.ClearClubuser()
+	return uuo
+}
+
+// ClearGender clears the gender edge to Gender.
+func (uuo *UserUpdateOne) ClearGender() *UserUpdateOne {
+	uuo.mutation.ClearGender()
+	return uuo
+}
+
+// ClearUserstatus clears the userstatus edge to UserStatus.
+func (uuo *UserUpdateOne) ClearUserstatus() *UserUpdateOne {
+	uuo.mutation.ClearUserstatus()
+	return uuo
+}
+
+// ClearDiscipline clears the discipline edge to Discipline.
+func (uuo *UserUpdateOne) ClearDiscipline() *UserUpdateOne {
+	uuo.mutation.ClearDiscipline()
+	return uuo
+}
+
+// ClearYear clears the year edge to Year.
+func (uuo *UserUpdateOne) ClearYear() *UserUpdateOne {
+	uuo.mutation.ClearYear()
 	return uuo
 }
 
@@ -789,14 +1197,7 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (u *User, err error) {
 	}
 	if value, ok := uuo.mutation.Password(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: user.FieldPassword,
-		})
-	}
-	if value, ok := uuo.mutation.AddedPassword(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: user.FieldPassword,
 		})
@@ -828,6 +1229,181 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (u *User, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: usertype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.ClubuserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.ClubuserTable,
+			Columns: []string{user.ClubuserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: club.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.ClubuserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.ClubuserTable,
+			Columns: []string{user.ClubuserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: club.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.GenderCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.GenderTable,
+			Columns: []string{user.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.GenderIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.GenderTable,
+			Columns: []string{user.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.UserstatusCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.UserstatusTable,
+			Columns: []string{user.UserstatusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: userstatus.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.UserstatusIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.UserstatusTable,
+			Columns: []string{user.UserstatusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: userstatus.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.DisciplineCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.DisciplineTable,
+			Columns: []string{user.DisciplineColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: discipline.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.DisciplineIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.DisciplineTable,
+			Columns: []string{user.DisciplineColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: discipline.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.YearCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.YearTable,
+			Columns: []string{user.YearColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: year.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.YearIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.YearTable,
+			Columns: []string{user.YearColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: year.FieldID,
 				},
 			},
 		}

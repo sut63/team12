@@ -3,8 +3,6 @@
 package club
 
 import (
-	"time"
-
 	"github.com/OMENX/app/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
@@ -104,13 +102,6 @@ func Name(v string) predicate.Club {
 func Purpose(v string) predicate.Club {
 	return predicate.Club(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldPurpose), v))
-	})
-}
-
-// Foundingdate applies equality check predicate on the "foundingdate" field. It's identical to FoundingdateEQ.
-func Foundingdate(v time.Time) predicate.Club {
-	return predicate.Club(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFoundingdate), v))
 	})
 }
 
@@ -336,82 +327,6 @@ func PurposeContainsFold(v string) predicate.Club {
 	})
 }
 
-// FoundingdateEQ applies the EQ predicate on the "foundingdate" field.
-func FoundingdateEQ(v time.Time) predicate.Club {
-	return predicate.Club(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldFoundingdate), v))
-	})
-}
-
-// FoundingdateNEQ applies the NEQ predicate on the "foundingdate" field.
-func FoundingdateNEQ(v time.Time) predicate.Club {
-	return predicate.Club(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldFoundingdate), v))
-	})
-}
-
-// FoundingdateIn applies the In predicate on the "foundingdate" field.
-func FoundingdateIn(vs ...time.Time) predicate.Club {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Club(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldFoundingdate), v...))
-	})
-}
-
-// FoundingdateNotIn applies the NotIn predicate on the "foundingdate" field.
-func FoundingdateNotIn(vs ...time.Time) predicate.Club {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Club(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldFoundingdate), v...))
-	})
-}
-
-// FoundingdateGT applies the GT predicate on the "foundingdate" field.
-func FoundingdateGT(v time.Time) predicate.Club {
-	return predicate.Club(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldFoundingdate), v))
-	})
-}
-
-// FoundingdateGTE applies the GTE predicate on the "foundingdate" field.
-func FoundingdateGTE(v time.Time) predicate.Club {
-	return predicate.Club(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldFoundingdate), v))
-	})
-}
-
-// FoundingdateLT applies the LT predicate on the "foundingdate" field.
-func FoundingdateLT(v time.Time) predicate.Club {
-	return predicate.Club(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldFoundingdate), v))
-	})
-}
-
-// FoundingdateLTE applies the LTE predicate on the "foundingdate" field.
-func FoundingdateLTE(v time.Time) predicate.Club {
-	return predicate.Club(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldFoundingdate), v))
-	})
-}
-
 // HasUser applies the HasEdge predicate on the "user" edge.
 func HasUser() predicate.Club {
 	return predicate.Club(func(s *sql.Selector) {
@@ -571,6 +486,34 @@ func HasActivitiesWith(preds ...predicate.Activities) predicate.Club {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(ActivitiesInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.O2M, false, ActivitiesTable, ActivitiesColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasUserclub applies the HasEdge predicate on the "userclub" edge.
+func HasUserclub() predicate.Club {
+	return predicate.Club(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(UserclubTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, UserclubTable, UserclubColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasUserclubWith applies the HasEdge predicate on the "userclub" edge with a given conditions (other predicates).
+func HasUserclubWith(preds ...predicate.User) predicate.Club {
+	return predicate.Club(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(UserclubInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, UserclubTable, UserclubColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

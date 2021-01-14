@@ -31,12 +31,6 @@ func (cu *ClubapplicationUpdate) Where(ps ...predicate.Clubapplication) *Clubapp
 	return cu
 }
 
-// SetApplyname sets the applyname field.
-func (cu *ClubapplicationUpdate) SetApplyname(s string) *ClubapplicationUpdate {
-	cu.mutation.SetApplyname(s)
-	return cu
-}
-
 // SetContact sets the contact field.
 func (cu *ClubapplicationUpdate) SetContact(s string) *ClubapplicationUpdate {
 	cu.mutation.SetContact(s)
@@ -49,17 +43,53 @@ func (cu *ClubapplicationUpdate) SetReason(s string) *ClubapplicationUpdate {
 	return cu
 }
 
-// SetCreatedAt sets the created_at field.
-func (cu *ClubapplicationUpdate) SetCreatedAt(t time.Time) *ClubapplicationUpdate {
-	cu.mutation.SetCreatedAt(t)
+// SetAddeddatetime sets the addeddatetime field.
+func (cu *ClubapplicationUpdate) SetAddeddatetime(t time.Time) *ClubapplicationUpdate {
+	cu.mutation.SetAddeddatetime(t)
 	return cu
 }
 
-// SetNillableCreatedAt sets the created_at field if the given value is not nil.
-func (cu *ClubapplicationUpdate) SetNillableCreatedAt(t *time.Time) *ClubapplicationUpdate {
-	if t != nil {
-		cu.SetCreatedAt(*t)
-	}
+// SetAddername sets the addername field.
+func (cu *ClubapplicationUpdate) SetAddername(s string) *ClubapplicationUpdate {
+	cu.mutation.SetAddername(s)
+	return cu
+}
+
+// SetDiscipline sets the discipline field.
+func (cu *ClubapplicationUpdate) SetDiscipline(s string) *ClubapplicationUpdate {
+	cu.mutation.SetDiscipline(s)
+	return cu
+}
+
+// SetGender sets the gender field.
+func (cu *ClubapplicationUpdate) SetGender(s string) *ClubapplicationUpdate {
+	cu.mutation.SetGender(s)
+	return cu
+}
+
+// SetAge sets the age field.
+func (cu *ClubapplicationUpdate) SetAge(i int) *ClubapplicationUpdate {
+	cu.mutation.ResetAge()
+	cu.mutation.SetAge(i)
+	return cu
+}
+
+// AddAge adds i to age.
+func (cu *ClubapplicationUpdate) AddAge(i int) *ClubapplicationUpdate {
+	cu.mutation.AddAge(i)
+	return cu
+}
+
+// SetYaer sets the yaer field.
+func (cu *ClubapplicationUpdate) SetYaer(i int) *ClubapplicationUpdate {
+	cu.mutation.ResetYaer()
+	cu.mutation.SetYaer(i)
+	return cu
+}
+
+// AddYaer adds i to yaer.
+func (cu *ClubapplicationUpdate) AddYaer(i int) *ClubapplicationUpdate {
+	cu.mutation.AddYaer(i)
 	return cu
 }
 
@@ -145,9 +175,34 @@ func (cu *ClubapplicationUpdate) ClearClub() *ClubapplicationUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (cu *ClubapplicationUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := cu.mutation.Applyname(); ok {
-		if err := clubapplication.ApplynameValidator(v); err != nil {
-			return 0, &ValidationError{Name: "applyname", err: fmt.Errorf("ent: validator failed for field \"applyname\": %w", err)}
+	if v, ok := cu.mutation.Contact(); ok {
+		if err := clubapplication.ContactValidator(v); err != nil {
+			return 0, &ValidationError{Name: "contact", err: fmt.Errorf("ent: validator failed for field \"contact\": %w", err)}
+		}
+	}
+	if v, ok := cu.mutation.Addername(); ok {
+		if err := clubapplication.AddernameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "addername", err: fmt.Errorf("ent: validator failed for field \"addername\": %w", err)}
+		}
+	}
+	if v, ok := cu.mutation.Discipline(); ok {
+		if err := clubapplication.DisciplineValidator(v); err != nil {
+			return 0, &ValidationError{Name: "discipline", err: fmt.Errorf("ent: validator failed for field \"discipline\": %w", err)}
+		}
+	}
+	if v, ok := cu.mutation.Gender(); ok {
+		if err := clubapplication.GenderValidator(v); err != nil {
+			return 0, &ValidationError{Name: "gender", err: fmt.Errorf("ent: validator failed for field \"gender\": %w", err)}
+		}
+	}
+	if v, ok := cu.mutation.Age(); ok {
+		if err := clubapplication.AgeValidator(v); err != nil {
+			return 0, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+		}
+	}
+	if v, ok := cu.mutation.Yaer(); ok {
+		if err := clubapplication.YaerValidator(v); err != nil {
+			return 0, &ValidationError{Name: "yaer", err: fmt.Errorf("ent: validator failed for field \"yaer\": %w", err)}
 		}
 	}
 
@@ -218,13 +273,6 @@ func (cu *ClubapplicationUpdate) sqlSave(ctx context.Context) (n int, err error)
 			}
 		}
 	}
-	if value, ok := cu.mutation.Applyname(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: clubapplication.FieldApplyname,
-		})
-	}
 	if value, ok := cu.mutation.Contact(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -239,11 +287,60 @@ func (cu *ClubapplicationUpdate) sqlSave(ctx context.Context) (n int, err error)
 			Column: clubapplication.FieldReason,
 		})
 	}
-	if value, ok := cu.mutation.CreatedAt(); ok {
+	if value, ok := cu.mutation.Addeddatetime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: clubapplication.FieldCreatedAt,
+			Column: clubapplication.FieldAddeddatetime,
+		})
+	}
+	if value, ok := cu.mutation.Addername(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: clubapplication.FieldAddername,
+		})
+	}
+	if value, ok := cu.mutation.Discipline(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: clubapplication.FieldDiscipline,
+		})
+	}
+	if value, ok := cu.mutation.Gender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: clubapplication.FieldGender,
+		})
+	}
+	if value, ok := cu.mutation.Age(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: clubapplication.FieldAge,
+		})
+	}
+	if value, ok := cu.mutation.AddedAge(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: clubapplication.FieldAge,
+		})
+	}
+	if value, ok := cu.mutation.Yaer(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: clubapplication.FieldYaer,
+		})
+	}
+	if value, ok := cu.mutation.AddedYaer(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: clubapplication.FieldYaer,
 		})
 	}
 	if cu.mutation.OwnerCleared() {
@@ -369,12 +466,6 @@ type ClubapplicationUpdateOne struct {
 	mutation *ClubapplicationMutation
 }
 
-// SetApplyname sets the applyname field.
-func (cuo *ClubapplicationUpdateOne) SetApplyname(s string) *ClubapplicationUpdateOne {
-	cuo.mutation.SetApplyname(s)
-	return cuo
-}
-
 // SetContact sets the contact field.
 func (cuo *ClubapplicationUpdateOne) SetContact(s string) *ClubapplicationUpdateOne {
 	cuo.mutation.SetContact(s)
@@ -387,17 +478,53 @@ func (cuo *ClubapplicationUpdateOne) SetReason(s string) *ClubapplicationUpdateO
 	return cuo
 }
 
-// SetCreatedAt sets the created_at field.
-func (cuo *ClubapplicationUpdateOne) SetCreatedAt(t time.Time) *ClubapplicationUpdateOne {
-	cuo.mutation.SetCreatedAt(t)
+// SetAddeddatetime sets the addeddatetime field.
+func (cuo *ClubapplicationUpdateOne) SetAddeddatetime(t time.Time) *ClubapplicationUpdateOne {
+	cuo.mutation.SetAddeddatetime(t)
 	return cuo
 }
 
-// SetNillableCreatedAt sets the created_at field if the given value is not nil.
-func (cuo *ClubapplicationUpdateOne) SetNillableCreatedAt(t *time.Time) *ClubapplicationUpdateOne {
-	if t != nil {
-		cuo.SetCreatedAt(*t)
-	}
+// SetAddername sets the addername field.
+func (cuo *ClubapplicationUpdateOne) SetAddername(s string) *ClubapplicationUpdateOne {
+	cuo.mutation.SetAddername(s)
+	return cuo
+}
+
+// SetDiscipline sets the discipline field.
+func (cuo *ClubapplicationUpdateOne) SetDiscipline(s string) *ClubapplicationUpdateOne {
+	cuo.mutation.SetDiscipline(s)
+	return cuo
+}
+
+// SetGender sets the gender field.
+func (cuo *ClubapplicationUpdateOne) SetGender(s string) *ClubapplicationUpdateOne {
+	cuo.mutation.SetGender(s)
+	return cuo
+}
+
+// SetAge sets the age field.
+func (cuo *ClubapplicationUpdateOne) SetAge(i int) *ClubapplicationUpdateOne {
+	cuo.mutation.ResetAge()
+	cuo.mutation.SetAge(i)
+	return cuo
+}
+
+// AddAge adds i to age.
+func (cuo *ClubapplicationUpdateOne) AddAge(i int) *ClubapplicationUpdateOne {
+	cuo.mutation.AddAge(i)
+	return cuo
+}
+
+// SetYaer sets the yaer field.
+func (cuo *ClubapplicationUpdateOne) SetYaer(i int) *ClubapplicationUpdateOne {
+	cuo.mutation.ResetYaer()
+	cuo.mutation.SetYaer(i)
+	return cuo
+}
+
+// AddYaer adds i to yaer.
+func (cuo *ClubapplicationUpdateOne) AddYaer(i int) *ClubapplicationUpdateOne {
+	cuo.mutation.AddYaer(i)
 	return cuo
 }
 
@@ -483,9 +610,34 @@ func (cuo *ClubapplicationUpdateOne) ClearClub() *ClubapplicationUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (cuo *ClubapplicationUpdateOne) Save(ctx context.Context) (*Clubapplication, error) {
-	if v, ok := cuo.mutation.Applyname(); ok {
-		if err := clubapplication.ApplynameValidator(v); err != nil {
-			return nil, &ValidationError{Name: "applyname", err: fmt.Errorf("ent: validator failed for field \"applyname\": %w", err)}
+	if v, ok := cuo.mutation.Contact(); ok {
+		if err := clubapplication.ContactValidator(v); err != nil {
+			return nil, &ValidationError{Name: "contact", err: fmt.Errorf("ent: validator failed for field \"contact\": %w", err)}
+		}
+	}
+	if v, ok := cuo.mutation.Addername(); ok {
+		if err := clubapplication.AddernameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "addername", err: fmt.Errorf("ent: validator failed for field \"addername\": %w", err)}
+		}
+	}
+	if v, ok := cuo.mutation.Discipline(); ok {
+		if err := clubapplication.DisciplineValidator(v); err != nil {
+			return nil, &ValidationError{Name: "discipline", err: fmt.Errorf("ent: validator failed for field \"discipline\": %w", err)}
+		}
+	}
+	if v, ok := cuo.mutation.Gender(); ok {
+		if err := clubapplication.GenderValidator(v); err != nil {
+			return nil, &ValidationError{Name: "gender", err: fmt.Errorf("ent: validator failed for field \"gender\": %w", err)}
+		}
+	}
+	if v, ok := cuo.mutation.Age(); ok {
+		if err := clubapplication.AgeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+		}
+	}
+	if v, ok := cuo.mutation.Yaer(); ok {
+		if err := clubapplication.YaerValidator(v); err != nil {
+			return nil, &ValidationError{Name: "yaer", err: fmt.Errorf("ent: validator failed for field \"yaer\": %w", err)}
 		}
 	}
 
@@ -554,13 +706,6 @@ func (cuo *ClubapplicationUpdateOne) sqlSave(ctx context.Context) (c *Clubapplic
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Clubapplication.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := cuo.mutation.Applyname(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: clubapplication.FieldApplyname,
-		})
-	}
 	if value, ok := cuo.mutation.Contact(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -575,11 +720,60 @@ func (cuo *ClubapplicationUpdateOne) sqlSave(ctx context.Context) (c *Clubapplic
 			Column: clubapplication.FieldReason,
 		})
 	}
-	if value, ok := cuo.mutation.CreatedAt(); ok {
+	if value, ok := cuo.mutation.Addeddatetime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: clubapplication.FieldCreatedAt,
+			Column: clubapplication.FieldAddeddatetime,
+		})
+	}
+	if value, ok := cuo.mutation.Addername(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: clubapplication.FieldAddername,
+		})
+	}
+	if value, ok := cuo.mutation.Discipline(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: clubapplication.FieldDiscipline,
+		})
+	}
+	if value, ok := cuo.mutation.Gender(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: clubapplication.FieldGender,
+		})
+	}
+	if value, ok := cuo.mutation.Age(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: clubapplication.FieldAge,
+		})
+	}
+	if value, ok := cuo.mutation.AddedAge(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: clubapplication.FieldAge,
+		})
+	}
+	if value, ok := cuo.mutation.Yaer(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: clubapplication.FieldYaer,
+		})
+	}
+	if value, ok := cuo.mutation.AddedYaer(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: clubapplication.FieldYaer,
 		})
 	}
 	if cuo.mutation.OwnerCleared() {
