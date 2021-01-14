@@ -270,12 +270,12 @@ func (csq *ClubappStatusQuery) WithClubapplication(opts ...func(*Clubapplication
 // Example:
 //
 //	var v []struct {
-//		ApplyStatus string `json:"apply_status,omitempty"`
+//		Clubstatus string `json:"clubstatus,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.ClubappStatus.Query().
-//		GroupBy(clubappstatus.FieldApplyStatus).
+//		GroupBy(clubappstatus.FieldClubstatus).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -296,11 +296,11 @@ func (csq *ClubappStatusQuery) GroupBy(field string, fields ...string) *ClubappS
 // Example:
 //
 //	var v []struct {
-//		ApplyStatus string `json:"apply_status,omitempty"`
+//		Clubstatus string `json:"clubstatus,omitempty"`
 //	}
 //
 //	client.ClubappStatus.Query().
-//		Select(clubappstatus.FieldApplyStatus).
+//		Select(clubappstatus.FieldClubstatus).
 //		Scan(ctx, &v)
 //
 func (csq *ClubappStatusQuery) Select(field string, fields ...string) *ClubappStatusSelect {
@@ -371,13 +371,13 @@ func (csq *ClubappStatusQuery) sqlAll(ctx context.Context) ([]*ClubappStatus, er
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.clubappstatus_id
+			fk := n.clubstatusID
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "clubappstatus_id" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "clubstatusID" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "clubappstatus_id" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "clubstatusID" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.Clubapplication = append(node.Edges.Clubapplication, n)
 		}

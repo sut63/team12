@@ -77,7 +77,6 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
 		{Name: "purpose", Type: field.TypeString},
-		{Name: "foundingdate", Type: field.TypeTime},
 		{Name: "ClubBranch_ID", Type: field.TypeInt, Nullable: true},
 		{Name: "ClubType_ID", Type: field.TypeInt, Nullable: true},
 		{Name: "UserID", Type: field.TypeInt, Nullable: true},
@@ -90,21 +89,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "clubs_club_branches_club",
-				Columns: []*schema.Column{ClubsColumns[4]},
+				Columns: []*schema.Column{ClubsColumns[3]},
 
 				RefColumns: []*schema.Column{ClubBranchesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "clubs_club_types_club",
-				Columns: []*schema.Column{ClubsColumns[5]},
+				Columns: []*schema.Column{ClubsColumns[4]},
 
 				RefColumns: []*schema.Column{ClubTypesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "clubs_users_club",
-				Columns: []*schema.Column{ClubsColumns[6]},
+				Columns: []*schema.Column{ClubsColumns[5]},
 
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -138,7 +137,7 @@ var (
 	// ClubappStatusColumns holds the columns for the "clubapp_status" table.
 	ClubappStatusColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "apply_status", Type: field.TypeString, Unique: true},
+		{Name: "clubstatus", Type: field.TypeString, Unique: true},
 	}
 	// ClubappStatusTable holds the schema information for the "clubapp_status" table.
 	ClubappStatusTable = &schema.Table{
@@ -150,12 +149,16 @@ var (
 	// ClubapplicationsColumns holds the columns for the "clubapplications" table.
 	ClubapplicationsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "applyname", Type: field.TypeString},
 		{Name: "contact", Type: field.TypeString},
 		{Name: "reason", Type: field.TypeString},
-		{Name: "created_at", Type: field.TypeTime},
+		{Name: "addeddatetime", Type: field.TypeTime},
+		{Name: "addername", Type: field.TypeString},
+		{Name: "discipline", Type: field.TypeString},
+		{Name: "gender", Type: field.TypeString},
+		{Name: "age", Type: field.TypeInt},
+		{Name: "yaer", Type: field.TypeInt},
 		{Name: "ClubID", Type: field.TypeInt, Nullable: true},
-		{Name: "clubappstatus_id", Type: field.TypeInt, Nullable: true},
+		{Name: "clubstatusID", Type: field.TypeInt, Nullable: true},
 		{Name: "UserID", Type: field.TypeInt, Nullable: true},
 	}
 	// ClubapplicationsTable holds the schema information for the "clubapplications" table.
@@ -166,21 +169,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "clubapplications_clubs_clubapplication",
-				Columns: []*schema.Column{ClubapplicationsColumns[5]},
+				Columns: []*schema.Column{ClubapplicationsColumns[9]},
 
 				RefColumns: []*schema.Column{ClubsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "clubapplications_clubapp_status_clubapplication",
-				Columns: []*schema.Column{ClubapplicationsColumns[6]},
+				Columns: []*schema.Column{ClubapplicationsColumns[10]},
 
 				RefColumns: []*schema.Column{ClubappStatusColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "clubapplications_users_clubapplication",
-				Columns: []*schema.Column{ClubapplicationsColumns[7]},
+				Columns: []*schema.Column{ClubapplicationsColumns[11]},
 
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -237,6 +240,42 @@ var (
 		PrimaryKey:  []*schema.Column{ComplaintTypesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
+	// DisciplinesColumns holds the columns for the "disciplines" table.
+	DisciplinesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "discipline", Type: field.TypeString, Unique: true},
+	}
+	// DisciplinesTable holds the schema information for the "disciplines" table.
+	DisciplinesTable = &schema.Table{
+		Name:        "disciplines",
+		Columns:     DisciplinesColumns,
+		PrimaryKey:  []*schema.Column{DisciplinesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// GendersColumns holds the columns for the "genders" table.
+	GendersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "gender", Type: field.TypeString, Unique: true},
+	}
+	// GendersTable holds the schema information for the "genders" table.
+	GendersTable = &schema.Table{
+		Name:        "genders",
+		Columns:     GendersColumns,
+		PrimaryKey:  []*schema.Column{GendersColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// PurposesColumns holds the columns for the "purposes" table.
+	PurposesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "purpose", Type: field.TypeString},
+	}
+	// PurposesTable holds the schema information for the "purposes" table.
+	PurposesTable = &schema.Table{
+		Name:        "purposes",
+		Columns:     PurposesColumns,
+		PrimaryKey:  []*schema.Column{PurposesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
 	// RoomsColumns holds the columns for the "rooms" table.
 	RoomsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -268,6 +307,7 @@ var (
 	RoomusesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "added_time", Type: field.TypeTime},
+		{Name: "purpose_id", Type: field.TypeInt, Nullable: true},
 		{Name: "room_id", Type: field.TypeInt, Nullable: true},
 		{Name: "purpose_id", Type: field.TypeInt, Nullable: true},
 		{Name: "UserID", Type: field.TypeInt, Nullable: true},
@@ -279,22 +319,29 @@ var (
 		PrimaryKey: []*schema.Column{RoomusesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
+				Symbol:  "roomuses_purposes_roomuses",
+				Columns: []*schema.Column{RoomusesColumns[2], RoomusesColumns[4]},
+
+				RefColumns: []*schema.Column{PurposesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
 				Symbol:  "roomuses_rooms_roomuses",
-				Columns: []*schema.Column{RoomusesColumns[2]},
+				Columns: []*schema.Column{RoomusesColumns[3]},
 
 				RefColumns: []*schema.Column{RoomsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomuses_roompurposes_roompurpose",
-				Columns: []*schema.Column{RoomusesColumns[3]},
+				Columns: []*schema.Column{RoomusesColumns[2], RoomusesColumns[4]},
 
 				RefColumns: []*schema.Column{RoompurposesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "roomuses_users_Roomuse",
-				Columns: []*schema.Column{RoomusesColumns[4]},
+				Columns: []*schema.Column{RoomusesColumns[5]},
 
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -304,10 +351,15 @@ var (
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "name", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString, Unique: true},
 		{Name: "email", Type: field.TypeString},
-		{Name: "password", Type: field.TypeInt},
+		{Name: "password", Type: field.TypeString},
+		{Name: "ClubID", Type: field.TypeInt, Nullable: true},
+		{Name: "discipline_id", Type: field.TypeInt, Nullable: true},
+		{Name: "gender_id", Type: field.TypeInt, Nullable: true},
+		{Name: "userstatus_id", Type: field.TypeInt, Nullable: true},
 		{Name: "UserTypeID", Type: field.TypeInt, Nullable: true},
+		{Name: "year_id", Type: field.TypeInt, Nullable: true},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{
@@ -316,13 +368,60 @@ var (
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:  "users_usertypes_user",
+				Symbol:  "users_clubs_userclub",
 				Columns: []*schema.Column{UsersColumns[4]},
+
+				RefColumns: []*schema.Column{ClubsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "users_disciplines_users",
+				Columns: []*schema.Column{UsersColumns[5]},
+
+				RefColumns: []*schema.Column{DisciplinesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "users_genders_users",
+				Columns: []*schema.Column{UsersColumns[6]},
+
+				RefColumns: []*schema.Column{GendersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "users_user_status_users",
+				Columns: []*schema.Column{UsersColumns[7]},
+
+				RefColumns: []*schema.Column{UserStatusColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+			{
+				Symbol:  "users_usertypes_user",
+				Columns: []*schema.Column{UsersColumns[8]},
 
 				RefColumns: []*schema.Column{UsertypesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
+			{
+				Symbol:  "users_years_users",
+				Columns: []*schema.Column{UsersColumns[9]},
+
+				RefColumns: []*schema.Column{YearsColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
 		},
+	}
+	// UserStatusColumns holds the columns for the "user_status" table.
+	UserStatusColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "userstatus", Type: field.TypeString, Unique: true},
+	}
+	// UserStatusTable holds the schema information for the "user_status" table.
+	UserStatusTable = &schema.Table{
+		Name:        "user_status",
+		Columns:     UserStatusColumns,
+		PrimaryKey:  []*schema.Column{UserStatusColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
 	}
 	// UsertypesColumns holds the columns for the "usertypes" table.
 	UsertypesColumns = []*schema.Column{
@@ -334,6 +433,18 @@ var (
 		Name:        "usertypes",
 		Columns:     UsertypesColumns,
 		PrimaryKey:  []*schema.Column{UsertypesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{},
+	}
+	// YearsColumns holds the columns for the "years" table.
+	YearsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "year", Type: field.TypeInt, Unique: true},
+	}
+	// YearsTable holds the schema information for the "years" table.
+	YearsTable = &schema.Table{
+		Name:        "years",
+		Columns:     YearsColumns,
+		PrimaryKey:  []*schema.Column{YearsColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{},
 	}
 	// Tables holds all the tables in the schema.
@@ -348,11 +459,16 @@ var (
 		ClubapplicationsTable,
 		ComplaintsTable,
 		ComplaintTypesTable,
+		DisciplinesTable,
+		GendersTable,
+		PurposesTable,
 		RoomsTable,
 		RoompurposesTable,
 		RoomusesTable,
 		UsersTable,
+		UserStatusTable,
 		UsertypesTable,
+		YearsTable,
 	}
 )
 
@@ -369,8 +485,14 @@ func init() {
 	ComplaintsTable.ForeignKeys[0].RefTable = ClubsTable
 	ComplaintsTable.ForeignKeys[1].RefTable = ComplaintTypesTable
 	ComplaintsTable.ForeignKeys[2].RefTable = UsersTable
-	RoomusesTable.ForeignKeys[0].RefTable = RoomsTable
-	RoomusesTable.ForeignKeys[1].RefTable = RoompurposesTable
-	RoomusesTable.ForeignKeys[2].RefTable = UsersTable
-	UsersTable.ForeignKeys[0].RefTable = UsertypesTable
+	RoomusesTable.ForeignKeys[0].RefTable = PurposesTable
+	RoomusesTable.ForeignKeys[1].RefTable = RoomsTable
+	RoomusesTable.ForeignKeys[2].RefTable = RoompurposesTable
+	RoomusesTable.ForeignKeys[3].RefTable = UsersTable
+	UsersTable.ForeignKeys[0].RefTable = ClubsTable
+	UsersTable.ForeignKeys[1].RefTable = DisciplinesTable
+	UsersTable.ForeignKeys[2].RefTable = GendersTable
+	UsersTable.ForeignKeys[3].RefTable = UserStatusTable
+	UsersTable.ForeignKeys[4].RefTable = UsertypesTable
+	UsersTable.ForeignKeys[5].RefTable = YearsTable
 }

@@ -11,8 +11,6 @@ const (
 	FieldName = "name"
 	// FieldPurpose holds the string denoting the purpose field in the database.
 	FieldPurpose = "purpose"
-	// FieldFoundingdate holds the string denoting the foundingdate field in the database.
-	FieldFoundingdate = "foundingdate"
 
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
@@ -26,6 +24,8 @@ const (
 	EdgeClubToComplaint = "ClubToComplaint"
 	// EdgeActivities holds the string denoting the activities edge name in mutations.
 	EdgeActivities = "activities"
+	// EdgeUserclub holds the string denoting the userclub edge name in mutations.
+	EdgeUserclub = "userclub"
 
 	// Table holds the table name of the club in the database.
 	Table = "clubs"
@@ -71,6 +71,13 @@ const (
 	ActivitiesInverseTable = "activities"
 	// ActivitiesColumn is the table column denoting the activities relation/edge.
 	ActivitiesColumn = "ClubID"
+	// UserclubTable is the table the holds the userclub relation/edge.
+	UserclubTable = "users"
+	// UserclubInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	UserclubInverseTable = "users"
+	// UserclubColumn is the table column denoting the userclub relation/edge.
+	UserclubColumn = "ClubID"
 )
 
 // Columns holds all SQL columns for club fields.
@@ -78,7 +85,6 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldPurpose,
-	FieldFoundingdate,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Club type.

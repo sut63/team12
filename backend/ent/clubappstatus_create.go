@@ -20,9 +20,9 @@ type ClubappStatusCreate struct {
 	hooks    []Hook
 }
 
-// SetApplyStatus sets the apply_status field.
-func (csc *ClubappStatusCreate) SetApplyStatus(s string) *ClubappStatusCreate {
-	csc.mutation.SetApplyStatus(s)
+// SetClubstatus sets the clubstatus field.
+func (csc *ClubappStatusCreate) SetClubstatus(s string) *ClubappStatusCreate {
+	csc.mutation.SetClubstatus(s)
 	return csc
 }
 
@@ -48,8 +48,8 @@ func (csc *ClubappStatusCreate) Mutation() *ClubappStatusMutation {
 
 // Save creates the ClubappStatus in the database.
 func (csc *ClubappStatusCreate) Save(ctx context.Context) (*ClubappStatus, error) {
-	if _, ok := csc.mutation.ApplyStatus(); !ok {
-		return nil, &ValidationError{Name: "apply_status", err: errors.New("ent: missing required field \"apply_status\"")}
+	if _, ok := csc.mutation.Clubstatus(); !ok {
+		return nil, &ValidationError{Name: "clubstatus", err: errors.New("ent: missing required field \"clubstatus\"")}
 	}
 	var (
 		err  error
@@ -111,13 +111,13 @@ func (csc *ClubappStatusCreate) createSpec() (*ClubappStatus, *sqlgraph.CreateSp
 			},
 		}
 	)
-	if value, ok := csc.mutation.ApplyStatus(); ok {
+	if value, ok := csc.mutation.Clubstatus(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
-			Column: clubappstatus.FieldApplyStatus,
+			Column: clubappstatus.FieldClubstatus,
 		})
-		cs.ApplyStatus = value
+		cs.Clubstatus = value
 	}
 	if nodes := csc.mutation.ClubapplicationIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

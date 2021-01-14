@@ -16,6 +16,16 @@ const (
 
 	// EdgeUsertype holds the string denoting the usertype edge name in mutations.
 	EdgeUsertype = "usertype"
+	// EdgeClubuser holds the string denoting the clubuser edge name in mutations.
+	EdgeClubuser = "clubuser"
+	// EdgeGender holds the string denoting the gender edge name in mutations.
+	EdgeGender = "gender"
+	// EdgeUserstatus holds the string denoting the userstatus edge name in mutations.
+	EdgeUserstatus = "userstatus"
+	// EdgeDiscipline holds the string denoting the discipline edge name in mutations.
+	EdgeDiscipline = "discipline"
+	// EdgeYear holds the string denoting the year edge name in mutations.
+	EdgeYear = "year"
 	// EdgeClub holds the string denoting the club edge name in mutations.
 	EdgeClub = "club"
 	// EdgeClubapplication holds the string denoting the clubapplication edge name in mutations.
@@ -34,6 +44,41 @@ const (
 	UsertypeInverseTable = "usertypes"
 	// UsertypeColumn is the table column denoting the usertype relation/edge.
 	UsertypeColumn = "UserTypeID"
+	// ClubuserTable is the table the holds the clubuser relation/edge.
+	ClubuserTable = "users"
+	// ClubuserInverseTable is the table name for the Club entity.
+	// It exists in this package in order to avoid circular dependency with the "club" package.
+	ClubuserInverseTable = "clubs"
+	// ClubuserColumn is the table column denoting the clubuser relation/edge.
+	ClubuserColumn = "ClubID"
+	// GenderTable is the table the holds the gender relation/edge.
+	GenderTable = "users"
+	// GenderInverseTable is the table name for the Gender entity.
+	// It exists in this package in order to avoid circular dependency with the "gender" package.
+	GenderInverseTable = "genders"
+	// GenderColumn is the table column denoting the gender relation/edge.
+	GenderColumn = "gender_id"
+	// UserstatusTable is the table the holds the userstatus relation/edge.
+	UserstatusTable = "users"
+	// UserstatusInverseTable is the table name for the UserStatus entity.
+	// It exists in this package in order to avoid circular dependency with the "userstatus" package.
+	UserstatusInverseTable = "user_status"
+	// UserstatusColumn is the table column denoting the userstatus relation/edge.
+	UserstatusColumn = "userstatus_id"
+	// DisciplineTable is the table the holds the discipline relation/edge.
+	DisciplineTable = "users"
+	// DisciplineInverseTable is the table name for the Discipline entity.
+	// It exists in this package in order to avoid circular dependency with the "discipline" package.
+	DisciplineInverseTable = "disciplines"
+	// DisciplineColumn is the table column denoting the discipline relation/edge.
+	DisciplineColumn = "discipline_id"
+	// YearTable is the table the holds the year relation/edge.
+	YearTable = "users"
+	// YearInverseTable is the table name for the Year entity.
+	// It exists in this package in order to avoid circular dependency with the "year" package.
+	YearInverseTable = "years"
+	// YearColumn is the table column denoting the year relation/edge.
+	YearColumn = "year_id"
 	// ClubTable is the table the holds the club relation/edge.
 	ClubTable = "clubs"
 	// ClubInverseTable is the table name for the Club entity.
@@ -74,7 +119,12 @@ var Columns = []string{
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the User type.
 var ForeignKeys = []string{
+	"ClubID",
+	"discipline_id",
+	"gender_id",
+	"userstatus_id",
 	"UserTypeID",
+	"year_id",
 }
 
 var (

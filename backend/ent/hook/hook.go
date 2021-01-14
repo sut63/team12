@@ -139,6 +139,45 @@ func (f ComplaintTypeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Valu
 	return f(ctx, mv)
 }
 
+// The DisciplineFunc type is an adapter to allow the use of ordinary
+// function as Discipline mutator.
+type DisciplineFunc func(context.Context, *ent.DisciplineMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f DisciplineFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.DisciplineMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.DisciplineMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The GenderFunc type is an adapter to allow the use of ordinary
+// function as Gender mutator.
+type GenderFunc func(context.Context, *ent.GenderMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GenderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GenderMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GenderMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The PurposeFunc type is an adapter to allow the use of ordinary
+// function as Purpose mutator.
+type PurposeFunc func(context.Context, *ent.PurposeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PurposeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.PurposeMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PurposeMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The RoomFunc type is an adapter to allow the use of ordinary
 // function as Room mutator.
 type RoomFunc func(context.Context, *ent.RoomMutation) (ent.Value, error)
@@ -191,6 +230,19 @@ func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error)
 	return f(ctx, mv)
 }
 
+// The UserStatusFunc type is an adapter to allow the use of ordinary
+// function as UserStatus mutator.
+type UserStatusFunc func(context.Context, *ent.UserStatusMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f UserStatusFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.UserStatusMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserStatusMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The UsertypeFunc type is an adapter to allow the use of ordinary
 // function as Usertype mutator.
 type UsertypeFunc func(context.Context, *ent.UsertypeMutation) (ent.Value, error)
@@ -200,6 +252,19 @@ func (f UsertypeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, er
 	mv, ok := m.(*ent.UsertypeMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UsertypeMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The YearFunc type is an adapter to allow the use of ordinary
+// function as Year mutator.
+type YearFunc func(context.Context, *ent.YearMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f YearFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.YearMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.YearMutation", m)
 	}
 	return f(ctx, mv)
 }

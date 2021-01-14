@@ -32,6 +32,12 @@ type Tx struct {
 	Complaint *ComplaintClient
 	// ComplaintType is the client for interacting with the ComplaintType builders.
 	ComplaintType *ComplaintTypeClient
+	// Discipline is the client for interacting with the Discipline builders.
+	Discipline *DisciplineClient
+	// Gender is the client for interacting with the Gender builders.
+	Gender *GenderClient
+	// Purpose is the client for interacting with the Purpose builders.
+	Purpose *PurposeClient
 	// Room is the client for interacting with the Room builders.
 	Room *RoomClient
 	// Roompurpose is the client for interacting with the Roompurpose builders.
@@ -40,8 +46,12 @@ type Tx struct {
 	Roomuse *RoomuseClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// UserStatus is the client for interacting with the UserStatus builders.
+	UserStatus *UserStatusClient
 	// Usertype is the client for interacting with the Usertype builders.
 	Usertype *UsertypeClient
+	// Year is the client for interacting with the Year builders.
+	Year *YearClient
 
 	// lazily loaded.
 	client     *Client
@@ -187,11 +197,16 @@ func (tx *Tx) init() {
 	tx.Clubapplication = NewClubapplicationClient(tx.config)
 	tx.Complaint = NewComplaintClient(tx.config)
 	tx.ComplaintType = NewComplaintTypeClient(tx.config)
+	tx.Discipline = NewDisciplineClient(tx.config)
+	tx.Gender = NewGenderClient(tx.config)
+	tx.Purpose = NewPurposeClient(tx.config)
 	tx.Room = NewRoomClient(tx.config)
 	tx.Roompurpose = NewRoompurposeClient(tx.config)
 	tx.Roomuse = NewRoomuseClient(tx.config)
 	tx.User = NewUserClient(tx.config)
+	tx.UserStatus = NewUserStatusClient(tx.config)
 	tx.Usertype = NewUsertypeClient(tx.config)
+	tx.Year = NewYearClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.

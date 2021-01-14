@@ -7,8 +7,8 @@ const (
 	Label = "clubapp_status"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldApplyStatus holds the string denoting the apply_status field in the database.
-	FieldApplyStatus = "apply_status"
+	// FieldClubstatus holds the string denoting the clubstatus field in the database.
+	FieldClubstatus = "clubstatus"
 
 	// EdgeClubapplication holds the string denoting the clubapplication edge name in mutations.
 	EdgeClubapplication = "clubapplication"
@@ -21,11 +21,11 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "clubapplication" package.
 	ClubapplicationInverseTable = "clubapplications"
 	// ClubapplicationColumn is the table column denoting the clubapplication relation/edge.
-	ClubapplicationColumn = "clubappstatus_id"
+	ClubapplicationColumn = "clubstatusID"
 )
 
 // Columns holds all SQL columns for clubappstatus fields.
 var Columns = []string{
 	FieldID,
-	FieldApplyStatus,
+	FieldClubstatus,
 }

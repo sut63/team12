@@ -106,7 +106,7 @@ func Email(v string) predicate.User {
 }
 
 // Password applies equality check predicate on the "password" field. It's identical to PasswordEQ.
-func Password(v int) predicate.User {
+func Password(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldPassword), v))
 	})
@@ -335,21 +335,21 @@ func EmailContainsFold(v string) predicate.User {
 }
 
 // PasswordEQ applies the EQ predicate on the "password" field.
-func PasswordEQ(v int) predicate.User {
+func PasswordEQ(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldPassword), v))
 	})
 }
 
 // PasswordNEQ applies the NEQ predicate on the "password" field.
-func PasswordNEQ(v int) predicate.User {
+func PasswordNEQ(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldPassword), v))
 	})
 }
 
 // PasswordIn applies the In predicate on the "password" field.
-func PasswordIn(vs ...int) predicate.User {
+func PasswordIn(vs ...string) predicate.User {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -366,7 +366,7 @@ func PasswordIn(vs ...int) predicate.User {
 }
 
 // PasswordNotIn applies the NotIn predicate on the "password" field.
-func PasswordNotIn(vs ...int) predicate.User {
+func PasswordNotIn(vs ...string) predicate.User {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -383,30 +383,65 @@ func PasswordNotIn(vs ...int) predicate.User {
 }
 
 // PasswordGT applies the GT predicate on the "password" field.
-func PasswordGT(v int) predicate.User {
+func PasswordGT(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldPassword), v))
 	})
 }
 
 // PasswordGTE applies the GTE predicate on the "password" field.
-func PasswordGTE(v int) predicate.User {
+func PasswordGTE(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldPassword), v))
 	})
 }
 
 // PasswordLT applies the LT predicate on the "password" field.
-func PasswordLT(v int) predicate.User {
+func PasswordLT(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldPassword), v))
 	})
 }
 
 // PasswordLTE applies the LTE predicate on the "password" field.
-func PasswordLTE(v int) predicate.User {
+func PasswordLTE(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordContains applies the Contains predicate on the "password" field.
+func PasswordContains(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordHasPrefix applies the HasPrefix predicate on the "password" field.
+func PasswordHasPrefix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordHasSuffix applies the HasSuffix predicate on the "password" field.
+func PasswordHasSuffix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordEqualFold applies the EqualFold predicate on the "password" field.
+func PasswordEqualFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldPassword), v))
+	})
+}
+
+// PasswordContainsFold applies the ContainsFold predicate on the "password" field.
+func PasswordContainsFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldPassword), v))
 	})
 }
 
@@ -429,6 +464,146 @@ func HasUsertypeWith(preds ...predicate.Usertype) predicate.User {
 			sqlgraph.From(Table, FieldID),
 			sqlgraph.To(UsertypeInverseTable, FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, UsertypeTable, UsertypeColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasClubuser applies the HasEdge predicate on the "clubuser" edge.
+func HasClubuser() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ClubuserTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, ClubuserTable, ClubuserColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasClubuserWith applies the HasEdge predicate on the "clubuser" edge with a given conditions (other predicates).
+func HasClubuserWith(preds ...predicate.Club) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ClubuserInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, ClubuserTable, ClubuserColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasGender applies the HasEdge predicate on the "gender" edge.
+func HasGender() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(GenderTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, GenderTable, GenderColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasGenderWith applies the HasEdge predicate on the "gender" edge with a given conditions (other predicates).
+func HasGenderWith(preds ...predicate.Gender) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(GenderInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, GenderTable, GenderColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasUserstatus applies the HasEdge predicate on the "userstatus" edge.
+func HasUserstatus() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(UserstatusTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, UserstatusTable, UserstatusColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasUserstatusWith applies the HasEdge predicate on the "userstatus" edge with a given conditions (other predicates).
+func HasUserstatusWith(preds ...predicate.UserStatus) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(UserstatusInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, UserstatusTable, UserstatusColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasDiscipline applies the HasEdge predicate on the "discipline" edge.
+func HasDiscipline() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(DisciplineTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, DisciplineTable, DisciplineColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasDisciplineWith applies the HasEdge predicate on the "discipline" edge with a given conditions (other predicates).
+func HasDisciplineWith(preds ...predicate.Discipline) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(DisciplineInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, DisciplineTable, DisciplineColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasYear applies the HasEdge predicate on the "year" edge.
+func HasYear() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(YearTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, YearTable, YearColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasYearWith applies the HasEdge predicate on the "year" edge with a given conditions (other predicates).
+func HasYearWith(preds ...predicate.Year) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(YearInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, YearTable, YearColumn),
 		)
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {

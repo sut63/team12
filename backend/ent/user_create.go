@@ -10,9 +10,13 @@ import (
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/clubapplication"
 	"github.com/OMENX/app/ent/complaint"
+	"github.com/OMENX/app/ent/discipline"
+	"github.com/OMENX/app/ent/gender"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
+	"github.com/OMENX/app/ent/userstatus"
 	"github.com/OMENX/app/ent/usertype"
+	"github.com/OMENX/app/ent/year"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 	"github.com/facebookincubator/ent/schema/field"
 )
@@ -37,8 +41,8 @@ func (uc *UserCreate) SetEmail(s string) *UserCreate {
 }
 
 // SetPassword sets the password field.
-func (uc *UserCreate) SetPassword(i int) *UserCreate {
-	uc.mutation.SetPassword(i)
+func (uc *UserCreate) SetPassword(s string) *UserCreate {
+	uc.mutation.SetPassword(s)
 	return uc
 }
 
@@ -59,6 +63,101 @@ func (uc *UserCreate) SetNillableUsertypeID(id *int) *UserCreate {
 // SetUsertype sets the usertype edge to Usertype.
 func (uc *UserCreate) SetUsertype(u *Usertype) *UserCreate {
 	return uc.SetUsertypeID(u.ID)
+}
+
+// SetClubuserID sets the clubuser edge to Club by id.
+func (uc *UserCreate) SetClubuserID(id int) *UserCreate {
+	uc.mutation.SetClubuserID(id)
+	return uc
+}
+
+// SetNillableClubuserID sets the clubuser edge to Club by id if the given value is not nil.
+func (uc *UserCreate) SetNillableClubuserID(id *int) *UserCreate {
+	if id != nil {
+		uc = uc.SetClubuserID(*id)
+	}
+	return uc
+}
+
+// SetClubuser sets the clubuser edge to Club.
+func (uc *UserCreate) SetClubuser(c *Club) *UserCreate {
+	return uc.SetClubuserID(c.ID)
+}
+
+// SetGenderID sets the gender edge to Gender by id.
+func (uc *UserCreate) SetGenderID(id int) *UserCreate {
+	uc.mutation.SetGenderID(id)
+	return uc
+}
+
+// SetNillableGenderID sets the gender edge to Gender by id if the given value is not nil.
+func (uc *UserCreate) SetNillableGenderID(id *int) *UserCreate {
+	if id != nil {
+		uc = uc.SetGenderID(*id)
+	}
+	return uc
+}
+
+// SetGender sets the gender edge to Gender.
+func (uc *UserCreate) SetGender(g *Gender) *UserCreate {
+	return uc.SetGenderID(g.ID)
+}
+
+// SetUserstatusID sets the userstatus edge to UserStatus by id.
+func (uc *UserCreate) SetUserstatusID(id int) *UserCreate {
+	uc.mutation.SetUserstatusID(id)
+	return uc
+}
+
+// SetNillableUserstatusID sets the userstatus edge to UserStatus by id if the given value is not nil.
+func (uc *UserCreate) SetNillableUserstatusID(id *int) *UserCreate {
+	if id != nil {
+		uc = uc.SetUserstatusID(*id)
+	}
+	return uc
+}
+
+// SetUserstatus sets the userstatus edge to UserStatus.
+func (uc *UserCreate) SetUserstatus(u *UserStatus) *UserCreate {
+	return uc.SetUserstatusID(u.ID)
+}
+
+// SetDisciplineID sets the discipline edge to Discipline by id.
+func (uc *UserCreate) SetDisciplineID(id int) *UserCreate {
+	uc.mutation.SetDisciplineID(id)
+	return uc
+}
+
+// SetNillableDisciplineID sets the discipline edge to Discipline by id if the given value is not nil.
+func (uc *UserCreate) SetNillableDisciplineID(id *int) *UserCreate {
+	if id != nil {
+		uc = uc.SetDisciplineID(*id)
+	}
+	return uc
+}
+
+// SetDiscipline sets the discipline edge to Discipline.
+func (uc *UserCreate) SetDiscipline(d *Discipline) *UserCreate {
+	return uc.SetDisciplineID(d.ID)
+}
+
+// SetYearID sets the year edge to Year by id.
+func (uc *UserCreate) SetYearID(id int) *UserCreate {
+	uc.mutation.SetYearID(id)
+	return uc
+}
+
+// SetNillableYearID sets the year edge to Year by id if the given value is not nil.
+func (uc *UserCreate) SetNillableYearID(id *int) *UserCreate {
+	if id != nil {
+		uc = uc.SetYearID(*id)
+	}
+	return uc
+}
+
+// SetYear sets the year edge to Year.
+func (uc *UserCreate) SetYear(y *Year) *UserCreate {
+	return uc.SetYearID(y.ID)
 }
 
 // AddClubIDs adds the club edge to Club by ids.
@@ -225,7 +324,7 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := uc.mutation.Password(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: user.FieldPassword,
 		})
@@ -242,6 +341,101 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: usertype.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.ClubuserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.ClubuserTable,
+			Columns: []string{user.ClubuserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: club.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.GenderIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.GenderTable,
+			Columns: []string{user.GenderColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: gender.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.UserstatusIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.UserstatusTable,
+			Columns: []string{user.UserstatusColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: userstatus.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.DisciplineIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.DisciplineTable,
+			Columns: []string{user.DisciplineColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: discipline.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.YearIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.YearTable,
+			Columns: []string{user.YearColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: year.FieldID,
 				},
 			},
 		}

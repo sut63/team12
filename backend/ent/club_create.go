@@ -6,7 +6,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/club"
@@ -35,12 +34,6 @@ func (cc *ClubCreate) SetName(s string) *ClubCreate {
 // SetPurpose sets the purpose field.
 func (cc *ClubCreate) SetPurpose(s string) *ClubCreate {
 	cc.mutation.SetPurpose(s)
-	return cc
-}
-
-// SetFoundingdate sets the foundingdate field.
-func (cc *ClubCreate) SetFoundingdate(t time.Time) *ClubCreate {
-	cc.mutation.SetFoundingdate(t)
 	return cc
 }
 
@@ -146,6 +139,21 @@ func (cc *ClubCreate) AddActivities(a ...*Activities) *ClubCreate {
 	return cc.AddActivityIDs(ids...)
 }
 
+// AddUserclubIDs adds the userclub edge to User by ids.
+func (cc *ClubCreate) AddUserclubIDs(ids ...int) *ClubCreate {
+	cc.mutation.AddUserclubIDs(ids...)
+	return cc
+}
+
+// AddUserclub adds the userclub edges to User.
+func (cc *ClubCreate) AddUserclub(u ...*User) *ClubCreate {
+	ids := make([]int, len(u))
+	for i := range u {
+		ids[i] = u[i].ID
+	}
+	return cc.AddUserclubIDs(ids...)
+}
+
 // Mutation returns the ClubMutation object of the builder.
 func (cc *ClubCreate) Mutation() *ClubMutation {
 	return cc.mutation
@@ -168,9 +176,6 @@ func (cc *ClubCreate) Save(ctx context.Context) (*Club, error) {
 		if err := club.PurposeValidator(v); err != nil {
 			return nil, &ValidationError{Name: "purpose", err: fmt.Errorf("ent: validator failed for field \"purpose\": %w", err)}
 		}
-	}
-	if _, ok := cc.mutation.Foundingdate(); !ok {
-		return nil, &ValidationError{Name: "foundingdate", err: errors.New("ent: missing required field \"foundingdate\"")}
 	}
 	var (
 		err  error
@@ -247,14 +252,6 @@ func (cc *ClubCreate) createSpec() (*Club, *sqlgraph.CreateSpec) {
 			Column: club.FieldPurpose,
 		})
 		c.Purpose = value
-	}
-	if value, ok := cc.mutation.Foundingdate(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: club.FieldFoundingdate,
-		})
-		c.Foundingdate = value
 	}
 	if nodes := cc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -362,6 +359,25 @@ func (cc *ClubCreate) createSpec() (*Club, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: activities.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := cc.mutation.UserclubIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   club.UserclubTable,
+			Columns: []string{club.UserclubColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: user.FieldID,
 				},
 			},
 		}

@@ -18,11 +18,16 @@ import (
 	"github.com/OMENX/app/ent/clubtype"
 	"github.com/OMENX/app/ent/complaint"
 	"github.com/OMENX/app/ent/complainttype"
+	"github.com/OMENX/app/ent/discipline"
+	"github.com/OMENX/app/ent/gender"
+	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
 	"github.com/OMENX/app/ent/roompurpose"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
+	"github.com/OMENX/app/ent/userstatus"
 	"github.com/OMENX/app/ent/usertype"
+	"github.com/OMENX/app/ent/year"
 
 	"github.com/facebookincubator/ent"
 )
@@ -46,11 +51,16 @@ const (
 	TypeClubapplication = "Clubapplication"
 	TypeComplaint       = "Complaint"
 	TypeComplaintType   = "ComplaintType"
+	TypeDiscipline      = "Discipline"
+	TypeGender          = "Gender"
+	TypePurpose         = "Purpose"
 	TypeRoom            = "Room"
 	TypeRoompurpose     = "Roompurpose"
 	TypeRoomuse         = "Roomuse"
 	TypeUser            = "User"
+	TypeUserStatus      = "UserStatus"
 	TypeUsertype        = "Usertype"
+	TypeYear            = "Year"
 )
 
 // AcademicYearMutation represents an operation that mutate the AcademicYears
@@ -1443,7 +1453,6 @@ type ClubMutation struct {
 	id                      *int
 	name                    *string
 	purpose                 *string
-	foundingdate            *time.Time
 	clearedFields           map[string]struct{}
 	user                    *int
 	cleareduser             bool
@@ -1457,6 +1466,8 @@ type ClubMutation struct {
 	removed_ClubToComplaint map[int]struct{}
 	activities              map[int]struct{}
 	removedactivities       map[int]struct{}
+	userclub                map[int]struct{}
+	removeduserclub         map[int]struct{}
 	done                    bool
 	oldValue                func(context.Context) (*Club, error)
 }
@@ -1612,43 +1623,6 @@ func (m *ClubMutation) OldPurpose(ctx context.Context) (v string, err error) {
 // ResetPurpose reset all changes of the "purpose" field.
 func (m *ClubMutation) ResetPurpose() {
 	m.purpose = nil
-}
-
-// SetFoundingdate sets the foundingdate field.
-func (m *ClubMutation) SetFoundingdate(t time.Time) {
-	m.foundingdate = &t
-}
-
-// Foundingdate returns the foundingdate value in the mutation.
-func (m *ClubMutation) Foundingdate() (r time.Time, exists bool) {
-	v := m.foundingdate
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldFoundingdate returns the old foundingdate value of the Club.
-// If the Club object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ClubMutation) OldFoundingdate(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldFoundingdate is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldFoundingdate requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldFoundingdate: %w", err)
-	}
-	return oldValue.Foundingdate, nil
-}
-
-// ResetFoundingdate reset all changes of the "foundingdate" field.
-func (m *ClubMutation) ResetFoundingdate() {
-	m.foundingdate = nil
 }
 
 // SetUserID sets the user edge to User by id.
@@ -1894,6 +1868,48 @@ func (m *ClubMutation) ResetActivities() {
 	m.removedactivities = nil
 }
 
+// AddUserclubIDs adds the userclub edge to User by ids.
+func (m *ClubMutation) AddUserclubIDs(ids ...int) {
+	if m.userclub == nil {
+		m.userclub = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.userclub[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveUserclubIDs removes the userclub edge to User by ids.
+func (m *ClubMutation) RemoveUserclubIDs(ids ...int) {
+	if m.removeduserclub == nil {
+		m.removeduserclub = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removeduserclub[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedUserclub returns the removed ids of userclub.
+func (m *ClubMutation) RemovedUserclubIDs() (ids []int) {
+	for id := range m.removeduserclub {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// UserclubIDs returns the userclub ids in the mutation.
+func (m *ClubMutation) UserclubIDs() (ids []int) {
+	for id := range m.userclub {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetUserclub reset all changes of the "userclub" edge.
+func (m *ClubMutation) ResetUserclub() {
+	m.userclub = nil
+	m.removeduserclub = nil
+}
+
 // Op returns the operation name.
 func (m *ClubMutation) Op() Op {
 	return m.op
@@ -1908,15 +1924,12 @@ func (m *ClubMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *ClubMutation) Fields() []string {
-	fields := make([]string, 0, 3)
+	fields := make([]string, 0, 2)
 	if m.name != nil {
 		fields = append(fields, club.FieldName)
 	}
 	if m.purpose != nil {
 		fields = append(fields, club.FieldPurpose)
-	}
-	if m.foundingdate != nil {
-		fields = append(fields, club.FieldFoundingdate)
 	}
 	return fields
 }
@@ -1930,8 +1943,6 @@ func (m *ClubMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case club.FieldPurpose:
 		return m.Purpose()
-	case club.FieldFoundingdate:
-		return m.Foundingdate()
 	}
 	return nil, false
 }
@@ -1945,8 +1956,6 @@ func (m *ClubMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldName(ctx)
 	case club.FieldPurpose:
 		return m.OldPurpose(ctx)
-	case club.FieldFoundingdate:
-		return m.OldFoundingdate(ctx)
 	}
 	return nil, fmt.Errorf("unknown Club field %s", name)
 }
@@ -1969,13 +1978,6 @@ func (m *ClubMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPurpose(v)
-		return nil
-	case club.FieldFoundingdate:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetFoundingdate(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Club field %s", name)
@@ -2033,9 +2035,6 @@ func (m *ClubMutation) ResetField(name string) error {
 	case club.FieldPurpose:
 		m.ResetPurpose()
 		return nil
-	case club.FieldFoundingdate:
-		m.ResetFoundingdate()
-		return nil
 	}
 	return fmt.Errorf("unknown Club field %s", name)
 }
@@ -2043,7 +2042,7 @@ func (m *ClubMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *ClubMutation) AddedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 7)
 	if m.user != nil {
 		edges = append(edges, club.EdgeUser)
 	}
@@ -2061,6 +2060,9 @@ func (m *ClubMutation) AddedEdges() []string {
 	}
 	if m.activities != nil {
 		edges = append(edges, club.EdgeActivities)
+	}
+	if m.userclub != nil {
+		edges = append(edges, club.EdgeUserclub)
 	}
 	return edges
 }
@@ -2099,6 +2101,12 @@ func (m *ClubMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case club.EdgeUserclub:
+		ids := make([]ent.Value, 0, len(m.userclub))
+		for id := range m.userclub {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -2106,7 +2114,7 @@ func (m *ClubMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *ClubMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 7)
 	if m.removedclubapplication != nil {
 		edges = append(edges, club.EdgeClubapplication)
 	}
@@ -2115,6 +2123,9 @@ func (m *ClubMutation) RemovedEdges() []string {
 	}
 	if m.removedactivities != nil {
 		edges = append(edges, club.EdgeActivities)
+	}
+	if m.removeduserclub != nil {
+		edges = append(edges, club.EdgeUserclub)
 	}
 	return edges
 }
@@ -2141,6 +2152,12 @@ func (m *ClubMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case club.EdgeUserclub:
+		ids := make([]ent.Value, 0, len(m.removeduserclub))
+		for id := range m.removeduserclub {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
@@ -2148,7 +2165,7 @@ func (m *ClubMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *ClubMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 6)
+	edges := make([]string, 0, 7)
 	if m.cleareduser {
 		edges = append(edges, club.EdgeUser)
 	}
@@ -2214,6 +2231,9 @@ func (m *ClubMutation) ResetEdge(name string) error {
 		return nil
 	case club.EdgeActivities:
 		m.ResetActivities()
+		return nil
+	case club.EdgeUserclub:
+		m.ResetUserclub()
 		return nil
 	}
 	return fmt.Errorf("unknown Club edge %s", name)
@@ -2962,7 +2982,7 @@ type ClubappStatusMutation struct {
 	op                     Op
 	typ                    string
 	id                     *int
-	apply_status           *string
+	clubstatus             *string
 	clearedFields          map[string]struct{}
 	clubapplication        map[int]struct{}
 	removedclubapplication map[int]struct{}
@@ -3049,41 +3069,41 @@ func (m *ClubappStatusMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
-// SetApplyStatus sets the apply_status field.
-func (m *ClubappStatusMutation) SetApplyStatus(s string) {
-	m.apply_status = &s
+// SetClubstatus sets the clubstatus field.
+func (m *ClubappStatusMutation) SetClubstatus(s string) {
+	m.clubstatus = &s
 }
 
-// ApplyStatus returns the apply_status value in the mutation.
-func (m *ClubappStatusMutation) ApplyStatus() (r string, exists bool) {
-	v := m.apply_status
+// Clubstatus returns the clubstatus value in the mutation.
+func (m *ClubappStatusMutation) Clubstatus() (r string, exists bool) {
+	v := m.clubstatus
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldApplyStatus returns the old apply_status value of the ClubappStatus.
+// OldClubstatus returns the old clubstatus value of the ClubappStatus.
 // If the ClubappStatus object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ClubappStatusMutation) OldApplyStatus(ctx context.Context) (v string, err error) {
+func (m *ClubappStatusMutation) OldClubstatus(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldApplyStatus is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldClubstatus is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldApplyStatus requires an ID field in the mutation")
+		return v, fmt.Errorf("OldClubstatus requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldApplyStatus: %w", err)
+		return v, fmt.Errorf("querying old value for OldClubstatus: %w", err)
 	}
-	return oldValue.ApplyStatus, nil
+	return oldValue.Clubstatus, nil
 }
 
-// ResetApplyStatus reset all changes of the "apply_status" field.
-func (m *ClubappStatusMutation) ResetApplyStatus() {
-	m.apply_status = nil
+// ResetClubstatus reset all changes of the "clubstatus" field.
+func (m *ClubappStatusMutation) ResetClubstatus() {
+	m.clubstatus = nil
 }
 
 // AddClubapplicationIDs adds the clubapplication edge to Clubapplication by ids.
@@ -3143,8 +3163,8 @@ func (m *ClubappStatusMutation) Type() string {
 // fields that were in/decremented, call AddedFields().
 func (m *ClubappStatusMutation) Fields() []string {
 	fields := make([]string, 0, 1)
-	if m.apply_status != nil {
-		fields = append(fields, clubappstatus.FieldApplyStatus)
+	if m.clubstatus != nil {
+		fields = append(fields, clubappstatus.FieldClubstatus)
 	}
 	return fields
 }
@@ -3154,8 +3174,8 @@ func (m *ClubappStatusMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *ClubappStatusMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case clubappstatus.FieldApplyStatus:
-		return m.ApplyStatus()
+	case clubappstatus.FieldClubstatus:
+		return m.Clubstatus()
 	}
 	return nil, false
 }
@@ -3165,8 +3185,8 @@ func (m *ClubappStatusMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *ClubappStatusMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case clubappstatus.FieldApplyStatus:
-		return m.OldApplyStatus(ctx)
+	case clubappstatus.FieldClubstatus:
+		return m.OldClubstatus(ctx)
 	}
 	return nil, fmt.Errorf("unknown ClubappStatus field %s", name)
 }
@@ -3176,12 +3196,12 @@ func (m *ClubappStatusMutation) OldField(ctx context.Context, name string) (ent.
 // type mismatch the field type.
 func (m *ClubappStatusMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case clubappstatus.FieldApplyStatus:
+	case clubappstatus.FieldClubstatus:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetApplyStatus(v)
+		m.SetClubstatus(v)
 		return nil
 	}
 	return fmt.Errorf("unknown ClubappStatus field %s", name)
@@ -3233,8 +3253,8 @@ func (m *ClubappStatusMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *ClubappStatusMutation) ResetField(name string) error {
 	switch name {
-	case clubappstatus.FieldApplyStatus:
-		m.ResetApplyStatus()
+	case clubappstatus.FieldClubstatus:
+		m.ResetClubstatus()
 		return nil
 	}
 	return fmt.Errorf("unknown ClubappStatus field %s", name)
@@ -3330,10 +3350,16 @@ type ClubapplicationMutation struct {
 	op                   Op
 	typ                  string
 	id                   *int
-	applyname            *string
 	contact              *string
 	reason               *string
-	created_at           *time.Time
+	addeddatetime        *time.Time
+	addername            *string
+	discipline           *string
+	gender               *string
+	age                  *int
+	addage               *int
+	yaer                 *int
+	addyaer              *int
 	clearedFields        map[string]struct{}
 	owner                *int
 	clearedowner         bool
@@ -3424,43 +3450,6 @@ func (m *ClubapplicationMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
-// SetApplyname sets the applyname field.
-func (m *ClubapplicationMutation) SetApplyname(s string) {
-	m.applyname = &s
-}
-
-// Applyname returns the applyname value in the mutation.
-func (m *ClubapplicationMutation) Applyname() (r string, exists bool) {
-	v := m.applyname
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldApplyname returns the old applyname value of the Clubapplication.
-// If the Clubapplication object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ClubapplicationMutation) OldApplyname(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldApplyname is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldApplyname requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldApplyname: %w", err)
-	}
-	return oldValue.Applyname, nil
-}
-
-// ResetApplyname reset all changes of the "applyname" field.
-func (m *ClubapplicationMutation) ResetApplyname() {
-	m.applyname = nil
-}
-
 // SetContact sets the contact field.
 func (m *ClubapplicationMutation) SetContact(s string) {
 	m.contact = &s
@@ -3535,41 +3524,266 @@ func (m *ClubapplicationMutation) ResetReason() {
 	m.reason = nil
 }
 
-// SetCreatedAt sets the created_at field.
-func (m *ClubapplicationMutation) SetCreatedAt(t time.Time) {
-	m.created_at = &t
+// SetAddeddatetime sets the addeddatetime field.
+func (m *ClubapplicationMutation) SetAddeddatetime(t time.Time) {
+	m.addeddatetime = &t
 }
 
-// CreatedAt returns the created_at value in the mutation.
-func (m *ClubapplicationMutation) CreatedAt() (r time.Time, exists bool) {
-	v := m.created_at
+// Addeddatetime returns the addeddatetime value in the mutation.
+func (m *ClubapplicationMutation) Addeddatetime() (r time.Time, exists bool) {
+	v := m.addeddatetime
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldCreatedAt returns the old created_at value of the Clubapplication.
+// OldAddeddatetime returns the old addeddatetime value of the Clubapplication.
 // If the Clubapplication object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ClubapplicationMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+func (m *ClubapplicationMutation) OldAddeddatetime(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldCreatedAt is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldAddeddatetime is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldCreatedAt requires an ID field in the mutation")
+		return v, fmt.Errorf("OldAddeddatetime requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+		return v, fmt.Errorf("querying old value for OldAddeddatetime: %w", err)
 	}
-	return oldValue.CreatedAt, nil
+	return oldValue.Addeddatetime, nil
 }
 
-// ResetCreatedAt reset all changes of the "created_at" field.
-func (m *ClubapplicationMutation) ResetCreatedAt() {
-	m.created_at = nil
+// ResetAddeddatetime reset all changes of the "addeddatetime" field.
+func (m *ClubapplicationMutation) ResetAddeddatetime() {
+	m.addeddatetime = nil
+}
+
+// SetAddername sets the addername field.
+func (m *ClubapplicationMutation) SetAddername(s string) {
+	m.addername = &s
+}
+
+// Addername returns the addername value in the mutation.
+func (m *ClubapplicationMutation) Addername() (r string, exists bool) {
+	v := m.addername
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAddername returns the old addername value of the Clubapplication.
+// If the Clubapplication object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ClubapplicationMutation) OldAddername(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldAddername is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldAddername requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAddername: %w", err)
+	}
+	return oldValue.Addername, nil
+}
+
+// ResetAddername reset all changes of the "addername" field.
+func (m *ClubapplicationMutation) ResetAddername() {
+	m.addername = nil
+}
+
+// SetDiscipline sets the discipline field.
+func (m *ClubapplicationMutation) SetDiscipline(s string) {
+	m.discipline = &s
+}
+
+// Discipline returns the discipline value in the mutation.
+func (m *ClubapplicationMutation) Discipline() (r string, exists bool) {
+	v := m.discipline
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDiscipline returns the old discipline value of the Clubapplication.
+// If the Clubapplication object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ClubapplicationMutation) OldDiscipline(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldDiscipline is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldDiscipline requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDiscipline: %w", err)
+	}
+	return oldValue.Discipline, nil
+}
+
+// ResetDiscipline reset all changes of the "discipline" field.
+func (m *ClubapplicationMutation) ResetDiscipline() {
+	m.discipline = nil
+}
+
+// SetGender sets the gender field.
+func (m *ClubapplicationMutation) SetGender(s string) {
+	m.gender = &s
+}
+
+// Gender returns the gender value in the mutation.
+func (m *ClubapplicationMutation) Gender() (r string, exists bool) {
+	v := m.gender
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGender returns the old gender value of the Clubapplication.
+// If the Clubapplication object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ClubapplicationMutation) OldGender(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGender is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGender requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGender: %w", err)
+	}
+	return oldValue.Gender, nil
+}
+
+// ResetGender reset all changes of the "gender" field.
+func (m *ClubapplicationMutation) ResetGender() {
+	m.gender = nil
+}
+
+// SetAge sets the age field.
+func (m *ClubapplicationMutation) SetAge(i int) {
+	m.age = &i
+	m.addage = nil
+}
+
+// Age returns the age value in the mutation.
+func (m *ClubapplicationMutation) Age() (r int, exists bool) {
+	v := m.age
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAge returns the old age value of the Clubapplication.
+// If the Clubapplication object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ClubapplicationMutation) OldAge(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldAge is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldAge requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAge: %w", err)
+	}
+	return oldValue.Age, nil
+}
+
+// AddAge adds i to age.
+func (m *ClubapplicationMutation) AddAge(i int) {
+	if m.addage != nil {
+		*m.addage += i
+	} else {
+		m.addage = &i
+	}
+}
+
+// AddedAge returns the value that was added to the age field in this mutation.
+func (m *ClubapplicationMutation) AddedAge() (r int, exists bool) {
+	v := m.addage
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAge reset all changes of the "age" field.
+func (m *ClubapplicationMutation) ResetAge() {
+	m.age = nil
+	m.addage = nil
+}
+
+// SetYaer sets the yaer field.
+func (m *ClubapplicationMutation) SetYaer(i int) {
+	m.yaer = &i
+	m.addyaer = nil
+}
+
+// Yaer returns the yaer value in the mutation.
+func (m *ClubapplicationMutation) Yaer() (r int, exists bool) {
+	v := m.yaer
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldYaer returns the old yaer value of the Clubapplication.
+// If the Clubapplication object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ClubapplicationMutation) OldYaer(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldYaer is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldYaer requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldYaer: %w", err)
+	}
+	return oldValue.Yaer, nil
+}
+
+// AddYaer adds i to yaer.
+func (m *ClubapplicationMutation) AddYaer(i int) {
+	if m.addyaer != nil {
+		*m.addyaer += i
+	} else {
+		m.addyaer = &i
+	}
+}
+
+// AddedYaer returns the value that was added to the yaer field in this mutation.
+func (m *ClubapplicationMutation) AddedYaer() (r int, exists bool) {
+	v := m.addyaer
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetYaer reset all changes of the "yaer" field.
+func (m *ClubapplicationMutation) ResetYaer() {
+	m.yaer = nil
+	m.addyaer = nil
 }
 
 // SetOwnerID sets the owner edge to User by id.
@@ -3703,18 +3917,30 @@ func (m *ClubapplicationMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *ClubapplicationMutation) Fields() []string {
-	fields := make([]string, 0, 4)
-	if m.applyname != nil {
-		fields = append(fields, clubapplication.FieldApplyname)
-	}
+	fields := make([]string, 0, 8)
 	if m.contact != nil {
 		fields = append(fields, clubapplication.FieldContact)
 	}
 	if m.reason != nil {
 		fields = append(fields, clubapplication.FieldReason)
 	}
-	if m.created_at != nil {
-		fields = append(fields, clubapplication.FieldCreatedAt)
+	if m.addeddatetime != nil {
+		fields = append(fields, clubapplication.FieldAddeddatetime)
+	}
+	if m.addername != nil {
+		fields = append(fields, clubapplication.FieldAddername)
+	}
+	if m.discipline != nil {
+		fields = append(fields, clubapplication.FieldDiscipline)
+	}
+	if m.gender != nil {
+		fields = append(fields, clubapplication.FieldGender)
+	}
+	if m.age != nil {
+		fields = append(fields, clubapplication.FieldAge)
+	}
+	if m.yaer != nil {
+		fields = append(fields, clubapplication.FieldYaer)
 	}
 	return fields
 }
@@ -3724,14 +3950,22 @@ func (m *ClubapplicationMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *ClubapplicationMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case clubapplication.FieldApplyname:
-		return m.Applyname()
 	case clubapplication.FieldContact:
 		return m.Contact()
 	case clubapplication.FieldReason:
 		return m.Reason()
-	case clubapplication.FieldCreatedAt:
-		return m.CreatedAt()
+	case clubapplication.FieldAddeddatetime:
+		return m.Addeddatetime()
+	case clubapplication.FieldAddername:
+		return m.Addername()
+	case clubapplication.FieldDiscipline:
+		return m.Discipline()
+	case clubapplication.FieldGender:
+		return m.Gender()
+	case clubapplication.FieldAge:
+		return m.Age()
+	case clubapplication.FieldYaer:
+		return m.Yaer()
 	}
 	return nil, false
 }
@@ -3741,14 +3975,22 @@ func (m *ClubapplicationMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *ClubapplicationMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case clubapplication.FieldApplyname:
-		return m.OldApplyname(ctx)
 	case clubapplication.FieldContact:
 		return m.OldContact(ctx)
 	case clubapplication.FieldReason:
 		return m.OldReason(ctx)
-	case clubapplication.FieldCreatedAt:
-		return m.OldCreatedAt(ctx)
+	case clubapplication.FieldAddeddatetime:
+		return m.OldAddeddatetime(ctx)
+	case clubapplication.FieldAddername:
+		return m.OldAddername(ctx)
+	case clubapplication.FieldDiscipline:
+		return m.OldDiscipline(ctx)
+	case clubapplication.FieldGender:
+		return m.OldGender(ctx)
+	case clubapplication.FieldAge:
+		return m.OldAge(ctx)
+	case clubapplication.FieldYaer:
+		return m.OldYaer(ctx)
 	}
 	return nil, fmt.Errorf("unknown Clubapplication field %s", name)
 }
@@ -3758,13 +4000,6 @@ func (m *ClubapplicationMutation) OldField(ctx context.Context, name string) (en
 // type mismatch the field type.
 func (m *ClubapplicationMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case clubapplication.FieldApplyname:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetApplyname(v)
-		return nil
 	case clubapplication.FieldContact:
 		v, ok := value.(string)
 		if !ok {
@@ -3779,12 +4014,47 @@ func (m *ClubapplicationMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetReason(v)
 		return nil
-	case clubapplication.FieldCreatedAt:
+	case clubapplication.FieldAddeddatetime:
 		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetCreatedAt(v)
+		m.SetAddeddatetime(v)
+		return nil
+	case clubapplication.FieldAddername:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAddername(v)
+		return nil
+	case clubapplication.FieldDiscipline:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDiscipline(v)
+		return nil
+	case clubapplication.FieldGender:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGender(v)
+		return nil
+	case clubapplication.FieldAge:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAge(v)
+		return nil
+	case clubapplication.FieldYaer:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetYaer(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Clubapplication field %s", name)
@@ -3793,13 +4063,26 @@ func (m *ClubapplicationMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *ClubapplicationMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addage != nil {
+		fields = append(fields, clubapplication.FieldAge)
+	}
+	if m.addyaer != nil {
+		fields = append(fields, clubapplication.FieldYaer)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *ClubapplicationMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case clubapplication.FieldAge:
+		return m.AddedAge()
+	case clubapplication.FieldYaer:
+		return m.AddedYaer()
+	}
 	return nil, false
 }
 
@@ -3808,6 +4091,20 @@ func (m *ClubapplicationMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *ClubapplicationMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case clubapplication.FieldAge:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAge(v)
+		return nil
+	case clubapplication.FieldYaer:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddYaer(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Clubapplication numeric field %s", name)
 }
@@ -3836,17 +4133,29 @@ func (m *ClubapplicationMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *ClubapplicationMutation) ResetField(name string) error {
 	switch name {
-	case clubapplication.FieldApplyname:
-		m.ResetApplyname()
-		return nil
 	case clubapplication.FieldContact:
 		m.ResetContact()
 		return nil
 	case clubapplication.FieldReason:
 		m.ResetReason()
 		return nil
-	case clubapplication.FieldCreatedAt:
-		m.ResetCreatedAt()
+	case clubapplication.FieldAddeddatetime:
+		m.ResetAddeddatetime()
+		return nil
+	case clubapplication.FieldAddername:
+		m.ResetAddername()
+		return nil
+	case clubapplication.FieldDiscipline:
+		m.ResetDiscipline()
+		return nil
+	case clubapplication.FieldGender:
+		m.ResetGender()
+		return nil
+	case clubapplication.FieldAge:
+		m.ResetAge()
+		return nil
+	case clubapplication.FieldYaer:
+		m.ResetYaer()
 		return nil
 	}
 	return fmt.Errorf("unknown Clubapplication field %s", name)
@@ -4869,6 +5178,1110 @@ func (m *ComplaintTypeMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown ComplaintType edge %s", name)
+}
+
+// DisciplineMutation represents an operation that mutate the Disciplines
+// nodes in the graph.
+type DisciplineMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	discipline    *string
+	clearedFields map[string]struct{}
+	users         map[int]struct{}
+	removedusers  map[int]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Discipline, error)
+}
+
+var _ ent.Mutation = (*DisciplineMutation)(nil)
+
+// disciplineOption allows to manage the mutation configuration using functional options.
+type disciplineOption func(*DisciplineMutation)
+
+// newDisciplineMutation creates new mutation for $n.Name.
+func newDisciplineMutation(c config, op Op, opts ...disciplineOption) *DisciplineMutation {
+	m := &DisciplineMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeDiscipline,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withDisciplineID sets the id field of the mutation.
+func withDisciplineID(id int) disciplineOption {
+	return func(m *DisciplineMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Discipline
+		)
+		m.oldValue = func(ctx context.Context) (*Discipline, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Discipline.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withDiscipline sets the old Discipline of the mutation.
+func withDiscipline(node *Discipline) disciplineOption {
+	return func(m *DisciplineMutation) {
+		m.oldValue = func(context.Context) (*Discipline, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m DisciplineMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m DisciplineMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *DisciplineMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetDiscipline sets the discipline field.
+func (m *DisciplineMutation) SetDiscipline(s string) {
+	m.discipline = &s
+}
+
+// Discipline returns the discipline value in the mutation.
+func (m *DisciplineMutation) Discipline() (r string, exists bool) {
+	v := m.discipline
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDiscipline returns the old discipline value of the Discipline.
+// If the Discipline object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *DisciplineMutation) OldDiscipline(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldDiscipline is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldDiscipline requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDiscipline: %w", err)
+	}
+	return oldValue.Discipline, nil
+}
+
+// ResetDiscipline reset all changes of the "discipline" field.
+func (m *DisciplineMutation) ResetDiscipline() {
+	m.discipline = nil
+}
+
+// AddUserIDs adds the users edge to User by ids.
+func (m *DisciplineMutation) AddUserIDs(ids ...int) {
+	if m.users == nil {
+		m.users = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.users[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveUserIDs removes the users edge to User by ids.
+func (m *DisciplineMutation) RemoveUserIDs(ids ...int) {
+	if m.removedusers == nil {
+		m.removedusers = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedusers[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedUsers returns the removed ids of users.
+func (m *DisciplineMutation) RemovedUsersIDs() (ids []int) {
+	for id := range m.removedusers {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// UsersIDs returns the users ids in the mutation.
+func (m *DisciplineMutation) UsersIDs() (ids []int) {
+	for id := range m.users {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetUsers reset all changes of the "users" edge.
+func (m *DisciplineMutation) ResetUsers() {
+	m.users = nil
+	m.removedusers = nil
+}
+
+// Op returns the operation name.
+func (m *DisciplineMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Discipline).
+func (m *DisciplineMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *DisciplineMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.discipline != nil {
+		fields = append(fields, discipline.FieldDiscipline)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *DisciplineMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case discipline.FieldDiscipline:
+		return m.Discipline()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *DisciplineMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case discipline.FieldDiscipline:
+		return m.OldDiscipline(ctx)
+	}
+	return nil, fmt.Errorf("unknown Discipline field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *DisciplineMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case discipline.FieldDiscipline:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDiscipline(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Discipline field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *DisciplineMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *DisciplineMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *DisciplineMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Discipline numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *DisciplineMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *DisciplineMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *DisciplineMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Discipline nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *DisciplineMutation) ResetField(name string) error {
+	switch name {
+	case discipline.FieldDiscipline:
+		m.ResetDiscipline()
+		return nil
+	}
+	return fmt.Errorf("unknown Discipline field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *DisciplineMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.users != nil {
+		edges = append(edges, discipline.EdgeUsers)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *DisciplineMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case discipline.EdgeUsers:
+		ids := make([]ent.Value, 0, len(m.users))
+		for id := range m.users {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *DisciplineMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedusers != nil {
+		edges = append(edges, discipline.EdgeUsers)
+	}
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *DisciplineMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case discipline.EdgeUsers:
+		ids := make([]ent.Value, 0, len(m.removedusers))
+		for id := range m.removedusers {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *DisciplineMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *DisciplineMutation) EdgeCleared(name string) bool {
+	switch name {
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *DisciplineMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Discipline unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *DisciplineMutation) ResetEdge(name string) error {
+	switch name {
+	case discipline.EdgeUsers:
+		m.ResetUsers()
+		return nil
+	}
+	return fmt.Errorf("unknown Discipline edge %s", name)
+}
+
+// GenderMutation represents an operation that mutate the Genders
+// nodes in the graph.
+type GenderMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	gender        *string
+	clearedFields map[string]struct{}
+	users         map[int]struct{}
+	removedusers  map[int]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Gender, error)
+}
+
+var _ ent.Mutation = (*GenderMutation)(nil)
+
+// genderOption allows to manage the mutation configuration using functional options.
+type genderOption func(*GenderMutation)
+
+// newGenderMutation creates new mutation for $n.Name.
+func newGenderMutation(c config, op Op, opts ...genderOption) *GenderMutation {
+	m := &GenderMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeGender,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withGenderID sets the id field of the mutation.
+func withGenderID(id int) genderOption {
+	return func(m *GenderMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Gender
+		)
+		m.oldValue = func(ctx context.Context) (*Gender, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Gender.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withGender sets the old Gender of the mutation.
+func withGender(node *Gender) genderOption {
+	return func(m *GenderMutation) {
+		m.oldValue = func(context.Context) (*Gender, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m GenderMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m GenderMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *GenderMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetGender sets the gender field.
+func (m *GenderMutation) SetGender(s string) {
+	m.gender = &s
+}
+
+// Gender returns the gender value in the mutation.
+func (m *GenderMutation) Gender() (r string, exists bool) {
+	v := m.gender
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGender returns the old gender value of the Gender.
+// If the Gender object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *GenderMutation) OldGender(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldGender is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldGender requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGender: %w", err)
+	}
+	return oldValue.Gender, nil
+}
+
+// ResetGender reset all changes of the "gender" field.
+func (m *GenderMutation) ResetGender() {
+	m.gender = nil
+}
+
+// AddUserIDs adds the users edge to User by ids.
+func (m *GenderMutation) AddUserIDs(ids ...int) {
+	if m.users == nil {
+		m.users = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.users[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveUserIDs removes the users edge to User by ids.
+func (m *GenderMutation) RemoveUserIDs(ids ...int) {
+	if m.removedusers == nil {
+		m.removedusers = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedusers[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedUsers returns the removed ids of users.
+func (m *GenderMutation) RemovedUsersIDs() (ids []int) {
+	for id := range m.removedusers {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// UsersIDs returns the users ids in the mutation.
+func (m *GenderMutation) UsersIDs() (ids []int) {
+	for id := range m.users {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetUsers reset all changes of the "users" edge.
+func (m *GenderMutation) ResetUsers() {
+	m.users = nil
+	m.removedusers = nil
+}
+
+// Op returns the operation name.
+func (m *GenderMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Gender).
+func (m *GenderMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *GenderMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.gender != nil {
+		fields = append(fields, gender.FieldGender)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *GenderMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case gender.FieldGender:
+		return m.Gender()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *GenderMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case gender.FieldGender:
+		return m.OldGender(ctx)
+	}
+	return nil, fmt.Errorf("unknown Gender field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *GenderMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case gender.FieldGender:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGender(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Gender field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *GenderMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *GenderMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *GenderMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Gender numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *GenderMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *GenderMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *GenderMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Gender nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *GenderMutation) ResetField(name string) error {
+	switch name {
+	case gender.FieldGender:
+		m.ResetGender()
+		return nil
+	}
+	return fmt.Errorf("unknown Gender field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *GenderMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.users != nil {
+		edges = append(edges, gender.EdgeUsers)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *GenderMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case gender.EdgeUsers:
+		ids := make([]ent.Value, 0, len(m.users))
+		for id := range m.users {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *GenderMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedusers != nil {
+		edges = append(edges, gender.EdgeUsers)
+	}
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *GenderMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case gender.EdgeUsers:
+		ids := make([]ent.Value, 0, len(m.removedusers))
+		for id := range m.removedusers {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *GenderMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *GenderMutation) EdgeCleared(name string) bool {
+	switch name {
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *GenderMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Gender unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *GenderMutation) ResetEdge(name string) error {
+	switch name {
+	case gender.EdgeUsers:
+		m.ResetUsers()
+		return nil
+	}
+	return fmt.Errorf("unknown Gender edge %s", name)
+}
+
+// PurposeMutation represents an operation that mutate the Purposes
+// nodes in the graph.
+type PurposeMutation struct {
+	config
+	op              Op
+	typ             string
+	id              *int
+	purpose         *string
+	clearedFields   map[string]struct{}
+	roomuses        map[int]struct{}
+	removedroomuses map[int]struct{}
+	done            bool
+	oldValue        func(context.Context) (*Purpose, error)
+}
+
+var _ ent.Mutation = (*PurposeMutation)(nil)
+
+// purposeOption allows to manage the mutation configuration using functional options.
+type purposeOption func(*PurposeMutation)
+
+// newPurposeMutation creates new mutation for $n.Name.
+func newPurposeMutation(c config, op Op, opts ...purposeOption) *PurposeMutation {
+	m := &PurposeMutation{
+		config:        c,
+		op:            op,
+		typ:           TypePurpose,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withPurposeID sets the id field of the mutation.
+func withPurposeID(id int) purposeOption {
+	return func(m *PurposeMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Purpose
+		)
+		m.oldValue = func(ctx context.Context) (*Purpose, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Purpose.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withPurpose sets the old Purpose of the mutation.
+func withPurpose(node *Purpose) purposeOption {
+	return func(m *PurposeMutation) {
+		m.oldValue = func(context.Context) (*Purpose, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m PurposeMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m PurposeMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *PurposeMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetPurpose sets the purpose field.
+func (m *PurposeMutation) SetPurpose(s string) {
+	m.purpose = &s
+}
+
+// Purpose returns the purpose value in the mutation.
+func (m *PurposeMutation) Purpose() (r string, exists bool) {
+	v := m.purpose
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPurpose returns the old purpose value of the Purpose.
+// If the Purpose object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *PurposeMutation) OldPurpose(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldPurpose is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldPurpose requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPurpose: %w", err)
+	}
+	return oldValue.Purpose, nil
+}
+
+// ResetPurpose reset all changes of the "purpose" field.
+func (m *PurposeMutation) ResetPurpose() {
+	m.purpose = nil
+}
+
+// AddRoomuseIDs adds the roomuses edge to Roomuse by ids.
+func (m *PurposeMutation) AddRoomuseIDs(ids ...int) {
+	if m.roomuses == nil {
+		m.roomuses = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.roomuses[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveRoomuseIDs removes the roomuses edge to Roomuse by ids.
+func (m *PurposeMutation) RemoveRoomuseIDs(ids ...int) {
+	if m.removedroomuses == nil {
+		m.removedroomuses = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedroomuses[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedRoomuses returns the removed ids of roomuses.
+func (m *PurposeMutation) RemovedRoomusesIDs() (ids []int) {
+	for id := range m.removedroomuses {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// RoomusesIDs returns the roomuses ids in the mutation.
+func (m *PurposeMutation) RoomusesIDs() (ids []int) {
+	for id := range m.roomuses {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetRoomuses reset all changes of the "roomuses" edge.
+func (m *PurposeMutation) ResetRoomuses() {
+	m.roomuses = nil
+	m.removedroomuses = nil
+}
+
+// Op returns the operation name.
+func (m *PurposeMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Purpose).
+func (m *PurposeMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *PurposeMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.purpose != nil {
+		fields = append(fields, purpose.FieldPurpose)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *PurposeMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case purpose.FieldPurpose:
+		return m.Purpose()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *PurposeMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case purpose.FieldPurpose:
+		return m.OldPurpose(ctx)
+	}
+	return nil, fmt.Errorf("unknown Purpose field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *PurposeMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case purpose.FieldPurpose:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPurpose(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Purpose field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *PurposeMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *PurposeMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *PurposeMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Purpose numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *PurposeMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *PurposeMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *PurposeMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Purpose nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *PurposeMutation) ResetField(name string) error {
+	switch name {
+	case purpose.FieldPurpose:
+		m.ResetPurpose()
+		return nil
+	}
+	return fmt.Errorf("unknown Purpose field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *PurposeMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.roomuses != nil {
+		edges = append(edges, purpose.EdgeRoomuses)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *PurposeMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case purpose.EdgeRoomuses:
+		ids := make([]ent.Value, 0, len(m.roomuses))
+		for id := range m.roomuses {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *PurposeMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedroomuses != nil {
+		edges = append(edges, purpose.EdgeRoomuses)
+	}
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *PurposeMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case purpose.EdgeRoomuses:
+		ids := make([]ent.Value, 0, len(m.removedroomuses))
+		for id := range m.removedroomuses {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *PurposeMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *PurposeMutation) EdgeCleared(name string) bool {
+	switch name {
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *PurposeMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Purpose unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *PurposeMutation) ResetEdge(name string) error {
+	switch name {
+	case purpose.EdgeRoomuses:
+		m.ResetRoomuses()
+		return nil
+	}
+	return fmt.Errorf("unknown Purpose edge %s", name)
 }
 
 // RoomMutation represents an operation that mutate the Rooms
@@ -5982,12 +7395,12 @@ func (m *RoomuseMutation) ResetRooms() {
 	m.clearedrooms = false
 }
 
-// SetPurposesID sets the purposes edge to Roompurpose by id.
+// SetPurposesID sets the purposes edge to Purpose by id.
 func (m *RoomuseMutation) SetPurposesID(id int) {
 	m.purposes = &id
 }
 
-// ClearPurposes clears the purposes edge to Roompurpose.
+// ClearPurposes clears the purposes edge to Purpose.
 func (m *RoomuseMutation) ClearPurposes() {
 	m.clearedpurposes = true
 }
@@ -6297,11 +7710,20 @@ type UserMutation struct {
 	id                      *int
 	name                    *string
 	email                   *string
-	password                *int
-	addpassword             *int
+	password                *string
 	clearedFields           map[string]struct{}
 	usertype                *int
 	clearedusertype         bool
+	clubuser                *int
+	clearedclubuser         bool
+	gender                  *int
+	clearedgender           bool
+	userstatus              *int
+	cleareduserstatus       bool
+	discipline              *int
+	cleareddiscipline       bool
+	year                    *int
+	clearedyear             bool
 	club                    map[int]struct{}
 	removedclub             map[int]struct{}
 	clubapplication         map[int]struct{}
@@ -6468,13 +7890,12 @@ func (m *UserMutation) ResetEmail() {
 }
 
 // SetPassword sets the password field.
-func (m *UserMutation) SetPassword(i int) {
-	m.password = &i
-	m.addpassword = nil
+func (m *UserMutation) SetPassword(s string) {
+	m.password = &s
 }
 
 // Password returns the password value in the mutation.
-func (m *UserMutation) Password() (r int, exists bool) {
+func (m *UserMutation) Password() (r string, exists bool) {
 	v := m.password
 	if v == nil {
 		return
@@ -6486,7 +7907,7 @@ func (m *UserMutation) Password() (r int, exists bool) {
 // If the User object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *UserMutation) OldPassword(ctx context.Context) (v int, err error) {
+func (m *UserMutation) OldPassword(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldPassword is allowed only on UpdateOne operations")
 	}
@@ -6500,28 +7921,9 @@ func (m *UserMutation) OldPassword(ctx context.Context) (v int, err error) {
 	return oldValue.Password, nil
 }
 
-// AddPassword adds i to password.
-func (m *UserMutation) AddPassword(i int) {
-	if m.addpassword != nil {
-		*m.addpassword += i
-	} else {
-		m.addpassword = &i
-	}
-}
-
-// AddedPassword returns the value that was added to the password field in this mutation.
-func (m *UserMutation) AddedPassword() (r int, exists bool) {
-	v := m.addpassword
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ResetPassword reset all changes of the "password" field.
 func (m *UserMutation) ResetPassword() {
 	m.password = nil
-	m.addpassword = nil
 }
 
 // SetUsertypeID sets the usertype edge to Usertype by id.
@@ -6561,6 +7963,201 @@ func (m *UserMutation) UsertypeIDs() (ids []int) {
 func (m *UserMutation) ResetUsertype() {
 	m.usertype = nil
 	m.clearedusertype = false
+}
+
+// SetClubuserID sets the clubuser edge to Club by id.
+func (m *UserMutation) SetClubuserID(id int) {
+	m.clubuser = &id
+}
+
+// ClearClubuser clears the clubuser edge to Club.
+func (m *UserMutation) ClearClubuser() {
+	m.clearedclubuser = true
+}
+
+// ClubuserCleared returns if the edge clubuser was cleared.
+func (m *UserMutation) ClubuserCleared() bool {
+	return m.clearedclubuser
+}
+
+// ClubuserID returns the clubuser id in the mutation.
+func (m *UserMutation) ClubuserID() (id int, exists bool) {
+	if m.clubuser != nil {
+		return *m.clubuser, true
+	}
+	return
+}
+
+// ClubuserIDs returns the clubuser ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// ClubuserID instead. It exists only for internal usage by the builders.
+func (m *UserMutation) ClubuserIDs() (ids []int) {
+	if id := m.clubuser; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetClubuser reset all changes of the "clubuser" edge.
+func (m *UserMutation) ResetClubuser() {
+	m.clubuser = nil
+	m.clearedclubuser = false
+}
+
+// SetGenderID sets the gender edge to Gender by id.
+func (m *UserMutation) SetGenderID(id int) {
+	m.gender = &id
+}
+
+// ClearGender clears the gender edge to Gender.
+func (m *UserMutation) ClearGender() {
+	m.clearedgender = true
+}
+
+// GenderCleared returns if the edge gender was cleared.
+func (m *UserMutation) GenderCleared() bool {
+	return m.clearedgender
+}
+
+// GenderID returns the gender id in the mutation.
+func (m *UserMutation) GenderID() (id int, exists bool) {
+	if m.gender != nil {
+		return *m.gender, true
+	}
+	return
+}
+
+// GenderIDs returns the gender ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// GenderID instead. It exists only for internal usage by the builders.
+func (m *UserMutation) GenderIDs() (ids []int) {
+	if id := m.gender; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetGender reset all changes of the "gender" edge.
+func (m *UserMutation) ResetGender() {
+	m.gender = nil
+	m.clearedgender = false
+}
+
+// SetUserstatusID sets the userstatus edge to UserStatus by id.
+func (m *UserMutation) SetUserstatusID(id int) {
+	m.userstatus = &id
+}
+
+// ClearUserstatus clears the userstatus edge to UserStatus.
+func (m *UserMutation) ClearUserstatus() {
+	m.cleareduserstatus = true
+}
+
+// UserstatusCleared returns if the edge userstatus was cleared.
+func (m *UserMutation) UserstatusCleared() bool {
+	return m.cleareduserstatus
+}
+
+// UserstatusID returns the userstatus id in the mutation.
+func (m *UserMutation) UserstatusID() (id int, exists bool) {
+	if m.userstatus != nil {
+		return *m.userstatus, true
+	}
+	return
+}
+
+// UserstatusIDs returns the userstatus ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// UserstatusID instead. It exists only for internal usage by the builders.
+func (m *UserMutation) UserstatusIDs() (ids []int) {
+	if id := m.userstatus; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetUserstatus reset all changes of the "userstatus" edge.
+func (m *UserMutation) ResetUserstatus() {
+	m.userstatus = nil
+	m.cleareduserstatus = false
+}
+
+// SetDisciplineID sets the discipline edge to Discipline by id.
+func (m *UserMutation) SetDisciplineID(id int) {
+	m.discipline = &id
+}
+
+// ClearDiscipline clears the discipline edge to Discipline.
+func (m *UserMutation) ClearDiscipline() {
+	m.cleareddiscipline = true
+}
+
+// DisciplineCleared returns if the edge discipline was cleared.
+func (m *UserMutation) DisciplineCleared() bool {
+	return m.cleareddiscipline
+}
+
+// DisciplineID returns the discipline id in the mutation.
+func (m *UserMutation) DisciplineID() (id int, exists bool) {
+	if m.discipline != nil {
+		return *m.discipline, true
+	}
+	return
+}
+
+// DisciplineIDs returns the discipline ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// DisciplineID instead. It exists only for internal usage by the builders.
+func (m *UserMutation) DisciplineIDs() (ids []int) {
+	if id := m.discipline; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetDiscipline reset all changes of the "discipline" edge.
+func (m *UserMutation) ResetDiscipline() {
+	m.discipline = nil
+	m.cleareddiscipline = false
+}
+
+// SetYearID sets the year edge to Year by id.
+func (m *UserMutation) SetYearID(id int) {
+	m.year = &id
+}
+
+// ClearYear clears the year edge to Year.
+func (m *UserMutation) ClearYear() {
+	m.clearedyear = true
+}
+
+// YearCleared returns if the edge year was cleared.
+func (m *UserMutation) YearCleared() bool {
+	return m.clearedyear
+}
+
+// YearID returns the year id in the mutation.
+func (m *UserMutation) YearID() (id int, exists bool) {
+	if m.year != nil {
+		return *m.year, true
+	}
+	return
+}
+
+// YearIDs returns the year ids in the mutation.
+// Note that ids always returns len(ids) <= 1 for unique edges, and you should use
+// YearID instead. It exists only for internal usage by the builders.
+func (m *UserMutation) YearIDs() (ids []int) {
+	if id := m.year; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetYear reset all changes of the "year" edge.
+func (m *UserMutation) ResetYear() {
+	m.year = nil
+	m.clearedyear = false
 }
 
 // AddClubIDs adds the club edge to Club by ids.
@@ -6808,7 +8405,7 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		m.SetEmail(v)
 		return nil
 	case user.FieldPassword:
-		v, ok := value.(int)
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -6821,21 +8418,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *UserMutation) AddedFields() []string {
-	var fields []string
-	if m.addpassword != nil {
-		fields = append(fields, user.FieldPassword)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case user.FieldPassword:
-		return m.AddedPassword()
-	}
 	return nil, false
 }
 
@@ -6844,13 +8433,6 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *UserMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case user.FieldPassword:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddPassword(v)
-		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
 }
@@ -6895,9 +8477,24 @@ func (m *UserMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this
 // mutation.
 func (m *UserMutation) AddedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 10)
 	if m.usertype != nil {
 		edges = append(edges, user.EdgeUsertype)
+	}
+	if m.clubuser != nil {
+		edges = append(edges, user.EdgeClubuser)
+	}
+	if m.gender != nil {
+		edges = append(edges, user.EdgeGender)
+	}
+	if m.userstatus != nil {
+		edges = append(edges, user.EdgeUserstatus)
+	}
+	if m.discipline != nil {
+		edges = append(edges, user.EdgeDiscipline)
+	}
+	if m.year != nil {
+		edges = append(edges, user.EdgeYear)
 	}
 	if m.club != nil {
 		edges = append(edges, user.EdgeClub)
@@ -6920,6 +8517,26 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 	switch name {
 	case user.EdgeUsertype:
 		if id := m.usertype; id != nil {
+			return []ent.Value{*id}
+		}
+	case user.EdgeClubuser:
+		if id := m.clubuser; id != nil {
+			return []ent.Value{*id}
+		}
+	case user.EdgeGender:
+		if id := m.gender; id != nil {
+			return []ent.Value{*id}
+		}
+	case user.EdgeUserstatus:
+		if id := m.userstatus; id != nil {
+			return []ent.Value{*id}
+		}
+	case user.EdgeDiscipline:
+		if id := m.discipline; id != nil {
+			return []ent.Value{*id}
+		}
+	case user.EdgeYear:
+		if id := m.year; id != nil {
 			return []ent.Value{*id}
 		}
 	case user.EdgeClub:
@@ -6953,7 +8570,7 @@ func (m *UserMutation) AddedIDs(name string) []ent.Value {
 // RemovedEdges returns all edge names that were removed in this
 // mutation.
 func (m *UserMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 10)
 	if m.removedclub != nil {
 		edges = append(edges, user.EdgeClub)
 	}
@@ -7004,9 +8621,24 @@ func (m *UserMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this
 // mutation.
 func (m *UserMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 5)
+	edges := make([]string, 0, 10)
 	if m.clearedusertype {
 		edges = append(edges, user.EdgeUsertype)
+	}
+	if m.clearedclubuser {
+		edges = append(edges, user.EdgeClubuser)
+	}
+	if m.clearedgender {
+		edges = append(edges, user.EdgeGender)
+	}
+	if m.cleareduserstatus {
+		edges = append(edges, user.EdgeUserstatus)
+	}
+	if m.cleareddiscipline {
+		edges = append(edges, user.EdgeDiscipline)
+	}
+	if m.clearedyear {
+		edges = append(edges, user.EdgeYear)
 	}
 	return edges
 }
@@ -7017,6 +8649,16 @@ func (m *UserMutation) EdgeCleared(name string) bool {
 	switch name {
 	case user.EdgeUsertype:
 		return m.clearedusertype
+	case user.EdgeClubuser:
+		return m.clearedclubuser
+	case user.EdgeGender:
+		return m.clearedgender
+	case user.EdgeUserstatus:
+		return m.cleareduserstatus
+	case user.EdgeDiscipline:
+		return m.cleareddiscipline
+	case user.EdgeYear:
+		return m.clearedyear
 	}
 	return false
 }
@@ -7027,6 +8669,21 @@ func (m *UserMutation) ClearEdge(name string) error {
 	switch name {
 	case user.EdgeUsertype:
 		m.ClearUsertype()
+		return nil
+	case user.EdgeClubuser:
+		m.ClearClubuser()
+		return nil
+	case user.EdgeGender:
+		m.ClearGender()
+		return nil
+	case user.EdgeUserstatus:
+		m.ClearUserstatus()
+		return nil
+	case user.EdgeDiscipline:
+		m.ClearDiscipline()
+		return nil
+	case user.EdgeYear:
+		m.ClearYear()
 		return nil
 	}
 	return fmt.Errorf("unknown User unique edge %s", name)
@@ -7039,6 +8696,21 @@ func (m *UserMutation) ResetEdge(name string) error {
 	switch name {
 	case user.EdgeUsertype:
 		m.ResetUsertype()
+		return nil
+	case user.EdgeClubuser:
+		m.ResetClubuser()
+		return nil
+	case user.EdgeGender:
+		m.ResetGender()
+		return nil
+	case user.EdgeUserstatus:
+		m.ResetUserstatus()
+		return nil
+	case user.EdgeDiscipline:
+		m.ResetDiscipline()
+		return nil
+	case user.EdgeYear:
+		m.ResetYear()
 		return nil
 	case user.EdgeClub:
 		m.ResetClub()
@@ -7054,6 +8726,374 @@ func (m *UserMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown User edge %s", name)
+}
+
+// UserStatusMutation represents an operation that mutate the UserStatusSlice
+// nodes in the graph.
+type UserStatusMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	userstatus    *string
+	clearedFields map[string]struct{}
+	users         map[int]struct{}
+	removedusers  map[int]struct{}
+	done          bool
+	oldValue      func(context.Context) (*UserStatus, error)
+}
+
+var _ ent.Mutation = (*UserStatusMutation)(nil)
+
+// userstatusOption allows to manage the mutation configuration using functional options.
+type userstatusOption func(*UserStatusMutation)
+
+// newUserStatusMutation creates new mutation for $n.Name.
+func newUserStatusMutation(c config, op Op, opts ...userstatusOption) *UserStatusMutation {
+	m := &UserStatusMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeUserStatus,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withUserStatusID sets the id field of the mutation.
+func withUserStatusID(id int) userstatusOption {
+	return func(m *UserStatusMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *UserStatus
+		)
+		m.oldValue = func(ctx context.Context) (*UserStatus, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().UserStatus.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withUserStatus sets the old UserStatus of the mutation.
+func withUserStatus(node *UserStatus) userstatusOption {
+	return func(m *UserStatusMutation) {
+		m.oldValue = func(context.Context) (*UserStatus, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m UserStatusMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m UserStatusMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *UserStatusMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetUserstatus sets the userstatus field.
+func (m *UserStatusMutation) SetUserstatus(s string) {
+	m.userstatus = &s
+}
+
+// Userstatus returns the userstatus value in the mutation.
+func (m *UserStatusMutation) Userstatus() (r string, exists bool) {
+	v := m.userstatus
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUserstatus returns the old userstatus value of the UserStatus.
+// If the UserStatus object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *UserStatusMutation) OldUserstatus(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldUserstatus is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldUserstatus requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUserstatus: %w", err)
+	}
+	return oldValue.Userstatus, nil
+}
+
+// ResetUserstatus reset all changes of the "userstatus" field.
+func (m *UserStatusMutation) ResetUserstatus() {
+	m.userstatus = nil
+}
+
+// AddUserIDs adds the users edge to User by ids.
+func (m *UserStatusMutation) AddUserIDs(ids ...int) {
+	if m.users == nil {
+		m.users = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.users[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveUserIDs removes the users edge to User by ids.
+func (m *UserStatusMutation) RemoveUserIDs(ids ...int) {
+	if m.removedusers == nil {
+		m.removedusers = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedusers[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedUsers returns the removed ids of users.
+func (m *UserStatusMutation) RemovedUsersIDs() (ids []int) {
+	for id := range m.removedusers {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// UsersIDs returns the users ids in the mutation.
+func (m *UserStatusMutation) UsersIDs() (ids []int) {
+	for id := range m.users {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetUsers reset all changes of the "users" edge.
+func (m *UserStatusMutation) ResetUsers() {
+	m.users = nil
+	m.removedusers = nil
+}
+
+// Op returns the operation name.
+func (m *UserStatusMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (UserStatus).
+func (m *UserStatusMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *UserStatusMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.userstatus != nil {
+		fields = append(fields, userstatus.FieldUserstatus)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *UserStatusMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case userstatus.FieldUserstatus:
+		return m.Userstatus()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *UserStatusMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case userstatus.FieldUserstatus:
+		return m.OldUserstatus(ctx)
+	}
+	return nil, fmt.Errorf("unknown UserStatus field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *UserStatusMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case userstatus.FieldUserstatus:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUserstatus(v)
+		return nil
+	}
+	return fmt.Errorf("unknown UserStatus field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *UserStatusMutation) AddedFields() []string {
+	return nil
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *UserStatusMutation) AddedField(name string) (ent.Value, bool) {
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *UserStatusMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown UserStatus numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *UserStatusMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *UserStatusMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *UserStatusMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown UserStatus nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *UserStatusMutation) ResetField(name string) error {
+	switch name {
+	case userstatus.FieldUserstatus:
+		m.ResetUserstatus()
+		return nil
+	}
+	return fmt.Errorf("unknown UserStatus field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *UserStatusMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.users != nil {
+		edges = append(edges, userstatus.EdgeUsers)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *UserStatusMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case userstatus.EdgeUsers:
+		ids := make([]ent.Value, 0, len(m.users))
+		for id := range m.users {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *UserStatusMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedusers != nil {
+		edges = append(edges, userstatus.EdgeUsers)
+	}
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *UserStatusMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case userstatus.EdgeUsers:
+		ids := make([]ent.Value, 0, len(m.removedusers))
+		for id := range m.removedusers {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *UserStatusMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *UserStatusMutation) EdgeCleared(name string) bool {
+	switch name {
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *UserStatusMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown UserStatus unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *UserStatusMutation) ResetEdge(name string) error {
+	switch name {
+	case userstatus.EdgeUsers:
+		m.ResetUsers()
+		return nil
+	}
+	return fmt.Errorf("unknown UserStatus edge %s", name)
 }
 
 // UsertypeMutation represents an operation that mutate the Usertypes
@@ -7422,4 +9462,408 @@ func (m *UsertypeMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown Usertype edge %s", name)
+}
+
+// YearMutation represents an operation that mutate the Years
+// nodes in the graph.
+type YearMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	year          *int
+	addyear       *int
+	clearedFields map[string]struct{}
+	users         map[int]struct{}
+	removedusers  map[int]struct{}
+	done          bool
+	oldValue      func(context.Context) (*Year, error)
+}
+
+var _ ent.Mutation = (*YearMutation)(nil)
+
+// yearOption allows to manage the mutation configuration using functional options.
+type yearOption func(*YearMutation)
+
+// newYearMutation creates new mutation for $n.Name.
+func newYearMutation(c config, op Op, opts ...yearOption) *YearMutation {
+	m := &YearMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeYear,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withYearID sets the id field of the mutation.
+func withYearID(id int) yearOption {
+	return func(m *YearMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *Year
+		)
+		m.oldValue = func(ctx context.Context) (*Year, error) {
+			once.Do(func() {
+				if m.done {
+					err = fmt.Errorf("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().Year.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withYear sets the old Year of the mutation.
+func withYear(node *Year) yearOption {
+	return func(m *YearMutation) {
+		m.oldValue = func(context.Context) (*Year, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m YearMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m YearMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the id value in the mutation. Note that, the id
+// is available only if it was provided to the builder.
+func (m *YearMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// SetYear sets the year field.
+func (m *YearMutation) SetYear(i int) {
+	m.year = &i
+	m.addyear = nil
+}
+
+// Year returns the year value in the mutation.
+func (m *YearMutation) Year() (r int, exists bool) {
+	v := m.year
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldYear returns the old year value of the Year.
+// If the Year object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *YearMutation) OldYear(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldYear is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldYear requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldYear: %w", err)
+	}
+	return oldValue.Year, nil
+}
+
+// AddYear adds i to year.
+func (m *YearMutation) AddYear(i int) {
+	if m.addyear != nil {
+		*m.addyear += i
+	} else {
+		m.addyear = &i
+	}
+}
+
+// AddedYear returns the value that was added to the year field in this mutation.
+func (m *YearMutation) AddedYear() (r int, exists bool) {
+	v := m.addyear
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetYear reset all changes of the "year" field.
+func (m *YearMutation) ResetYear() {
+	m.year = nil
+	m.addyear = nil
+}
+
+// AddUserIDs adds the users edge to User by ids.
+func (m *YearMutation) AddUserIDs(ids ...int) {
+	if m.users == nil {
+		m.users = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.users[ids[i]] = struct{}{}
+	}
+}
+
+// RemoveUserIDs removes the users edge to User by ids.
+func (m *YearMutation) RemoveUserIDs(ids ...int) {
+	if m.removedusers == nil {
+		m.removedusers = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.removedusers[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedUsers returns the removed ids of users.
+func (m *YearMutation) RemovedUsersIDs() (ids []int) {
+	for id := range m.removedusers {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// UsersIDs returns the users ids in the mutation.
+func (m *YearMutation) UsersIDs() (ids []int) {
+	for id := range m.users {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetUsers reset all changes of the "users" edge.
+func (m *YearMutation) ResetUsers() {
+	m.users = nil
+	m.removedusers = nil
+}
+
+// Op returns the operation name.
+func (m *YearMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (Year).
+func (m *YearMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during
+// this mutation. Note that, in order to get all numeric
+// fields that were in/decremented, call AddedFields().
+func (m *YearMutation) Fields() []string {
+	fields := make([]string, 0, 1)
+	if m.year != nil {
+		fields = append(fields, year.FieldYear)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name.
+// The second boolean value indicates that this field was
+// not set, or was not define in the schema.
+func (m *YearMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case year.FieldYear:
+		return m.Year()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database.
+// An error is returned if the mutation operation is not UpdateOne,
+// or the query to the database was failed.
+func (m *YearMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case year.FieldYear:
+		return m.OldYear(ctx)
+	}
+	return nil, fmt.Errorf("unknown Year field %s", name)
+}
+
+// SetField sets the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *YearMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case year.FieldYear:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetYear(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Year field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented
+// or decremented during this mutation.
+func (m *YearMutation) AddedFields() []string {
+	var fields []string
+	if m.addyear != nil {
+		fields = append(fields, year.FieldYear)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was in/decremented
+// from a field with the given name. The second value indicates
+// that this field was not set, or was not define in the schema.
+func (m *YearMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case year.FieldYear:
+		return m.AddedYear()
+	}
+	return nil, false
+}
+
+// AddField adds the value for the given name. It returns an
+// error if the field is not defined in the schema, or if the
+// type mismatch the field type.
+func (m *YearMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case year.FieldYear:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddYear(v)
+		return nil
+	}
+	return fmt.Errorf("unknown Year numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared
+// during this mutation.
+func (m *YearMutation) ClearedFields() []string {
+	return nil
+}
+
+// FieldCleared returns a boolean indicates if this field was
+// cleared in this mutation.
+func (m *YearMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value for the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *YearMutation) ClearField(name string) error {
+	return fmt.Errorf("unknown Year nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation regarding the
+// given field name. It returns an error if the field is not
+// defined in the schema.
+func (m *YearMutation) ResetField(name string) error {
+	switch name {
+	case year.FieldYear:
+		m.ResetYear()
+		return nil
+	}
+	return fmt.Errorf("unknown Year field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this
+// mutation.
+func (m *YearMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.users != nil {
+		edges = append(edges, year.EdgeUsers)
+	}
+	return edges
+}
+
+// AddedIDs returns all ids (to other nodes) that were added for
+// the given edge name.
+func (m *YearMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case year.EdgeUsers:
+		ids := make([]ent.Value, 0, len(m.users))
+		for id := range m.users {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this
+// mutation.
+func (m *YearMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedusers != nil {
+		edges = append(edges, year.EdgeUsers)
+	}
+	return edges
+}
+
+// RemovedIDs returns all ids (to other nodes) that were removed for
+// the given edge name.
+func (m *YearMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case year.EdgeUsers:
+		ids := make([]ent.Value, 0, len(m.removedusers))
+		for id := range m.removedusers {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this
+// mutation.
+func (m *YearMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// EdgeCleared returns a boolean indicates if this edge was
+// cleared in this mutation.
+func (m *YearMutation) EdgeCleared(name string) bool {
+	switch name {
+	}
+	return false
+}
+
+// ClearEdge clears the value for the given name. It returns an
+// error if the edge name is not defined in the schema.
+func (m *YearMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown Year unique edge %s", name)
+}
+
+// ResetEdge resets all changes in the mutation regarding the
+// given edge name. It returns an error if the edge is not
+// defined in the schema.
+func (m *YearMutation) ResetEdge(name string) error {
+	switch name {
+	case year.EdgeUsers:
+		m.ResetUsers()
+		return nil
+	}
+	return fmt.Errorf("unknown Year edge %s", name)
 }

@@ -5,7 +5,6 @@ package ent
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/clubbranch"
@@ -23,8 +22,6 @@ type Club struct {
 	Name string `json:"name,omitempty"`
 	// Purpose holds the value of the "purpose" field.
 	Purpose string `json:"purpose,omitempty"`
-	// Foundingdate holds the value of the "foundingdate" field.
-	Foundingdate time.Time `json:"foundingdate,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ClubQuery when eager-loading is set.
 	Edges         ClubEdges `json:"edges"`
@@ -47,9 +44,11 @@ type ClubEdges struct {
 	ClubToComplaint []*Complaint
 	// Activities holds the value of the activities edge.
 	Activities []*Activities
+	// Userclub holds the value of the userclub edge.
+	Userclub []*User
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [6]bool
+	loadedTypes [7]bool
 }
 
 // UserOrErr returns the User value or an error if the edge
@@ -121,13 +120,21 @@ func (e ClubEdges) ActivitiesOrErr() ([]*Activities, error) {
 	return nil, &NotLoadedError{edge: "activities"}
 }
 
+// UserclubOrErr returns the Userclub value or an error if the edge
+// was not loaded in eager-loading.
+func (e ClubEdges) UserclubOrErr() ([]*User, error) {
+	if e.loadedTypes[6] {
+		return e.Userclub, nil
+	}
+	return nil, &NotLoadedError{edge: "userclub"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Club) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // name
 		&sql.NullString{}, // purpose
-		&sql.NullTime{},   // foundingdate
 	}
 }
 
@@ -162,12 +169,7 @@ func (c *Club) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		c.Purpose = value.String
 	}
-	if value, ok := values[2].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field foundingdate", values[2])
-	} else if value.Valid {
-		c.Foundingdate = value.Time
-	}
-	values = values[3:]
+	values = values[2:]
 	if len(values) == len(club.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field ClubBranch_ID", value)
@@ -221,6 +223,11 @@ func (c *Club) QueryActivities() *ActivitiesQuery {
 	return (&ClubClient{config: c.config}).QueryActivities(c)
 }
 
+// QueryUserclub queries the userclub edge of the Club.
+func (c *Club) QueryUserclub() *UserQuery {
+	return (&ClubClient{config: c.config}).QueryUserclub(c)
+}
+
 // Update returns a builder for updating this Club.
 // Note that, you need to call Club.Unwrap() before calling this method, if this Club
 // was returned from a transaction, and the transaction was committed or rolled back.
@@ -248,8 +255,6 @@ func (c *Club) String() string {
 	builder.WriteString(c.Name)
 	builder.WriteString(", purpose=")
 	builder.WriteString(c.Purpose)
-	builder.WriteString(", foundingdate=")
-	builder.WriteString(c.Foundingdate.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -36,6 +36,15 @@ type Complaint func(*sql.Selector)
 // ComplaintType is the predicate function for complainttype builders.
 type ComplaintType func(*sql.Selector)
 
+// Discipline is the predicate function for discipline builders.
+type Discipline func(*sql.Selector)
+
+// Gender is the predicate function for gender builders.
+type Gender func(*sql.Selector)
+
+// Purpose is the predicate function for purpose builders.
+type Purpose func(*sql.Selector)
+
 // Room is the predicate function for room builders.
 type Room func(*sql.Selector)
 
@@ -48,5 +57,11 @@ type Roomuse func(*sql.Selector)
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
 
+// UserStatus is the predicate function for userstatus builders.
+type UserStatus func(*sql.Selector)
+
 // Usertype is the predicate function for usertype builders.
 type Usertype func(*sql.Selector)
+
+// Year is the predicate function for year builders.
+type Year func(*sql.Selector)

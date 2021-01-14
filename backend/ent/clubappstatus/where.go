@@ -91,29 +91,29 @@ func IDLTE(id int) predicate.ClubappStatus {
 	})
 }
 
-// ApplyStatus applies equality check predicate on the "apply_status" field. It's identical to ApplyStatusEQ.
-func ApplyStatus(v string) predicate.ClubappStatus {
+// Clubstatus applies equality check predicate on the "clubstatus" field. It's identical to ClubstatusEQ.
+func Clubstatus(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldApplyStatus), v))
+		s.Where(sql.EQ(s.C(FieldClubstatus), v))
 	})
 }
 
-// ApplyStatusEQ applies the EQ predicate on the "apply_status" field.
-func ApplyStatusEQ(v string) predicate.ClubappStatus {
+// ClubstatusEQ applies the EQ predicate on the "clubstatus" field.
+func ClubstatusEQ(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldApplyStatus), v))
+		s.Where(sql.EQ(s.C(FieldClubstatus), v))
 	})
 }
 
-// ApplyStatusNEQ applies the NEQ predicate on the "apply_status" field.
-func ApplyStatusNEQ(v string) predicate.ClubappStatus {
+// ClubstatusNEQ applies the NEQ predicate on the "clubstatus" field.
+func ClubstatusNEQ(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldApplyStatus), v))
+		s.Where(sql.NEQ(s.C(FieldClubstatus), v))
 	})
 }
 
-// ApplyStatusIn applies the In predicate on the "apply_status" field.
-func ApplyStatusIn(vs ...string) predicate.ClubappStatus {
+// ClubstatusIn applies the In predicate on the "clubstatus" field.
+func ClubstatusIn(vs ...string) predicate.ClubappStatus {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -125,12 +125,12 @@ func ApplyStatusIn(vs ...string) predicate.ClubappStatus {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldApplyStatus), v...))
+		s.Where(sql.In(s.C(FieldClubstatus), v...))
 	})
 }
 
-// ApplyStatusNotIn applies the NotIn predicate on the "apply_status" field.
-func ApplyStatusNotIn(vs ...string) predicate.ClubappStatus {
+// ClubstatusNotIn applies the NotIn predicate on the "clubstatus" field.
+func ClubstatusNotIn(vs ...string) predicate.ClubappStatus {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -142,70 +142,70 @@ func ApplyStatusNotIn(vs ...string) predicate.ClubappStatus {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldApplyStatus), v...))
+		s.Where(sql.NotIn(s.C(FieldClubstatus), v...))
 	})
 }
 
-// ApplyStatusGT applies the GT predicate on the "apply_status" field.
-func ApplyStatusGT(v string) predicate.ClubappStatus {
+// ClubstatusGT applies the GT predicate on the "clubstatus" field.
+func ClubstatusGT(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldApplyStatus), v))
+		s.Where(sql.GT(s.C(FieldClubstatus), v))
 	})
 }
 
-// ApplyStatusGTE applies the GTE predicate on the "apply_status" field.
-func ApplyStatusGTE(v string) predicate.ClubappStatus {
+// ClubstatusGTE applies the GTE predicate on the "clubstatus" field.
+func ClubstatusGTE(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldApplyStatus), v))
+		s.Where(sql.GTE(s.C(FieldClubstatus), v))
 	})
 }
 
-// ApplyStatusLT applies the LT predicate on the "apply_status" field.
-func ApplyStatusLT(v string) predicate.ClubappStatus {
+// ClubstatusLT applies the LT predicate on the "clubstatus" field.
+func ClubstatusLT(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldApplyStatus), v))
+		s.Where(sql.LT(s.C(FieldClubstatus), v))
 	})
 }
 
-// ApplyStatusLTE applies the LTE predicate on the "apply_status" field.
-func ApplyStatusLTE(v string) predicate.ClubappStatus {
+// ClubstatusLTE applies the LTE predicate on the "clubstatus" field.
+func ClubstatusLTE(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldApplyStatus), v))
+		s.Where(sql.LTE(s.C(FieldClubstatus), v))
 	})
 }
 
-// ApplyStatusContains applies the Contains predicate on the "apply_status" field.
-func ApplyStatusContains(v string) predicate.ClubappStatus {
+// ClubstatusContains applies the Contains predicate on the "clubstatus" field.
+func ClubstatusContains(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldApplyStatus), v))
+		s.Where(sql.Contains(s.C(FieldClubstatus), v))
 	})
 }
 
-// ApplyStatusHasPrefix applies the HasPrefix predicate on the "apply_status" field.
-func ApplyStatusHasPrefix(v string) predicate.ClubappStatus {
+// ClubstatusHasPrefix applies the HasPrefix predicate on the "clubstatus" field.
+func ClubstatusHasPrefix(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldApplyStatus), v))
+		s.Where(sql.HasPrefix(s.C(FieldClubstatus), v))
 	})
 }
 
-// ApplyStatusHasSuffix applies the HasSuffix predicate on the "apply_status" field.
-func ApplyStatusHasSuffix(v string) predicate.ClubappStatus {
+// ClubstatusHasSuffix applies the HasSuffix predicate on the "clubstatus" field.
+func ClubstatusHasSuffix(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldApplyStatus), v))
+		s.Where(sql.HasSuffix(s.C(FieldClubstatus), v))
 	})
 }
 
-// ApplyStatusEqualFold applies the EqualFold predicate on the "apply_status" field.
-func ApplyStatusEqualFold(v string) predicate.ClubappStatus {
+// ClubstatusEqualFold applies the EqualFold predicate on the "clubstatus" field.
+func ClubstatusEqualFold(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldApplyStatus), v))
+		s.Where(sql.EqualFold(s.C(FieldClubstatus), v))
 	})
 }
 
-// ApplyStatusContainsFold applies the ContainsFold predicate on the "apply_status" field.
-func ApplyStatusContainsFold(v string) predicate.ClubappStatus {
+// ClubstatusContainsFold applies the ContainsFold predicate on the "clubstatus" field.
+func ClubstatusContainsFold(v string) predicate.ClubappStatus {
 	return predicate.ClubappStatus(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldApplyStatus), v))
+		s.Where(sql.ContainsFold(s.C(FieldClubstatus), v))
 	})
 }
 
