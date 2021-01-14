@@ -63,6 +63,55 @@ type AcademicYear struct {
 	semester        string
 }
 
+// Disciplines is ...
+type Disciplines struct {
+	Discipline []Discipline
+}
+
+// Discipline is ...
+type Discipline struct {
+	Discip string
+}
+
+// Years is ...
+type Years struct {
+	Year []Year
+}
+
+// Year is ...
+type Year struct {
+	Year int
+}
+
+// Genders is ...
+type Genders struct {
+	Gender []Gender
+}
+
+// Gender is ...
+type Gender struct {
+	Gender string
+}
+
+// UserStatuss is ...
+type UserStatuss struct {
+	UserStatus []UserStatus
+}
+
+// UserStatus is ...
+type UserStatus struct {
+	UserStatus string
+}
+
+// ClubappStatuses is ...
+type ClubappStatuses struct {
+	ClubappStatus []ClubappStatus
+}
+
+// ClubappStatus is ...
+type ClubappStatus struct {
+	Status string
+}
 
 // @title SUT SA Example API
 // @version 1.0
@@ -125,6 +174,14 @@ func main() {
    controllers.NewActivitiesController(v1, client)
    controllers.NewActivityTypeController(v1, client)
    controllers.NewUsertypeController(v1, client)
+// new controller หากมีใหม่กว่า ลบcomment ออกด้วย 
+   controllers.NewDisciplineController(v1, client)
+	controllers.NewYearController(v1, client)
+	controllers.NewGenderController(v1, client)
+	controllers.NewUserstatusController(v1, client)
+	controllers.NewClubappStatusController(v1,client)
+	controllers.NewClubapplicationController(v1,client)
+
 
    // Set Types Data
 	typedata := Usertypes{
