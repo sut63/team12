@@ -1,11 +1,9 @@
 package schema
 
 import (
-	"time"
-
 	"github.com/facebookincubator/ent"
-    "github.com/facebookincubator/ent/schema/edge"
-    "github.com/facebookincubator/ent/schema/field"
+	"github.com/facebookincubator/ent/schema/edge"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // Complaint holds the schema definition for the Complaint entity.
@@ -17,8 +15,7 @@ type Complaint struct {
 func (Complaint) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("info"),
-		field.Time("date").
-			Default(time.Now),
+		field.String("date"),
 	}
 }
 

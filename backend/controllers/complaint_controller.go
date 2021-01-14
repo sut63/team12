@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/bluepsm/app/ent"
-	"github.com/bluepsm/app/ent/club"
-	"github.com/bluepsm/app/ent/complaint"
-	"github.com/bluepsm/app/ent/complainttype"
-	"github.com/bluepsm/app/ent/user"
+	"github.com/OMENX/app/ent"
+	"github.com/OMENX/app/ent/club"
+	"github.com/OMENX/app/ent/complaint"
+	"github.com/OMENX/app/ent/complainttype"
+	"github.com/OMENX/app/ent/user"
 
 	"github.com/gin-gonic/gin"
 )
