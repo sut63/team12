@@ -16,7 +16,7 @@ func (Clubapplication) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("contact").NotEmpty(),
 		field.String("reason"),
-		field.Time("datetime"),
+		field.Time("addeddatetime"),
 		field.String("addername").NotEmpty(),
 		field.String("discipline").NotEmpty(),
 		field.String("gender").NotEmpty(),
