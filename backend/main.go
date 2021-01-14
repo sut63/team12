@@ -37,13 +37,19 @@ type Usertype struct {
 	name string
 }
 
-type Clubs struct {
-	Club []Club
+type ClubBranchs struct {
+	ClubBranch []ClubBranch
 }
 
-type Club struct {
-	name    string
-	purpose string
+type ClubBranch struct {
+	name string
+}
+type ClubTypes struct {
+	ClubType []ClubType
+}
+
+type ClubType struct {
+	name string
 }
 
 type ActivityTypes struct {
@@ -197,7 +203,7 @@ func main() {
 	controllers.NewActivitiesController(v1, client)
 	controllers.NewActivityTypeController(v1, client)
 	controllers.NewUsertypeController(v1, client)
-	// new controller หากมีใหม่กว่า ลบcomment ออกด้วย
+
 	controllers.NewDisciplineController(v1, client)
 	controllers.NewYearController(v1, client)
 	controllers.NewGenderController(v1, client)
@@ -206,7 +212,10 @@ func main() {
 	controllers.NewClubapplicationController(v1, client)
 	controllers.NewComplaintController(v1, client)
 	controllers.NewComplainttypeController(v1, client)
-
+	// พึ่งอัพใหม่ล่าสุด
+	controllers.NewClubBranchController(v1, client)
+	controllers.NewClubTypeController(v1, client)
+	controllers.NewClubController(v1, client)
 	// Set Types Data
 	typedata := Usertypes{
 		Usertype: []Usertype{
@@ -222,20 +231,34 @@ func main() {
 			Save(context.Background())
 	}
 
-	// Set Club Data
-	clubs := Clubs{
-		Club: []Club{
-			Club{"ONE", "Suphasin"},
-			Club{"TWO", "BBB"},
-			Club{"THREE", "CCC"},
+		// Set ClubBranch Data
+	ClubBranchs := ClubBranchs{
+		ClubBranch: []ClubBranch{
+			ClubBranch{"B4101"},
+			ClubBranch{"B1212"},
+			ClubBranch{"สนามแบตมินตัน"},
 		},
 	}
 
-	for _, club := range clubs.Club {
-		client.Club.
+	for _, cb := range ClubBranchs.ClubBranch {
+		client.ClubBranch.
 			Create().
-			SetName(club.name).
-			SetPurpose(club.purpose).
+			SetName(cb.name).
+			Save(context.Background())
+	}
+		// Set ClubType Data
+	ClubTypes := ClubTypes{
+		ClubType: []ClubType{
+			ClubType{"กีฬา"},
+			ClubType{"วิชาการ"},
+			ClubType{"แข่งขัน"},
+		},
+	}
+
+	for _, ct := range ClubTypes.ClubType {
+		client.ClubType.
+			Create().
+			SetName(ct.name).
 			Save(context.Background())
 	}
 
