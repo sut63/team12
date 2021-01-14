@@ -14,8 +14,8 @@ type Activities struct {
 // Fields of the Activities.
 func (Activities) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name"),
-		field.String("detail"),
+		field.String("name").NotEmpty(),
+		field.String("detail").NotEmpty(),
 		field.Time("starttime"),
 		field.Time("endtime"),
 	}
