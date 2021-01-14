@@ -22,7 +22,6 @@ import (
 	"github.com/OMENX/app/ent/gender"
 	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
-	"github.com/OMENX/app/ent/roompurpose"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
 	"github.com/OMENX/app/ent/userstatus"
@@ -55,7 +54,6 @@ const (
 	TypeGender          = "Gender"
 	TypePurpose         = "Purpose"
 	TypeRoom            = "Room"
-	TypeRoompurpose     = "Roompurpose"
 	TypeRoomuse         = "Roomuse"
 	TypeUser            = "User"
 	TypeUserStatus      = "UserStatus"
@@ -4285,7 +4283,7 @@ type ComplaintMutation struct {
 	typ                              string
 	id                               *int
 	info                             *string
-	date                             *time.Time
+	date                             *string
 	clearedFields                    map[string]struct{}
 	_ComplaintToUser                 *int
 	cleared_ComplaintToUser          bool
@@ -4414,12 +4412,12 @@ func (m *ComplaintMutation) ResetInfo() {
 }
 
 // SetDate sets the date field.
-func (m *ComplaintMutation) SetDate(t time.Time) {
-	m.date = &t
+func (m *ComplaintMutation) SetDate(s string) {
+	m.date = &s
 }
 
 // Date returns the date value in the mutation.
-func (m *ComplaintMutation) Date() (r time.Time, exists bool) {
+func (m *ComplaintMutation) Date() (r string, exists bool) {
 	v := m.date
 	if v == nil {
 		return
@@ -4431,7 +4429,7 @@ func (m *ComplaintMutation) Date() (r time.Time, exists bool) {
 // If the Complaint object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ComplaintMutation) OldDate(ctx context.Context) (v time.Time, err error) {
+func (m *ComplaintMutation) OldDate(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldDate is allowed only on UpdateOne operations")
 	}
@@ -4630,7 +4628,7 @@ func (m *ComplaintMutation) SetField(name string, value ent.Value) error {
 		m.SetInfo(v)
 		return nil
 	case complaint.FieldDate:
-		v, ok := value.(time.Time)
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -6851,374 +6849,6 @@ func (m *RoomMutation) ResetEdge(name string) error {
 		return nil
 	}
 	return fmt.Errorf("unknown Room edge %s", name)
-}
-
-// RoompurposeMutation represents an operation that mutate the Roompurposes
-// nodes in the graph.
-type RoompurposeMutation struct {
-	config
-	op                 Op
-	typ                string
-	id                 *int
-	purpose            *string
-	clearedFields      map[string]struct{}
-	roompurpose        map[int]struct{}
-	removedroompurpose map[int]struct{}
-	done               bool
-	oldValue           func(context.Context) (*Roompurpose, error)
-}
-
-var _ ent.Mutation = (*RoompurposeMutation)(nil)
-
-// roompurposeOption allows to manage the mutation configuration using functional options.
-type roompurposeOption func(*RoompurposeMutation)
-
-// newRoompurposeMutation creates new mutation for $n.Name.
-func newRoompurposeMutation(c config, op Op, opts ...roompurposeOption) *RoompurposeMutation {
-	m := &RoompurposeMutation{
-		config:        c,
-		op:            op,
-		typ:           TypeRoompurpose,
-		clearedFields: make(map[string]struct{}),
-	}
-	for _, opt := range opts {
-		opt(m)
-	}
-	return m
-}
-
-// withRoompurposeID sets the id field of the mutation.
-func withRoompurposeID(id int) roompurposeOption {
-	return func(m *RoompurposeMutation) {
-		var (
-			err   error
-			once  sync.Once
-			value *Roompurpose
-		)
-		m.oldValue = func(ctx context.Context) (*Roompurpose, error) {
-			once.Do(func() {
-				if m.done {
-					err = fmt.Errorf("querying old values post mutation is not allowed")
-				} else {
-					value, err = m.Client().Roompurpose.Get(ctx, id)
-				}
-			})
-			return value, err
-		}
-		m.id = &id
-	}
-}
-
-// withRoompurpose sets the old Roompurpose of the mutation.
-func withRoompurpose(node *Roompurpose) roompurposeOption {
-	return func(m *RoompurposeMutation) {
-		m.oldValue = func(context.Context) (*Roompurpose, error) {
-			return node, nil
-		}
-		m.id = &node.ID
-	}
-}
-
-// Client returns a new `ent.Client` from the mutation. If the mutation was
-// executed in a transaction (ent.Tx), a transactional client is returned.
-func (m RoompurposeMutation) Client() *Client {
-	client := &Client{config: m.config}
-	client.init()
-	return client
-}
-
-// Tx returns an `ent.Tx` for mutations that were executed in transactions;
-// it returns an error otherwise.
-func (m RoompurposeMutation) Tx() (*Tx, error) {
-	if _, ok := m.driver.(*txDriver); !ok {
-		return nil, fmt.Errorf("ent: mutation is not running in a transaction")
-	}
-	tx := &Tx{config: m.config}
-	tx.init()
-	return tx, nil
-}
-
-// ID returns the id value in the mutation. Note that, the id
-// is available only if it was provided to the builder.
-func (m *RoompurposeMutation) ID() (id int, exists bool) {
-	if m.id == nil {
-		return
-	}
-	return *m.id, true
-}
-
-// SetPurpose sets the purpose field.
-func (m *RoompurposeMutation) SetPurpose(s string) {
-	m.purpose = &s
-}
-
-// Purpose returns the purpose value in the mutation.
-func (m *RoompurposeMutation) Purpose() (r string, exists bool) {
-	v := m.purpose
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPurpose returns the old purpose value of the Roompurpose.
-// If the Roompurpose object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *RoompurposeMutation) OldPurpose(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldPurpose is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldPurpose requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPurpose: %w", err)
-	}
-	return oldValue.Purpose, nil
-}
-
-// ResetPurpose reset all changes of the "purpose" field.
-func (m *RoompurposeMutation) ResetPurpose() {
-	m.purpose = nil
-}
-
-// AddRoompurposeIDs adds the roompurpose edge to Roomuse by ids.
-func (m *RoompurposeMutation) AddRoompurposeIDs(ids ...int) {
-	if m.roompurpose == nil {
-		m.roompurpose = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.roompurpose[ids[i]] = struct{}{}
-	}
-}
-
-// RemoveRoompurposeIDs removes the roompurpose edge to Roomuse by ids.
-func (m *RoompurposeMutation) RemoveRoompurposeIDs(ids ...int) {
-	if m.removedroompurpose == nil {
-		m.removedroompurpose = make(map[int]struct{})
-	}
-	for i := range ids {
-		m.removedroompurpose[ids[i]] = struct{}{}
-	}
-}
-
-// RemovedRoompurpose returns the removed ids of roompurpose.
-func (m *RoompurposeMutation) RemovedRoompurposeIDs() (ids []int) {
-	for id := range m.removedroompurpose {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// RoompurposeIDs returns the roompurpose ids in the mutation.
-func (m *RoompurposeMutation) RoompurposeIDs() (ids []int) {
-	for id := range m.roompurpose {
-		ids = append(ids, id)
-	}
-	return
-}
-
-// ResetRoompurpose reset all changes of the "roompurpose" edge.
-func (m *RoompurposeMutation) ResetRoompurpose() {
-	m.roompurpose = nil
-	m.removedroompurpose = nil
-}
-
-// Op returns the operation name.
-func (m *RoompurposeMutation) Op() Op {
-	return m.op
-}
-
-// Type returns the node type of this mutation (Roompurpose).
-func (m *RoompurposeMutation) Type() string {
-	return m.typ
-}
-
-// Fields returns all fields that were changed during
-// this mutation. Note that, in order to get all numeric
-// fields that were in/decremented, call AddedFields().
-func (m *RoompurposeMutation) Fields() []string {
-	fields := make([]string, 0, 1)
-	if m.purpose != nil {
-		fields = append(fields, roompurpose.FieldPurpose)
-	}
-	return fields
-}
-
-// Field returns the value of a field with the given name.
-// The second boolean value indicates that this field was
-// not set, or was not define in the schema.
-func (m *RoompurposeMutation) Field(name string) (ent.Value, bool) {
-	switch name {
-	case roompurpose.FieldPurpose:
-		return m.Purpose()
-	}
-	return nil, false
-}
-
-// OldField returns the old value of the field from the database.
-// An error is returned if the mutation operation is not UpdateOne,
-// or the query to the database was failed.
-func (m *RoompurposeMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
-	switch name {
-	case roompurpose.FieldPurpose:
-		return m.OldPurpose(ctx)
-	}
-	return nil, fmt.Errorf("unknown Roompurpose field %s", name)
-}
-
-// SetField sets the value for the given name. It returns an
-// error if the field is not defined in the schema, or if the
-// type mismatch the field type.
-func (m *RoompurposeMutation) SetField(name string, value ent.Value) error {
-	switch name {
-	case roompurpose.FieldPurpose:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPurpose(v)
-		return nil
-	}
-	return fmt.Errorf("unknown Roompurpose field %s", name)
-}
-
-// AddedFields returns all numeric fields that were incremented
-// or decremented during this mutation.
-func (m *RoompurposeMutation) AddedFields() []string {
-	return nil
-}
-
-// AddedField returns the numeric value that was in/decremented
-// from a field with the given name. The second value indicates
-// that this field was not set, or was not define in the schema.
-func (m *RoompurposeMutation) AddedField(name string) (ent.Value, bool) {
-	return nil, false
-}
-
-// AddField adds the value for the given name. It returns an
-// error if the field is not defined in the schema, or if the
-// type mismatch the field type.
-func (m *RoompurposeMutation) AddField(name string, value ent.Value) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown Roompurpose numeric field %s", name)
-}
-
-// ClearedFields returns all nullable fields that were cleared
-// during this mutation.
-func (m *RoompurposeMutation) ClearedFields() []string {
-	return nil
-}
-
-// FieldCleared returns a boolean indicates if this field was
-// cleared in this mutation.
-func (m *RoompurposeMutation) FieldCleared(name string) bool {
-	_, ok := m.clearedFields[name]
-	return ok
-}
-
-// ClearField clears the value for the given name. It returns an
-// error if the field is not defined in the schema.
-func (m *RoompurposeMutation) ClearField(name string) error {
-	return fmt.Errorf("unknown Roompurpose nullable field %s", name)
-}
-
-// ResetField resets all changes in the mutation regarding the
-// given field name. It returns an error if the field is not
-// defined in the schema.
-func (m *RoompurposeMutation) ResetField(name string) error {
-	switch name {
-	case roompurpose.FieldPurpose:
-		m.ResetPurpose()
-		return nil
-	}
-	return fmt.Errorf("unknown Roompurpose field %s", name)
-}
-
-// AddedEdges returns all edge names that were set/added in this
-// mutation.
-func (m *RoompurposeMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.roompurpose != nil {
-		edges = append(edges, roompurpose.EdgeRoompurpose)
-	}
-	return edges
-}
-
-// AddedIDs returns all ids (to other nodes) that were added for
-// the given edge name.
-func (m *RoompurposeMutation) AddedIDs(name string) []ent.Value {
-	switch name {
-	case roompurpose.EdgeRoompurpose:
-		ids := make([]ent.Value, 0, len(m.roompurpose))
-		for id := range m.roompurpose {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// RemovedEdges returns all edge names that were removed in this
-// mutation.
-func (m *RoompurposeMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
-	if m.removedroompurpose != nil {
-		edges = append(edges, roompurpose.EdgeRoompurpose)
-	}
-	return edges
-}
-
-// RemovedIDs returns all ids (to other nodes) that were removed for
-// the given edge name.
-func (m *RoompurposeMutation) RemovedIDs(name string) []ent.Value {
-	switch name {
-	case roompurpose.EdgeRoompurpose:
-		ids := make([]ent.Value, 0, len(m.removedroompurpose))
-		for id := range m.removedroompurpose {
-			ids = append(ids, id)
-		}
-		return ids
-	}
-	return nil
-}
-
-// ClearedEdges returns all edge names that were cleared in this
-// mutation.
-func (m *RoompurposeMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
-	return edges
-}
-
-// EdgeCleared returns a boolean indicates if this edge was
-// cleared in this mutation.
-func (m *RoompurposeMutation) EdgeCleared(name string) bool {
-	switch name {
-	}
-	return false
-}
-
-// ClearEdge clears the value for the given name. It returns an
-// error if the edge name is not defined in the schema.
-func (m *RoompurposeMutation) ClearEdge(name string) error {
-	switch name {
-	}
-	return fmt.Errorf("unknown Roompurpose unique edge %s", name)
-}
-
-// ResetEdge resets all changes in the mutation regarding the
-// given edge name. It returns an error if the edge is not
-// defined in the schema.
-func (m *RoompurposeMutation) ResetEdge(name string) error {
-	switch name {
-	case roompurpose.EdgeRoompurpose:
-		m.ResetRoompurpose()
-		return nil
-	}
-	return fmt.Errorf("unknown Roompurpose edge %s", name)
 }
 
 // RoomuseMutation represents an operation that mutate the Roomuses

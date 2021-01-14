@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/gin-gonic/gin"
 	"github.com/OMENX/app/ent"
 	"github.com/OMENX/app/ent/userstatus"
+	"github.com/gin-gonic/gin"
 )
 
 // UserStatusController is ...

@@ -2127,12 +2127,12 @@ var doc = `{
                 "operationId": "create-complainttype",
                 "parameters": [
                     {
-                        "description": "ComplaintType entity",
+                        "description": "Complainttype entity",
                         "name": "complainttype",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controllers.ComplaintType"
+                            "$ref": "#/definitions/controllers.Complainttype"
                         }
                     }
                 ],
@@ -2169,7 +2169,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ComplaintType ID",
+                        "description": "Complainttype ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -2215,13 +2215,13 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ComplaintType ID",
+                        "description": "Complainttype ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "ComplaintType entity",
+                        "description": "Complainttype entity",
                         "name": "complainttype",
                         "in": "body",
                         "required": true,
@@ -2261,7 +2261,7 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "ComplaintType ID",
+                        "description": "Complainttype ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -4243,7 +4243,7 @@ var doc = `{
                 }
             }
         },
-        "controllers.ComplaintType": {
+        "controllers.Complainttype": {
             "type": "object",
             "properties": {
                 "description": {

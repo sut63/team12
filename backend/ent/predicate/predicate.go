@@ -48,9 +48,6 @@ type Purpose func(*sql.Selector)
 // Room is the predicate function for room builders.
 type Room func(*sql.Selector)
 
-// Roompurpose is the predicate function for roompurpose builders.
-type Roompurpose func(*sql.Selector)
-
 // Roomuse is the predicate function for roomuse builders.
 type Roomuse func(*sql.Selector)
 

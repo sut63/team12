@@ -20,6 +20,7 @@ type ClubController struct {
 	router gin.IRouter
 }
 
+// Club defines the struct for the club ...
 type Club struct {
 	UserID       int
 	ClubBranchID int
@@ -275,4 +276,3 @@ func (ctl *ClubController) register() {
 	club.PUT(":id", ctl.UpdateClub)
 	club.DELETE(":id", ctl.DeleteClub)
 }
-

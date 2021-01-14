@@ -546,30 +546,6 @@ func (f RoomMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) 
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.RoomMutation", m)
 }
 
-// The RoompurposeQueryRuleFunc type is an adapter to allow the use of ordinary
-// functions as a query rule.
-type RoompurposeQueryRuleFunc func(context.Context, *ent.RoompurposeQuery) error
-
-// EvalQuery return f(ctx, q).
-func (f RoompurposeQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
-	if q, ok := q.(*ent.RoompurposeQuery); ok {
-		return f(ctx, q)
-	}
-	return Denyf("ent/privacy: unexpected query type %T, expect *ent.RoompurposeQuery", q)
-}
-
-// The RoompurposeMutationRuleFunc type is an adapter to allow the use of ordinary
-// functions as a mutation rule.
-type RoompurposeMutationRuleFunc func(context.Context, *ent.RoompurposeMutation) error
-
-// EvalMutation calls f(ctx, m).
-func (f RoompurposeMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
-	if m, ok := m.(*ent.RoompurposeMutation); ok {
-		return f(ctx, m)
-	}
-	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.RoompurposeMutation", m)
-}
-
 // The RoomuseQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type RoomuseQueryRuleFunc func(context.Context, *ent.RoomuseQuery) error

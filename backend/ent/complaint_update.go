@@ -5,7 +5,6 @@ package ent
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/complaint"
@@ -38,16 +37,8 @@ func (cu *ComplaintUpdate) SetInfo(s string) *ComplaintUpdate {
 }
 
 // SetDate sets the date field.
-func (cu *ComplaintUpdate) SetDate(t time.Time) *ComplaintUpdate {
-	cu.mutation.SetDate(t)
-	return cu
-}
-
-// SetNillableDate sets the date field if the given value is not nil.
-func (cu *ComplaintUpdate) SetNillableDate(t *time.Time) *ComplaintUpdate {
-	if t != nil {
-		cu.SetDate(*t)
-	}
+func (cu *ComplaintUpdate) SetDate(s string) *ComplaintUpdate {
+	cu.mutation.SetDate(s)
 	return cu
 }
 
@@ -210,7 +201,7 @@ func (cu *ComplaintUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := cu.mutation.Date(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: complaint.FieldDate,
 		})
@@ -345,16 +336,8 @@ func (cuo *ComplaintUpdateOne) SetInfo(s string) *ComplaintUpdateOne {
 }
 
 // SetDate sets the date field.
-func (cuo *ComplaintUpdateOne) SetDate(t time.Time) *ComplaintUpdateOne {
-	cuo.mutation.SetDate(t)
-	return cuo
-}
-
-// SetNillableDate sets the date field if the given value is not nil.
-func (cuo *ComplaintUpdateOne) SetNillableDate(t *time.Time) *ComplaintUpdateOne {
-	if t != nil {
-		cuo.SetDate(*t)
-	}
+func (cuo *ComplaintUpdateOne) SetDate(s string) *ComplaintUpdateOne {
+	cuo.mutation.SetDate(s)
 	return cuo
 }
 
@@ -515,7 +498,7 @@ func (cuo *ComplaintUpdateOne) sqlSave(ctx context.Context) (c *Complaint, err e
 	}
 	if value, ok := cuo.mutation.Date(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
+			Type:   field.TypeString,
 			Value:  value,
 			Column: complaint.FieldDate,
 		})

@@ -38,7 +38,7 @@ definitions:
       userID:
         type: integer
     type: object
-  controllers.ComplaintType:
+  controllers.Complainttype:
     properties:
       description:
         type: string
@@ -2083,12 +2083,12 @@ paths:
       description: Create complainttype
       operationId: create-complainttype
       parameters:
-      - description: ComplaintType entity
+      - description: Complainttype entity
         in: body
         name: complainttype
         required: true
         schema:
-          $ref: '#/definitions/controllers.ComplaintType'
+          $ref: '#/definitions/controllers.Complainttype'
       produces:
       - application/json
       responses:
@@ -2110,7 +2110,7 @@ paths:
       description: get complainttype by ID
       operationId: delete-complainttype
       parameters:
-      - description: ComplaintType ID
+      - description: Complainttype ID
         in: path
         name: id
         required: true
@@ -2139,7 +2139,7 @@ paths:
       description: get complainttype by ID
       operationId: get-complainttype
       parameters:
-      - description: ComplaintType ID
+      - description: Complainttype ID
         in: path
         name: id
         required: true
@@ -2170,12 +2170,12 @@ paths:
       description: update complainttype by ID
       operationId: update-complainttype
       parameters:
-      - description: ComplaintType ID
+      - description: Complainttype ID
         in: path
         name: id
         required: true
         type: integer
-      - description: ComplaintType entity
+      - description: Complainttype entity
         in: body
         name: complainttype
         required: true

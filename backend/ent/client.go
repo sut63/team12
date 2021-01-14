@@ -23,7 +23,6 @@ import (
 	"github.com/OMENX/app/ent/gender"
 	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
-	"github.com/OMENX/app/ent/roompurpose"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
 	"github.com/OMENX/app/ent/userstatus"
@@ -68,8 +67,6 @@ type Client struct {
 	Purpose *PurposeClient
 	// Room is the client for interacting with the Room builders.
 	Room *RoomClient
-	// Roompurpose is the client for interacting with the Roompurpose builders.
-	Roompurpose *RoompurposeClient
 	// Roomuse is the client for interacting with the Roomuse builders.
 	Roomuse *RoomuseClient
 	// User is the client for interacting with the User builders.
@@ -107,7 +104,6 @@ func (c *Client) init() {
 	c.Gender = NewGenderClient(c.config)
 	c.Purpose = NewPurposeClient(c.config)
 	c.Room = NewRoomClient(c.config)
-	c.Roompurpose = NewRoompurposeClient(c.config)
 	c.Roomuse = NewRoomuseClient(c.config)
 	c.User = NewUserClient(c.config)
 	c.UserStatus = NewUserStatusClient(c.config)
@@ -159,7 +155,6 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		Gender:          NewGenderClient(cfg),
 		Purpose:         NewPurposeClient(cfg),
 		Room:            NewRoomClient(cfg),
-		Roompurpose:     NewRoompurposeClient(cfg),
 		Roomuse:         NewRoomuseClient(cfg),
 		User:            NewUserClient(cfg),
 		UserStatus:      NewUserStatusClient(cfg),
@@ -194,7 +189,6 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		Gender:          NewGenderClient(cfg),
 		Purpose:         NewPurposeClient(cfg),
 		Room:            NewRoomClient(cfg),
-		Roompurpose:     NewRoompurposeClient(cfg),
 		Roomuse:         NewRoomuseClient(cfg),
 		User:            NewUserClient(cfg),
 		UserStatus:      NewUserStatusClient(cfg),
@@ -242,7 +236,6 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Gender.Use(hooks...)
 	c.Purpose.Use(hooks...)
 	c.Room.Use(hooks...)
-	c.Roompurpose.Use(hooks...)
 	c.Roomuse.Use(hooks...)
 	c.User.Use(hooks...)
 	c.UserStatus.Use(hooks...)
@@ -1826,105 +1819,6 @@ func (c *RoomClient) QueryRoomuses(r *Room) *RoomuseQuery {
 // Hooks returns the client hooks.
 func (c *RoomClient) Hooks() []Hook {
 	return c.hooks.Room
-}
-
-// RoompurposeClient is a client for the Roompurpose schema.
-type RoompurposeClient struct {
-	config
-}
-
-// NewRoompurposeClient returns a client for the Roompurpose from the given config.
-func NewRoompurposeClient(c config) *RoompurposeClient {
-	return &RoompurposeClient{config: c}
-}
-
-// Use adds a list of mutation hooks to the hooks stack.
-// A call to `Use(f, g, h)` equals to `roompurpose.Hooks(f(g(h())))`.
-func (c *RoompurposeClient) Use(hooks ...Hook) {
-	c.hooks.Roompurpose = append(c.hooks.Roompurpose, hooks...)
-}
-
-// Create returns a create builder for Roompurpose.
-func (c *RoompurposeClient) Create() *RoompurposeCreate {
-	mutation := newRoompurposeMutation(c.config, OpCreate)
-	return &RoompurposeCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Update returns an update builder for Roompurpose.
-func (c *RoompurposeClient) Update() *RoompurposeUpdate {
-	mutation := newRoompurposeMutation(c.config, OpUpdate)
-	return &RoompurposeUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOne returns an update builder for the given entity.
-func (c *RoompurposeClient) UpdateOne(r *Roompurpose) *RoompurposeUpdateOne {
-	mutation := newRoompurposeMutation(c.config, OpUpdateOne, withRoompurpose(r))
-	return &RoompurposeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// UpdateOneID returns an update builder for the given id.
-func (c *RoompurposeClient) UpdateOneID(id int) *RoompurposeUpdateOne {
-	mutation := newRoompurposeMutation(c.config, OpUpdateOne, withRoompurposeID(id))
-	return &RoompurposeUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// Delete returns a delete builder for Roompurpose.
-func (c *RoompurposeClient) Delete() *RoompurposeDelete {
-	mutation := newRoompurposeMutation(c.config, OpDelete)
-	return &RoompurposeDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
-}
-
-// DeleteOne returns a delete builder for the given entity.
-func (c *RoompurposeClient) DeleteOne(r *Roompurpose) *RoompurposeDeleteOne {
-	return c.DeleteOneID(r.ID)
-}
-
-// DeleteOneID returns a delete builder for the given id.
-func (c *RoompurposeClient) DeleteOneID(id int) *RoompurposeDeleteOne {
-	builder := c.Delete().Where(roompurpose.ID(id))
-	builder.mutation.id = &id
-	builder.mutation.op = OpDeleteOne
-	return &RoompurposeDeleteOne{builder}
-}
-
-// Create returns a query builder for Roompurpose.
-func (c *RoompurposeClient) Query() *RoompurposeQuery {
-	return &RoompurposeQuery{config: c.config}
-}
-
-// Get returns a Roompurpose entity by its id.
-func (c *RoompurposeClient) Get(ctx context.Context, id int) (*Roompurpose, error) {
-	return c.Query().Where(roompurpose.ID(id)).Only(ctx)
-}
-
-// GetX is like Get, but panics if an error occurs.
-func (c *RoompurposeClient) GetX(ctx context.Context, id int) *Roompurpose {
-	r, err := c.Get(ctx, id)
-	if err != nil {
-		panic(err)
-	}
-	return r
-}
-
-// QueryRoompurpose queries the roompurpose edge of a Roompurpose.
-func (c *RoompurposeClient) QueryRoompurpose(r *Roompurpose) *RoomuseQuery {
-	query := &RoomuseQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
-		id := r.ID
-		step := sqlgraph.NewStep(
-			sqlgraph.From(roompurpose.Table, roompurpose.FieldID, id),
-			sqlgraph.To(roomuse.Table, roomuse.FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, roompurpose.RoompurposeTable, roompurpose.RoompurposeColumn),
-		)
-		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
-		return fromV, nil
-	}
-	return query
-}
-
-// Hooks returns the client hooks.
-func (c *RoompurposeClient) Hooks() []Hook {
-	return c.hooks.Roompurpose
 }
 
 // RoomuseClient is a client for the Roomuse schema.

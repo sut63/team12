@@ -21,6 +21,7 @@ type ActivitiesController struct {
 	router gin.IRouter
 }
 
+// Activities defines the struct for the activities ...
 type Activities struct {
 	AcademicYearID int
 	ActivityTypeID int

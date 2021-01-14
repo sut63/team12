@@ -3,8 +3,6 @@
 package ent
 
 import (
-	"time"
-
 	"github.com/OMENX/app/ent/academicyear"
 	"github.com/OMENX/app/ent/activities"
 	"github.com/OMENX/app/ent/activitytype"
@@ -12,10 +10,8 @@ import (
 	"github.com/OMENX/app/ent/clubapplication"
 	"github.com/OMENX/app/ent/clubbranch"
 	"github.com/OMENX/app/ent/clubtype"
-	"github.com/OMENX/app/ent/complaint"
 	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
-	"github.com/OMENX/app/ent/roompurpose"
 	"github.com/OMENX/app/ent/schema"
 	"github.com/OMENX/app/ent/user"
 	"github.com/OMENX/app/ent/usertype"
@@ -95,12 +91,6 @@ func init() {
 	clubapplicationDescYaer := clubapplicationFields[7].Descriptor()
 	// clubapplication.YaerValidator is a validator for the "yaer" field. It is called by the builders before save.
 	clubapplication.YaerValidator = clubapplicationDescYaer.Validators[0].(func(int) error)
-	complaintFields := schema.Complaint{}.Fields()
-	_ = complaintFields
-	// complaintDescDate is the schema descriptor for date field.
-	complaintDescDate := complaintFields[1].Descriptor()
-	// complaint.DefaultDate holds the default value on creation for the date field.
-	complaint.DefaultDate = complaintDescDate.Default.(func() time.Time)
 	purposeFields := schema.Purpose{}.Fields()
 	_ = purposeFields
 	// purposeDescPurpose is the schema descriptor for purpose field.
@@ -125,12 +115,6 @@ func init() {
 	roomDescMaxContain := roomFields[3].Descriptor()
 	// room.MaxContainValidator is a validator for the "max_contain" field. It is called by the builders before save.
 	room.MaxContainValidator = roomDescMaxContain.Validators[0].(func(int) error)
-	roompurposeFields := schema.Roompurpose{}.Fields()
-	_ = roompurposeFields
-	// roompurposeDescPurpose is the schema descriptor for purpose field.
-	roompurposeDescPurpose := roompurposeFields[0].Descriptor()
-	// roompurpose.PurposeValidator is a validator for the "purpose" field. It is called by the builders before save.
-	roompurpose.PurposeValidator = roompurposeDescPurpose.Validators[0].(func(string) error)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescName is the schema descriptor for name field.
