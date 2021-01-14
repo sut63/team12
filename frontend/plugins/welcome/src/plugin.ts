@@ -4,6 +4,7 @@ import WatchVideo from './components/WatchVideo';
 import SignIn from './components/SignIn';
 import Activities from './components/Activities';
 import ActivityTable from './components/ActivityTable';
+import Club from './components/Club';
 
 export const plugin = createPlugin({
   id: 'welcome',
@@ -12,6 +13,7 @@ export const plugin = createPlugin({
     router.registerRoute('/watch_video', WatchVideo);
     router.registerRoute('/signin', SignIn);
     router.registerRoute('/Activities', Activities);
+    router.registerRoute('/Club', Club);	
     router.registerRoute('/ActivityTable', ActivityTable);
   },
 });
