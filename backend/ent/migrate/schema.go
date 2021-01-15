@@ -194,9 +194,9 @@ var (
 	ComplaintsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "info", Type: field.TypeString},
-		{Name: "date", Type: field.TypeString},
+		{Name: "date", Type: field.TypeTime},
 		{Name: "ClubID", Type: field.TypeInt, Nullable: true},
-		{Name: "Type", Type: field.TypeInt, Nullable: true},
+		{Name: "TypeID", Type: field.TypeInt, Nullable: true},
 		{Name: "UserID", Type: field.TypeInt, Nullable: true},
 	}
 	// ComplaintsTable holds the schema information for the "complaints" table.

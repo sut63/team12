@@ -4214,12 +4214,6 @@
                 "clubID": {
                     "type": "integer"
                 },
-                "date": {
-                    "type": "string"
-                },
-                "info": {
-                    "type": "string"
-                },
                 "typeID": {
                     "type": "integer"
                 },
@@ -4636,7 +4630,7 @@
                     "description": "Info holds the value of the \"info\" field.",
                     "type": "string"
                 },
-                "type": {
+                "typeID": {
                     "type": "integer"
                 },
                 "userID": {

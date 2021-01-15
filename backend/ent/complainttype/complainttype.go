@@ -21,7 +21,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "complaint" package.
 	ComplaintTypeToComplaintInverseTable = "complaints"
 	// ComplaintTypeToComplaintColumn is the table column denoting the ComplaintTypeToComplaint relation/edge.
-	ComplaintTypeToComplaintColumn = "Type"
+	ComplaintTypeToComplaintColumn = "TypeID"
 )
 
 // Columns holds all SQL columns for complainttype fields.

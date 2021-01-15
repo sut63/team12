@@ -458,7 +458,7 @@ func (cq *ComplaintQuery) sqlAll(ctx context.Context) ([]*Complaint, error) {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*Complaint)
 		for i := range nodes {
-			if fk := nodes[i].Type; fk != nil {
+			if fk := nodes[i].TypeID; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
@@ -471,7 +471,7 @@ func (cq *ComplaintQuery) sqlAll(ctx context.Context) ([]*Complaint, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "Type" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "TypeID" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.ComplaintToComplaintType = n

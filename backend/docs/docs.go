@@ -4229,12 +4229,6 @@ var doc = `{
                 "clubID": {
                     "type": "integer"
                 },
-                "date": {
-                    "type": "string"
-                },
-                "info": {
-                    "type": "string"
-                },
                 "typeID": {
                     "type": "integer"
                 },
@@ -4651,7 +4645,7 @@ var doc = `{
                     "description": "Info holds the value of the \"info\" field.",
                     "type": "string"
                 },
-                "type": {
+                "typeID": {
                     "type": "integer"
                 },
                 "userID": {
