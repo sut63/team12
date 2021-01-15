@@ -37,10 +37,10 @@ export function CardTeam({ name, id, system }: ProfileProps) {
         <CardActionArea>
           <CardMedia
             component="img"
-            alt="นาย สมชาย ใจดี"
+            alt="ชมรม"
             height="140"
-            image="../../image/account.jpg"
-            title="นาย สมชาย ใจดี"
+            image="../../image/chomrom.jpg"
+            title="ชมรม"
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
@@ -59,16 +59,16 @@ export function CardTeam({ name, id, system }: ProfileProps) {
 const WelcomePage: FC<{}> = () => {
   return (
     <Page theme={pageTheme.home}>
-      <Header style={HeaderCustom} title={`ระบบ...`}></Header>
+      <Header style={HeaderCustom} title={`ระบบจัดการชมรม`}></Header>
       <Content>
         <ContentHeader title="สมาชิกในกลุ่ม"></ContentHeader>
         <Grid container>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อยระบบ"}></CardTeam>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อยระบบ"}></CardTeam>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อย"}></CardTeam>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อย"}></CardTeam>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อย"}></CardTeam>
-          <CardTeam name={"นาย สมชาย ใจดี"} id={"B5012345"} system={"ระบบย่อย"}></CardTeam>
+          <CardTeam name={"นาย ธนวัฒน์ พรมกุล"} id={"B6025212"} system={"ระบบย่อย: ระบบยืมอุปกรณ์"}></CardTeam>
+          <CardTeam name={"นาย พศิน บัวสิงห"} id={"B6108755"} system={"ระบบย่อย: ระบบสร้างชมรม"}></CardTeam>
+          <CardTeam name={"นาย ธนภูมิ พงษ์ประชา"} id={"B6110321"} system={"ระบบย่อย: ระบบสมัครเข้าชมรม"}></CardTeam>
+          <CardTeam name={"นาย บูรพา ภูสามารถ"} id={"B6111922"} system={"ระบบย่อย: ระบบร้องเรียน"}></CardTeam>
+          <CardTeam name={"นาย ศุภศิลป์ ย่อแสง"} id={"B6112608"} system={"ระบบย่อย: ระบบจัดกิจกรรมชมรม"}></CardTeam>
+          <CardTeam name={"นาย ธีร์ธวัช ศรีคอนไทย"} id={"B6131678"} system={"ระบบย่อย: ระบบการเข้าใช้ห้อง"}></CardTeam>
         </Grid>
       </Content>
     </Page>
