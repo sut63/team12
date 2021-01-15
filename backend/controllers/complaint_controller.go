@@ -23,11 +23,11 @@ type ComplaintController struct {
 
 // Complaint defines the struct for the complaint
 type Complaint struct {
-	UserID int
-	ClubID int
-	TypeID int
-	Info   string
-	Date   string
+	userID int
+	clubID int
+	typeID int
+	info   string
+	date   string
 }
 
 // CreateComplaint handles POST requests for adding complaint entities
@@ -52,7 +52,7 @@ func (ctl *ComplaintController) CreateComplaint(c *gin.Context) {
 
 	u, err := ctl.client.User.
 		Query().
-		Where(user.IDEQ(int(obj.UserID))).
+		Where(user.IDEQ(int(obj.userID))).
 		Only(context.Background())
 
 	if err != nil {
@@ -64,7 +64,7 @@ func (ctl *ComplaintController) CreateComplaint(c *gin.Context) {
 
 	cb, err := ctl.client.Club.
 		Query().
-		Where(club.IDEQ(int(obj.ClubID))).
+		Where(club.IDEQ(int(obj.clubID))).
 		Only(context.Background())
 
 	if err != nil {
@@ -76,7 +76,7 @@ func (ctl *ComplaintController) CreateComplaint(c *gin.Context) {
 
 	ct, err := ctl.client.ComplaintType.
 		Query().
-		Where(complainttype.IDEQ(int(obj.TypeID))).
+		Where(complainttype.IDEQ(int(obj.typeID))).
 		Only(context.Background())
 
 	if err != nil {
@@ -86,15 +86,15 @@ func (ctl *ComplaintController) CreateComplaint(c *gin.Context) {
 		return
 	}
 
-	time, err := time.Parse(time.RFC3339, obj.Date)
+	time, err := time.Parse(time.RFC3339, obj.date)
 
 	cp, err := ctl.client.Complaint.
 		Create().
 		SetComplaintToUser(u).
 		SetComplaintToClub(cb).
 		SetComplaintToComplaintType(ct).
-		SetInfo(obj.Info).
-		SetDate(time.Format("30-12-2020 15:04:05")).
+		SetInfo(obj.info).
+		SetDate(time).
 		Save(context.Background())
 
 	if err != nil {
