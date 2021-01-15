@@ -28,6 +28,12 @@ import { DefaultApi } from '../../api/apis';
 import { Link as RouterLink } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 
+//set UID from LocalStorage
+//const [uID, setUID] = useState(localStorage.getItem('user-id'));
+
+let userID = Number(localStorage.getItem('user-id'));
+let Email = localStorage.getItem('user-email');
+
 // header css
 const HeaderCustom = {
   minHeight: '50px',
@@ -60,6 +66,15 @@ const useStyles = makeStyles(theme => ({
     '& > * + *': {
       marginTop: theme.spacing(2),
     },
+  },
+  user: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'white',
+    height: 48,
+    padding: '0 30px',
   },
 }));
 
@@ -121,7 +136,7 @@ function Activities() {
       const Activities = {
         academicYearID: AcademicyearID,
         activityTypeID: ActivitytypeID,
-        clubID: UserID,
+        clubID: userID,
         detail: detail,
         endtime: endtime + ':00+07:00',
         name: name,
@@ -186,7 +201,18 @@ function Activities() {
   return (
     <Page theme={pageTheme.website}>
       <Header style={HeaderCustom} title={`กิจกรรม`}>
-        <Avatar alt="Remy Sharp" src="../../image/account.jpg" />
+        {/* <Avatar alt="Remy Sharp" src="../../image/account.jpg"></Avatar> */}
+        <div
+          style={{
+            background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+            height: 50,
+            width: 200,
+            margin: 0,
+            alignItems: 'center',
+          }}
+        >
+          {Email}
+        </div>
         <div style={{ marginLeft: 10 }}></div>
       </Header>
       <Content>
@@ -200,11 +226,11 @@ function Activities() {
               )}
             </div>
           ) : null}
-          <Link component={RouterLink} to="/ActivityTable">
+          {/*  <Link component={RouterLink} to="/ActivityTable">
             <Button variant="contained" color="primary">
               ตารางข้อมูลกิจกรรม
             </Button>
-          </Link>
+          </Link> */}
         </ContentHeader>
         <Container maxWidth="sm">
           <Grid container spacing={2}>
@@ -279,26 +305,6 @@ function Activities() {
                 >
                   {academicyears.map((item: EntAcademicYear) => (
                     <MenuItem value={item.id}>{item.semester}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={3}>
-              <div className={classes.paper}>ผู้ใช้งาน</div>
-            </Grid>
-            <Grid item xs={9}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-mutiple-name-label">ผู้ใช้งาน</InputLabel>
-                <Select
-                  id="userid"
-                  name="user"
-                  value={UserID} // (undefined || '') = ''
-                  onChange={user_id_handleChange}
-                  style={{ width: 350 }}
-                >
-                  {users.map((item: EntUser) => (
-                    <MenuItem value={item.id}>{item.name}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
