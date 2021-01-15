@@ -439,8 +439,8 @@ func main() {
 	// Set ComplaintType Data
 	complainttypes := ComplaintTypes{
 		ComplaintType: []ComplaintType{
-			ComplaintType{"TestType1"},
-			ComplaintType{"TestType2"},
+			//ComplaintType{"TestType1"},
+			//ComplaintType{"TestType2"},
 		},
 	}
 
@@ -454,19 +454,51 @@ func main() {
 	// Set Complaint Data
 	complaints := Complaints{
 		Complaint: []Complaint{
-			Complaint{1, 1, 1, "Test1", "Test1"},
-			Complaint{2, 2, 2, "Test2", "Test2"},
+			//Complaint{1, 1, 1, "Test1", "2000-19-01 00:00:00+00:00"},
 		},
 	}
 
 	for _, cp := range complaints.Complaint {
+
+		u, err := client.User.
+			Query().
+			Where(user.IDEQ(int(cp.UserID))).
+			Only(context.Background())
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		ct, err := client.ComplaintType.
+			Query().
+			Where(complainttype.IDEQ(int(cp.TypeID))).
+			Only(context.Background())
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		cc, err := client.Club.
+			Query().
+			Where(club.IDEQ(int(cp.ClubID))).
+			Only(context.Background())
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		t, err := time.Parse(time.RFC3339, cp.Date)
+
 		client.Complaint.
 			Create().
-			SetComplaintToUserID(cp.UserID).
-			SetComplaintToClubID(cp.ClubID).
-			SetComplaintToComplaintTypeID(cp.TypeID).
+			SetComplaintToUser(u).
+			SetComplaintToClub(cc).
+			SetComplaintToComplaintType(ct).
 			SetInfo(cp.Info).
-			SetDate(cp.Date).
+			SetDate(t).
 			Save(context.Background())
 	}
 
