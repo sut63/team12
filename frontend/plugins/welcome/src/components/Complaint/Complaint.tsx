@@ -86,9 +86,9 @@ export default function CreateComplaint() {
   const [alert, setAlert] = useState(true);
   const [open, setOpen] = React.useState(false);
 
-  const [uID, setUID] = useState(localStorage.getItem('user-id')); 
+  // const [uID, setUID] = useState(localStorage.getItem('user-id')); 
 
-  let userID = Number(uID);
+  // let userID = Number(uID);
 
   const getUsers = async () => {
     const res = await api.listUser({ limit: 10, offset: 0 });
