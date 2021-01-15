@@ -28,7 +28,7 @@ export const AppSidebar = () => (
       text="Watch Video"
     />
     <SidebarItem icon={CreateComponentIcon} to="Activities" text="จัดกิจกรรม" />
-
+    <SidebarItem icon={CreateComponentIcon} to="club" text="สร้างชมรม" />
     {/* End global nav */}
     <SidebarDivider />
     <SidebarSpace />
