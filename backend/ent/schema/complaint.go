@@ -15,7 +15,7 @@ type Complaint struct {
 func (Complaint) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("info"),
-		field.String("date"),
+		field.Time("date"),
 	}
 }
 
