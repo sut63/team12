@@ -99,14 +99,16 @@ export function EntClubToJSON(value?: EntClub | null): any {
     }
     return {
         
-        'clubBranch_ID': value.clubBranchID,
-        'clubType_ID': value.clubTypeID,
+        'ClubBranchID': value.clubBranchID,
+        'ClubTypeID': value.clubTypeID,
         'edges': EntClubEdgesToJSON(value.edges),
         'id': value.id,
-        'name': value.name,
-        'purpose': value.purpose,
-        'userID': value.userID,
+        'Name': value.name,
+        'Purpose': value.purpose,
+        'UserID': value.userID,
     };
 }
+
+
 
 
