@@ -376,7 +376,7 @@ export default function CreateClubApplication() {
                     onChange={ClubIDhandleChange}
                   >
                     {club.map((item: EntClub) => (
-                      <MenuItem value={item.id}>{item.clubname}</MenuItem>
+                      <MenuItem value={item.id}>{item.name}</MenuItem>
                     ))}
                   </Select>
                 </form>

@@ -130,16 +130,16 @@ export function EntUserEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolea
     }
     return {
         
-        'club': !exists(json, 'club') ? undefined : ((json['club'] as Array<any>).map(EntClubFromJSON)),
-        'clubapplication': !exists(json, 'clubapplication') ? undefined : ((json['clubapplication'] as Array<any>).map(EntClubapplicationFromJSON)),
-        'discipline': !exists(json, 'discipline') ? undefined : EntDisciplineFromJSON(json['discipline']),
-        'fromClub': !exists(json, 'fromClub') ? undefined : EntClubFromJSON(json['fromClub']),
-        'gender': !exists(json, 'gender') ? undefined : EntGenderFromJSON(json['gender']),
-        'roomuse': !exists(json, 'roomuse') ? undefined : ((json['roomuse'] as Array<any>).map(EntRoomuseFromJSON)),
-        'userToComplaint': !exists(json, 'userToComplaint') ? undefined : ((json['userToComplaint'] as Array<any>).map(EntComplaintFromJSON)),
-        'userstatus': !exists(json, 'userstatus') ? undefined : EntUserStatusFromJSON(json['userstatus']),
-        'usertype': !exists(json, 'usertype') ? undefined : EntUsertypeFromJSON(json['usertype']),
-        'year': !exists(json, 'year') ? undefined : EntYearFromJSON(json['year']),
+        'club': !exists(json, 'Club') ? undefined : ((json['Club'] as Array<any>).map(EntClubFromJSON)),
+        'clubapplication': !exists(json, 'Clubapplication') ? undefined : ((json['Clubapplication'] as Array<any>).map(EntClubapplicationFromJSON)),
+        'discipline': !exists(json, 'Discipline') ? undefined : EntDisciplineFromJSON(json['Discipline']),
+        'fromClub': !exists(json, 'FromClub') ? undefined : EntClubFromJSON(json['FromClub']),
+        'gender': !exists(json, 'Gender') ? undefined : EntGenderFromJSON(json['Gender']),
+        'roomuse': !exists(json, 'Roomuse') ? undefined : ((json['Roomuse'] as Array<any>).map(EntRoomuseFromJSON)),
+        'userToComplaint': !exists(json, 'UserToComplaint') ? undefined : ((json['UserToComplaint'] as Array<any>).map(EntComplaintFromJSON)),
+        'userstatus': !exists(json, 'Userstatus') ? undefined : EntUserStatusFromJSON(json['Userstatus']),
+        'usertype': !exists(json, 'Usertype') ? undefined : EntUsertypeFromJSON(json['Usertype']),
+        'year': !exists(json, 'Year') ? undefined : EntYearFromJSON(json['Year']),
     };
 }
 

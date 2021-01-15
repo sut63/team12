@@ -79,15 +79,22 @@ const SignIn: FC<{}> = () => {
 
 
   const SinginhandleChange = async () => {
-    user.map((item: any) => {
+    user.map((item: EntUser) => {
       console.log(item.email);
       if (item.email == email && item.password == password) {
-        
         SetAlert(true);
         localStorage.setItem('user-id', JSON.stringify(item.id));
         localStorage.setItem('user-name', JSON.stringify(item.name));
         localStorage.setItem('user-email', JSON.stringify(item.email));
-        history.pushState("", "", "/welcome");
+        localStorage.setItem(
+          'user-type',
+          JSON.stringify(item.edges?.usertype?.name),
+        );
+        localStorage.setItem(
+          'user-status',
+          JSON.stringify(item.edges?.userstatus?.userstatus),
+        );
+        history.pushState('', '', '/welcome');
         window.location.reload(false);
       }
     })
