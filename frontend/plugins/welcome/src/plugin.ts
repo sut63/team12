@@ -4,17 +4,20 @@ import WatchVideo from './components/WatchVideo';
 import SignIn from './components/SignIn';
 import Activities from './components/Activities';
 import ActivityTable from './components/ActivityTable';
-import Club from './components/Club';
+import Club from './components/club';
+import ClubApplication from './components/ClubApplication';
 import Complaint from './components/Complaint';
+import Roomuse from './components/Roomuse';
 
 export const plugin = createPlugin({
   id: 'welcome',
   register({ router }) {
-    router.registerRoute('/', WelcomePage);
-    router.registerRoute('/watch_video', WatchVideo);
-    router.registerRoute('/signin', SignIn);
+    router.registerRoute('/Welcome', WelcomePage);
+    router.registerRoute('/', SignIn);
     router.registerRoute('/Activities', Activities);
-    router.registerRoute('/Club', Club);	
+    router.registerRoute('/ClubApplication', ClubApplication);
+    router.registerRoute('/Club', Club);
+    router.registerRoute('/Roomuse', Roomuse);
     router.registerRoute('/ActivityTable', ActivityTable);
     router.registerRoute('/Complaint', Complaint);
   },
