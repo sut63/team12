@@ -29,6 +29,7 @@ export const AppSidebar = () => (
     />
     <SidebarItem icon={CreateComponentIcon} to="Activities" text="จัดกิจกรรม" />
     <SidebarItem icon={CreateComponentIcon} to="club" text="สร้างชมรม" />
+    <SidebarItem icon={CreateComponentIcon} to="Complaint" text="ร้องเรียน" />
     {/* End global nav */}
     <SidebarDivider />
     <SidebarSpace />
