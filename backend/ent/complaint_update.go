@@ -5,6 +5,7 @@ package ent
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/complaint"
@@ -37,8 +38,8 @@ func (cu *ComplaintUpdate) SetInfo(s string) *ComplaintUpdate {
 }
 
 // SetDate sets the date field.
-func (cu *ComplaintUpdate) SetDate(s string) *ComplaintUpdate {
-	cu.mutation.SetDate(s)
+func (cu *ComplaintUpdate) SetDate(t time.Time) *ComplaintUpdate {
+	cu.mutation.SetDate(t)
 	return cu
 }
 
@@ -201,7 +202,7 @@ func (cu *ComplaintUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	}
 	if value, ok := cu.mutation.Date(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: complaint.FieldDate,
 		})
@@ -336,8 +337,8 @@ func (cuo *ComplaintUpdateOne) SetInfo(s string) *ComplaintUpdateOne {
 }
 
 // SetDate sets the date field.
-func (cuo *ComplaintUpdateOne) SetDate(s string) *ComplaintUpdateOne {
-	cuo.mutation.SetDate(s)
+func (cuo *ComplaintUpdateOne) SetDate(t time.Time) *ComplaintUpdateOne {
+	cuo.mutation.SetDate(t)
 	return cuo
 }
 
@@ -498,7 +499,7 @@ func (cuo *ComplaintUpdateOne) sqlSave(ctx context.Context) (c *Complaint, err e
 	}
 	if value, ok := cuo.mutation.Date(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: complaint.FieldDate,
 		})

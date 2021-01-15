@@ -3,6 +3,8 @@
 package complaint
 
 import (
+	"time"
+
 	"github.com/OMENX/app/ent/predicate"
 	"github.com/facebookincubator/ent/dialect/sql"
 	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
@@ -99,7 +101,7 @@ func Info(v string) predicate.Complaint {
 }
 
 // Date applies equality check predicate on the "date" field. It's identical to DateEQ.
-func Date(v string) predicate.Complaint {
+func Date(v time.Time) predicate.Complaint {
 	return predicate.Complaint(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldDate), v))
 	})
@@ -217,21 +219,21 @@ func InfoContainsFold(v string) predicate.Complaint {
 }
 
 // DateEQ applies the EQ predicate on the "date" field.
-func DateEQ(v string) predicate.Complaint {
+func DateEQ(v time.Time) predicate.Complaint {
 	return predicate.Complaint(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldDate), v))
 	})
 }
 
 // DateNEQ applies the NEQ predicate on the "date" field.
-func DateNEQ(v string) predicate.Complaint {
+func DateNEQ(v time.Time) predicate.Complaint {
 	return predicate.Complaint(func(s *sql.Selector) {
 		s.Where(sql.NEQ(s.C(FieldDate), v))
 	})
 }
 
 // DateIn applies the In predicate on the "date" field.
-func DateIn(vs ...string) predicate.Complaint {
+func DateIn(vs ...time.Time) predicate.Complaint {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -248,7 +250,7 @@ func DateIn(vs ...string) predicate.Complaint {
 }
 
 // DateNotIn applies the NotIn predicate on the "date" field.
-func DateNotIn(vs ...string) predicate.Complaint {
+func DateNotIn(vs ...time.Time) predicate.Complaint {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -265,65 +267,30 @@ func DateNotIn(vs ...string) predicate.Complaint {
 }
 
 // DateGT applies the GT predicate on the "date" field.
-func DateGT(v string) predicate.Complaint {
+func DateGT(v time.Time) predicate.Complaint {
 	return predicate.Complaint(func(s *sql.Selector) {
 		s.Where(sql.GT(s.C(FieldDate), v))
 	})
 }
 
 // DateGTE applies the GTE predicate on the "date" field.
-func DateGTE(v string) predicate.Complaint {
+func DateGTE(v time.Time) predicate.Complaint {
 	return predicate.Complaint(func(s *sql.Selector) {
 		s.Where(sql.GTE(s.C(FieldDate), v))
 	})
 }
 
 // DateLT applies the LT predicate on the "date" field.
-func DateLT(v string) predicate.Complaint {
+func DateLT(v time.Time) predicate.Complaint {
 	return predicate.Complaint(func(s *sql.Selector) {
 		s.Where(sql.LT(s.C(FieldDate), v))
 	})
 }
 
 // DateLTE applies the LTE predicate on the "date" field.
-func DateLTE(v string) predicate.Complaint {
+func DateLTE(v time.Time) predicate.Complaint {
 	return predicate.Complaint(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldDate), v))
-	})
-}
-
-// DateContains applies the Contains predicate on the "date" field.
-func DateContains(v string) predicate.Complaint {
-	return predicate.Complaint(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldDate), v))
-	})
-}
-
-// DateHasPrefix applies the HasPrefix predicate on the "date" field.
-func DateHasPrefix(v string) predicate.Complaint {
-	return predicate.Complaint(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldDate), v))
-	})
-}
-
-// DateHasSuffix applies the HasSuffix predicate on the "date" field.
-func DateHasSuffix(v string) predicate.Complaint {
-	return predicate.Complaint(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldDate), v))
-	})
-}
-
-// DateEqualFold applies the EqualFold predicate on the "date" field.
-func DateEqualFold(v string) predicate.Complaint {
-	return predicate.Complaint(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldDate), v))
-	})
-}
-
-// DateContainsFold applies the ContainsFold predicate on the "date" field.
-func DateContainsFold(v string) predicate.Complaint {
-	return predicate.Complaint(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldDate), v))
 	})
 }
 

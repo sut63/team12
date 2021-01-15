@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/complaint"
@@ -29,8 +30,8 @@ func (cc *ComplaintCreate) SetInfo(s string) *ComplaintCreate {
 }
 
 // SetDate sets the date field.
-func (cc *ComplaintCreate) SetDate(s string) *ComplaintCreate {
-	cc.mutation.SetDate(s)
+func (cc *ComplaintCreate) SetDate(t time.Time) *ComplaintCreate {
+	cc.mutation.SetDate(t)
 	return cc
 }
 
@@ -174,7 +175,7 @@ func (cc *ComplaintCreate) createSpec() (*Complaint, *sqlgraph.CreateSpec) {
 	}
 	if value, ok := cc.mutation.Date(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
+			Type:   field.TypeTime,
 			Value:  value,
 			Column: complaint.FieldDate,
 		})

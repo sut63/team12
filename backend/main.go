@@ -2,11 +2,16 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"time"
 
 	"github.com/OMENX/app/controllers"
 	_ "github.com/OMENX/app/docs"
 	"github.com/OMENX/app/ent"
+	"github.com/OMENX/app/ent/club"
+	"github.com/OMENX/app/ent/complainttype"
+	"github.com/OMENX/app/ent/user"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
@@ -14,11 +19,11 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// type Users struct {
+// Users struct {
 // 	User []User
 // }
 
-// type User struct {
+// User struct {
 // 	Name         string
 // 	Email        string
 // 	Password     string
@@ -30,41 +35,52 @@ import (
 // 	YearID       int
 // }
 
+// Usertypes struct {
 type Usertypes struct {
 	Usertype []Usertype
 }
 
+// Usertype struct {
 type Usertype struct {
 	name string
 }
 
+// ClubBranchs struct {
 type ClubBranchs struct {
 	ClubBranch []ClubBranch
 }
 
+// ClubBranch struct {
 type ClubBranch struct {
 	name string
 }
+
+// ClubTypes struct {
 type ClubTypes struct {
 	ClubType []ClubType
 }
 
+// ClubType struct {
 type ClubType struct {
 	name string
 }
 
+// ActivityTypes struct {
 type ActivityTypes struct {
 	ActivityType []ActivityType
 }
 
+// ActivityType struct {
 type ActivityType struct {
 	name string
 }
 
+// AcademicYears struct {
 type AcademicYears struct {
 	AcademicYear []AcademicYear
 }
 
+// AcademicYear struct {
 type AcademicYear struct {
 	semester string
 }
@@ -124,8 +140,8 @@ type Complaint struct {
 	UserID int
 	ClubID int
 	TypeID int
-	Info   string
-	Date   string
+	info   string
+	date   string
 }
 
 // Complaints struct
@@ -143,10 +159,12 @@ type ComplaintTypes struct {
 	ComplaintType []ComplaintType
 }
 
+// Rooms struct {
 type Rooms struct {
 	Room []Room
 }
 
+// Room struct {
 type Room struct {
 	ROOMNAME     string
 	ROOMLOCATION string
@@ -154,10 +172,12 @@ type Room struct {
 	MAXCONTAIN   int
 }
 
+// Purposes struct {
 type Purposes struct {
 	Purpose []Purpose
 }
 
+// Purpose struct {
 type Purpose struct {
 	PURPOSE string
 }
@@ -439,8 +459,8 @@ func main() {
 	// Set ComplaintType Data
 	complainttypes := ComplaintTypes{
 		ComplaintType: []ComplaintType{
-			//ComplaintType{"TestType1"},
-			//ComplaintType{"TestType2"},
+			ComplaintType{"TestType1"},
+			ComplaintType{"TestType2"},
 		},
 	}
 
@@ -490,14 +510,14 @@ func main() {
 			return
 		}
 
-		t, err := time.Parse(time.RFC3339, cp.Date)
+		t, err := time.Parse(time.RFC3339, cp.date)
 
 		client.Complaint.
 			Create().
 			SetComplaintToUser(u).
 			SetComplaintToClub(cc).
 			SetComplaintToComplaintType(ct).
-			SetInfo(cp.Info).
+			SetInfo(cp.info).
 			SetDate(t).
 			Save(context.Background())
 	}

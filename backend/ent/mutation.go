@@ -4283,7 +4283,7 @@ type ComplaintMutation struct {
 	typ                              string
 	id                               *int
 	info                             *string
-	date                             *string
+	date                             *time.Time
 	clearedFields                    map[string]struct{}
 	_ComplaintToUser                 *int
 	cleared_ComplaintToUser          bool
@@ -4412,12 +4412,12 @@ func (m *ComplaintMutation) ResetInfo() {
 }
 
 // SetDate sets the date field.
-func (m *ComplaintMutation) SetDate(s string) {
-	m.date = &s
+func (m *ComplaintMutation) SetDate(t time.Time) {
+	m.date = &t
 }
 
 // Date returns the date value in the mutation.
-func (m *ComplaintMutation) Date() (r string, exists bool) {
+func (m *ComplaintMutation) Date() (r time.Time, exists bool) {
 	v := m.date
 	if v == nil {
 		return
@@ -4429,7 +4429,7 @@ func (m *ComplaintMutation) Date() (r string, exists bool) {
 // If the Complaint object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ComplaintMutation) OldDate(ctx context.Context) (v string, err error) {
+func (m *ComplaintMutation) OldDate(ctx context.Context) (v time.Time, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, fmt.Errorf("OldDate is allowed only on UpdateOne operations")
 	}
@@ -4628,7 +4628,7 @@ func (m *ComplaintMutation) SetField(name string, value ent.Value) error {
 		m.SetInfo(v)
 		return nil
 	case complaint.FieldDate:
-		v, ok := value.(string)
+		v, ok := value.(time.Time)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}

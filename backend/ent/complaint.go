@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/complaint"
@@ -21,12 +22,12 @@ type Complaint struct {
 	// Info holds the value of the "info" field.
 	Info string `json:"info,omitempty"`
 	// Date holds the value of the "date" field.
-	Date string `json:"date,omitempty"`
+	Date time.Time `json:"date,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ComplaintQuery when eager-loading is set.
 	Edges  ComplaintEdges `json:"edges"`
 	ClubID *int
-	Type   *int
+	TypeID *int
 	UserID *int
 }
 
@@ -90,7 +91,7 @@ func (*Complaint) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // info
-		&sql.NullString{}, // date
+		&sql.NullTime{},   // date
 	}
 }
 
@@ -98,7 +99,7 @@ func (*Complaint) scanValues() []interface{} {
 func (*Complaint) fkValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{}, // ClubID
-		&sql.NullInt64{}, // Type
+		&sql.NullInt64{}, // TypeID
 		&sql.NullInt64{}, // UserID
 	}
 }
@@ -120,10 +121,10 @@ func (c *Complaint) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		c.Info = value.String
 	}
-	if value, ok := values[1].(*sql.NullString); !ok {
+	if value, ok := values[1].(*sql.NullTime); !ok {
 		return fmt.Errorf("unexpected type %T for field date", values[1])
 	} else if value.Valid {
-		c.Date = value.String
+		c.Date = value.Time
 	}
 	values = values[2:]
 	if len(values) == len(complaint.ForeignKeys) {
@@ -134,10 +135,10 @@ func (c *Complaint) assignValues(values ...interface{}) error {
 			*c.ClubID = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field Type", value)
+			return fmt.Errorf("unexpected type %T for edge-field TypeID", value)
 		} else if value.Valid {
-			c.Type = new(int)
-			*c.Type = int(value.Int64)
+			c.TypeID = new(int)
+			*c.TypeID = int(value.Int64)
 		}
 		if value, ok := values[2].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field UserID", value)
@@ -190,7 +191,7 @@ func (c *Complaint) String() string {
 	builder.WriteString(", info=")
 	builder.WriteString(c.Info)
 	builder.WriteString(", date=")
-	builder.WriteString(c.Date)
+	builder.WriteString(c.Date.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

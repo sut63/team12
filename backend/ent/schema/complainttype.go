@@ -21,6 +21,6 @@ func (ComplaintType) Fields() []ent.Field {
 // Edges of the ComplaintType.
 func (ComplaintType) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("ComplaintTypeToComplaint", Complaint.Type).StorageKey(edge.Column("Type")),
+		edge.To("ComplaintTypeToComplaint", Complaint.Type).StorageKey(edge.Column("TypeID")),
 	}
 }

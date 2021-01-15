@@ -23,9 +23,9 @@ type ComplaintController struct {
 
 // Complaint defines the struct for the complaint
 type Complaint struct {
-	userID int
-	clubID int
-	typeID int
+	UserID int
+	ClubID int
+	TypeID int
 	info   string
 	date   string
 }
@@ -52,7 +52,7 @@ func (ctl *ComplaintController) CreateComplaint(c *gin.Context) {
 
 	u, err := ctl.client.User.
 		Query().
-		Where(user.IDEQ(int(obj.userID))).
+		Where(user.IDEQ(int(obj.UserID))).
 		Only(context.Background())
 
 	if err != nil {
@@ -64,7 +64,7 @@ func (ctl *ComplaintController) CreateComplaint(c *gin.Context) {
 
 	cb, err := ctl.client.Club.
 		Query().
-		Where(club.IDEQ(int(obj.clubID))).
+		Where(club.IDEQ(int(obj.ClubID))).
 		Only(context.Background())
 
 	if err != nil {
@@ -76,7 +76,7 @@ func (ctl *ComplaintController) CreateComplaint(c *gin.Context) {
 
 	ct, err := ctl.client.ComplaintType.
 		Query().
-		Where(complainttype.IDEQ(int(obj.typeID))).
+		Where(complainttype.IDEQ(int(obj.TypeID))).
 		Only(context.Background())
 
 	if err != nil {
@@ -173,6 +173,9 @@ func (ctl *ComplaintController) ListComplaint(c *gin.Context) {
 
 	complaints, err := ctl.client.Complaint.
 		Query().
+		WithComplaintToUser().
+		WithComplaintToClub().
+		WithComplaintToComplaintType().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())

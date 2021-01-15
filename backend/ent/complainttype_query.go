@@ -371,13 +371,13 @@ func (ctq *ComplaintTypeQuery) sqlAll(ctx context.Context) ([]*ComplaintType, er
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.Type
+			fk := n.TypeID
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "Type" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "TypeID" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "Type" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "TypeID" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.ComplaintTypeToComplaint = append(node.Edges.ComplaintTypeToComplaint, n)
 		}

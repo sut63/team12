@@ -29,10 +29,6 @@ definitions:
     properties:
       clubID:
         type: integer
-      date:
-        type: string
-      info:
-        type: string
       typeID:
         type: integer
       userID:
@@ -347,7 +343,7 @@ definitions:
       info:
         description: Info holds the value of the "info" field.
         type: string
-      type:
+      typeID:
         type: integer
       userID:
         type: integer

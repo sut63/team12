@@ -34,7 +34,7 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "complainttype" package.
 	ComplaintToComplaintTypeInverseTable = "complaint_types"
 	// ComplaintToComplaintTypeColumn is the table column denoting the ComplaintToComplaintType relation/edge.
-	ComplaintToComplaintTypeColumn = "Type"
+	ComplaintToComplaintTypeColumn = "TypeID"
 	// ComplaintToClubTable is the table the holds the ComplaintToClub relation/edge.
 	ComplaintToClubTable = "complaints"
 	// ComplaintToClubInverseTable is the table name for the Club entity.
@@ -54,6 +54,6 @@ var Columns = []string{
 // ForeignKeys holds the SQL foreign-keys that are owned by the Complaint type.
 var ForeignKeys = []string{
 	"ClubID",
-	"Type",
+	"TypeID",
 	"UserID",
 }
