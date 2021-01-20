@@ -14,12 +14,8 @@ const AppRoutes = app.getRoutes();
 
 const App: FC<{}> = () => (
   <AppProvider>
-    <AppRouter>
-      {/* <SignIn></SignIn> */}
-      <SidebarPage>
-        <AppSidebar />
+    <AppRouter>  
         <AppRoutes />
-      </SidebarPage>
     </AppRouter>
   </AppProvider>
 );

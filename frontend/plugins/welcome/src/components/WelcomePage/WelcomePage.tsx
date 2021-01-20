@@ -6,13 +6,16 @@ import {
   Page,
   pageTheme,
   ContentHeader,
+  SidebarPage,
 } from '@backstage/core';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-
+import { UserHeader } from '../UserHeader/UserHeader';
+import { AppSidebar } from '../Sidebar/Sidebar';
+// import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 const HeaderCustom = {
   minHeight: '50px',
 };
@@ -37,29 +40,43 @@ export function CardTeam({ name, id, system }: ProfileProps) {
         <CardActionArea>
           <CardMedia
             component="img"
-            alt="ชมรม"
-            height="140"
-            image="../../image/chomrom.jpg"
+            style={{ height: "0" , paddingTop: "56.25%" }}
+            image="../../image/UnitA.jpg"
             title="ชมรม"
           />
           <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
+            <Typography gutterBottom variant="h6" component="h2">
               {system}
             </Typography>
-            <Typography gutterBottom variant="h5" component="h2">
+            <Typography gutterBottom variant="h6" component="h2">
               {id} {name}
             </Typography>
           </CardContent>
         </CardActionArea>
       </Card>
     </Grid>
+    // <Grid container spacing={2}>
+    //     <Grid item >
+    //         <FiberManualRecordIcon style={{ fontSize: 10, color: "black" }} />
+    //     </Grid>
+    //     <Grid item xs={12} sm container>
+    //         <Grid item xs={12}>
+    //             <Typography gutterBottom variant="subtitle1" style={{ color: 'black' }}>
+    //               {system} {id}     {name}
+    //             </Typography>
+    //         </Grid>
+    //     </Grid>
+    // </Grid>
+    
   );
 }
 
 const WelcomePage: FC<{}> = () => {
   return (
     <Page theme={pageTheme.home}>
-      <Header style={HeaderCustom} title={`ระบบจัดการชมรม`}></Header>
+      <SidebarPage>
+       <AppSidebar/>
+      <Header style={HeaderCustom} title={`ระบบจัดการชมรม`}><UserHeader/></Header>
       <Content>
         <ContentHeader title="สมาชิกในกลุ่ม"></ContentHeader>
         <Grid container>
@@ -71,7 +88,9 @@ const WelcomePage: FC<{}> = () => {
           <CardTeam name={"นาย ธีร์ธวัช ศรีคอนไทย"} id={"B6131678"} system={"ระบบย่อย: ระบบการเข้าใช้ห้อง"}></CardTeam>
         </Grid>
       </Content>
+      </SidebarPage>
     </Page>
+    
   );
 };
 

@@ -5,8 +5,9 @@ import {
   Header,
   Content,
   ContentHeader,
+  SidebarPage,
 } from '@backstage/core';
-import { makeStyles, Theme, createStyles} from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
@@ -22,6 +23,8 @@ import { DefaultApi } from '../../api/apis';
 import { EntUser } from '../../api/models/EntUser';
 import { EntClub } from '../../api/models/EntClub';
 import { EntComplaintType } from '../../api/models/EntComplaintType';
+import { UserHeader } from '../UserHeader/UserHeader';
+import { AppSidebar } from '../Sidebar/Sidebar';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -141,7 +144,7 @@ export default function CreateComplaint() {
     setComplaintType(event.target.value as number);
   };
 
-  function handleClose(){
+  function handleClose() {
     window.location.reload(false);
     setOpen(false);
   };
@@ -218,12 +221,14 @@ export default function CreateComplaint() {
 
   }
 
-  return(
-    <Page theme={pageTheme.home}>
-      <Header title={`ระบบร้องเรียน`}></Header>
-      <Content>
-        <ContentHeader title="ส่งเรื่องร้องเรียน">
-        {/* {status ? (
+  return (
+    <SidebarPage>
+      <AppSidebar />
+      <Page theme={pageTheme.home}>
+        <Header title={`ระบบร้องเรียน`}><UserHeader /></Header>
+        <Content>
+          <ContentHeader title="ส่งเรื่องร้องเรียน">
+            {/* {status ? (
            <div>
              {alert ? (
                <Alert severity="success">
@@ -236,143 +241,144 @@ export default function CreateComplaint() {
              )}
            </div>
          ) : null} */}
-         {status ? (
-            <div>
-              {alert ? (
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                  <Alert onClose={handleClose} severity="success">
-                    ส่งคำร้องสำเร็จ
-                </Alert>
-                </Snackbar>
-              ) : (
+            {status ? (
+              <div>
+                {alert ? (
                   <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="error">
-                      ส่งคำร้องไม่สำเร็จกรุณาลองใหม่อีกครั้ง
+                    <Alert onClose={handleClose} severity="success">
+                      ส่งคำร้องสำเร็จ
                 </Alert>
                   </Snackbar>
-                )}
-            </div>
-          ) : null}
-        </ContentHeader>
-        <div className={classes.root}>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <div>
-                  <FormControl className={classes.formControl}>
-                    <InputLabel id="demo-simple-select-label">เลือกผู้ใช้ระบบ</InputLabel>
-                    <Select
-                      name="owner"
-                      value={userid}
-                      onChange={handleUserChange}
-                    >
-                    {users.map(item => {
-                      return (
-                        <MenuItem key={item.id} value={item.id}>
-                          {item.email}
-                        </MenuItem>
-                      );
-                    })}
-                    </Select>
-                  </FormControl>
-                </div>
-                <Grid item xs={12}>
-                  <div className={classes.paper}></div>
-                </Grid>
-                <div>
-                <TextField
-                  label="เลือกวันที่"
-                  name="date"
-                  type="date"
-                  value={date}
-                  className={classes.textField}
-                  onChange={handleDateChange}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                />
-                </div>
-                <Grid item xs={12}>
-                  <div className={classes.paper}></div>
-                </Grid>
-                <div>
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-label">เลือกชมรม</InputLabel>
-                  <Select
-                    name="club"
-                    value={clubid}
-                    onChange={handleClubChange}
-                  >
-                  {clubs.map(item => {
-                    return (
-                      <MenuItem key={item.id} value={item.id}>
-                        {item.name}
-                      </MenuItem>
-                    );
-                  })}
-                  </Select>
-                </FormControl>
-                </div>
-                <Grid item xs={12}>
-                  <div className={classes.paper}></div>
-                </Grid>
-                <div>
-                <FormControl className={classes.formControl}>
-                  <InputLabel id="demo-simple-select-label">เลือกหัวข้อ</InputLabel>
-                  <Select
-                    name="type"
-                    value={complainttypeid}
-                    onChange={handleComplaintTypeChange}
-                  >
-                  {complainttypes.map(item => {
-                    return (
-                      <MenuItem key={item.id} value={item.id}>
-                        {item.description}
-                      </MenuItem>
-                    );
-                  })}
-                  </Select>
-                </FormControl>
-                </div>
-                <Grid item xs={12}>
-                  <div className={classes.paper}></div>
-                </Grid>
-                <div>
-                <form className={classes.textboxroot} noValidate autoComplete="off">
+                ) : (
+                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                      <Alert onClose={handleClose} severity="error">
+                        ส่งคำร้องไม่สำเร็จกรุณาลองใหม่อีกครั้ง
+                </Alert>
+                    </Snackbar>
+                  )}
+              </div>
+            ) : null}
+          </ContentHeader>
+          <div className={classes.root}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
                   <div>
-                  <TextField
-                    id="info"
-                    label="รายละเอียด"
-                    multiline
-                    rows={20}
-                    variant="outlined"
-                    value={info}
-                    onChange={handleInfoChange}
-                  />
+                    <FormControl className={classes.formControl}>
+                      <InputLabel id="demo-simple-select-label">เลือกผู้ใช้ระบบ</InputLabel>
+                      <Select
+                        name="owner"
+                        value={userid}
+                        onChange={handleUserChange}
+                      >
+                        {users.map(item => {
+                          return (
+                            <MenuItem key={item.id} value={item.id}>
+                              {item.email}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
                   </div>
-                </form>
-                </div>
-                <Grid item xs={12}>
-                  <div className={classes.paper}></div>
-                </Grid>
-                <div>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    className={classes.button}
-                    onClick={() => { 
-                      save();
-                    }}
-                    startIcon={<AddIcon />}
-                  >
-                    ส่งเรื่องร้องเรียน
+                  <Grid item xs={12}>
+                    <div className={classes.paper}></div>
+                  </Grid>
+                  <div>
+                    <TextField
+                      label="เลือกวันที่"
+                      name="date"
+                      type="date"
+                      value={date}
+                      className={classes.textField}
+                      onChange={handleDateChange}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </div>
+                  <Grid item xs={12}>
+                    <div className={classes.paper}></div>
+                  </Grid>
+                  <div>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel id="demo-simple-select-label">เลือกชมรม</InputLabel>
+                      <Select
+                        name="club"
+                        value={clubid}
+                        onChange={handleClubChange}
+                      >
+                        {clubs.map(item => {
+                          return (
+                            <MenuItem key={item.id} value={item.id}>
+                              {item.name}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                  </div>
+                  <Grid item xs={12}>
+                    <div className={classes.paper}></div>
+                  </Grid>
+                  <div>
+                    <FormControl className={classes.formControl}>
+                      <InputLabel id="demo-simple-select-label">เลือกหัวข้อ</InputLabel>
+                      <Select
+                        name="type"
+                        value={complainttypeid}
+                        onChange={handleComplaintTypeChange}
+                      >
+                        {complainttypes.map(item => {
+                          return (
+                            <MenuItem key={item.id} value={item.id}>
+                              {item.description}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                  </div>
+                  <Grid item xs={12}>
+                    <div className={classes.paper}></div>
+                  </Grid>
+                  <div>
+                    <form className={classes.textboxroot} noValidate autoComplete="off">
+                      <div>
+                        <TextField
+                          id="info"
+                          label="รายละเอียด"
+                          multiline
+                          rows={20}
+                          variant="outlined"
+                          value={info}
+                          onChange={handleInfoChange}
+                        />
+                      </div>
+                    </form>
+                  </div>
+                  <Grid item xs={12}>
+                    <div className={classes.paper}></div>
+                  </Grid>
+                  <div>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className={classes.button}
+                      onClick={() => {
+                        save();
+                      }}
+                      startIcon={<AddIcon />}
+                    >
+                      ส่งเรื่องร้องเรียน
                   </Button>
-                </div>
-              </Paper>
+                  </div>
+                </Paper>
+              </Grid>
             </Grid>
-          </Grid>
-        </div>
-      </Content>
-    </Page>
+          </div>
+        </Content>
+      </Page>
+    </SidebarPage>
   );
 }

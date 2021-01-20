@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Content, Header, Page, pageTheme } from '@backstage/core';
+import { Content, Header, Page, pageTheme, SidebarPage } from '@backstage/core';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   Container,
@@ -18,6 +18,9 @@ import { EntClubType } from '../../api/models/EntClubType';
 import { DefaultApi } from '../../api/apis';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import { UserHeader } from '../UserHeader/UserHeader';
+import { AppSidebar } from '../Sidebar/Sidebar';
+
 // header css
 const HeaderCustom = {
   minHeight: '50px',
@@ -96,7 +99,7 @@ function Clubs() {
     };
     console.log(Clubs);
     const res: any = await api.createClub({
-      club : Clubs,
+      club: Clubs,
     });
 
     setStatus(true);
@@ -142,146 +145,148 @@ function Clubs() {
   console.log(UserID);
   console.log(Purpose);
   console.log(Name);
-  
+
   return (
-    <Page theme={pageTheme.website}>
-      <Header style={HeaderCustom} title={`สร้างชมรม`}>
-        <Avatar alt="Remy Sharp" src="../../image/account.jpg" />
-        <div style={{ marginLeft: 10 }}></div>
-      </Header>
-      <Content>
-        <Container maxWidth="sm">
-          <Grid container spacing={2}>
-            <Grid item xs={12}></Grid>
-            <Grid item xs={3}>
-              <div className={classes.paper}>สร้างชมรม</div>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                id="filled-basic"
-                label="ใส่ชื่อชมรม"
-                variant="filled"
-                value={Name}
-                style={{ width: 350 }}
-                onChange={name_handleChange}
-              />
-            </Grid>
+    <SidebarPage>
+      <AppSidebar />
+      <Page theme={pageTheme.website}>
+        <Header style={HeaderCustom} title={`สร้างชมรม`}>
+          <UserHeader />
+        </Header>
+        <Content>
+          <Container maxWidth="sm">
+            <Grid container spacing={2}>
+              <Grid item xs={12}></Grid>
+              <Grid item xs={3}>
+                <div className={classes.paper}>สร้างชมรม</div>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  id="filled-basic"
+                  label="ใส่ชื่อชมรม"
+                  variant="filled"
+                  value={Name}
+                  style={{ width: 350 }}
+                  onChange={name_handleChange}
+                />
+              </Grid>
 
-          
 
-            <Grid item xs={3}>
-              <div className={classes.paper}>ประเภทชมรม</div>
-            </Grid>
-            <Grid item xs={9}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-mutiple-name-label">
-                  เลือกประเภทของชมรม
+
+              <Grid item xs={3}>
+                <div className={classes.paper}>ประเภทชมรม</div>
+              </Grid>
+              <Grid item xs={9}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-mutiple-name-label">
+                    เลือกประเภทของชมรม
                 </InputLabel>
-                <Select
-                  name="clubtype"
-                  value={ClubTypeID} // (undefined || '') = ''
-                  onChange={ClubType_id_handleChange}
-                  style={{ width: 350 }}
-                >
-                  {clubtypes.map((item: EntClubType) => (
-                    <MenuItem value={item.id}>{item.name}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+                  <Select
+                    name="clubtype"
+                    value={ClubTypeID} // (undefined || '') = ''
+                    onChange={ClubType_id_handleChange}
+                    style={{ width: 350 }}
+                  >
+                    {clubtypes.map((item: EntClubType) => (
+                      <MenuItem value={item.id}>{item.name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-            <Grid item xs={3}>
-              <div className={classes.paper}>สถานที่จัดชมรม</div>
-            </Grid>
-            <Grid item xs={9}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-mutiple-name-label">
-                  เลือกสถานที่จัดชมรม
+              <Grid item xs={3}>
+                <div className={classes.paper}>สถานที่จัดชมรม</div>
+              </Grid>
+              <Grid item xs={9}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-mutiple-name-label">
+                    เลือกสถานที่จัดชมรม
                 </InputLabel>
-                <Select
-                  name="ClubBranch"
-                  value={ClubBranchID} // (undefined || '') = ''
-                  onChange={ClubBranch_id_handleChange}
-                  style={{ width: 350 }}
-                >
-                  {clubbranchs.map((item: EntClubBranch) => (
-                    <MenuItem value={item.id}>{item.name}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+                  <Select
+                    name="ClubBranch"
+                    value={ClubBranchID} // (undefined || '') = ''
+                    onChange={ClubBranch_id_handleChange}
+                    style={{ width: 350 }}
+                  >
+                    {clubbranchs.map((item: EntClubBranch) => (
+                      <MenuItem value={item.id}>{item.name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-            <Grid item xs={3}>
-              <div className={classes.paper}>ผู้ใช้งาน</div>
-            </Grid>
-            <Grid item xs={9}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <InputLabel id="demo-mutiple-name-label">SUPHASIN</InputLabel>
-                <Select
-                  name="user"
-                  value={UserID} // (undefined || '') = ''
-                  onChange={user_id_handleChange}
-                  style={{ width: 350 }}
-                >
-                  {users.map((item: EntUser) => (
-                    <MenuItem value={item.id}>{item.name}</MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
+              <Grid item xs={3}>
+                <div className={classes.paper}>ผู้ใช้งาน</div>
+              </Grid>
+              <Grid item xs={9}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-mutiple-name-label">SUPHASIN</InputLabel>
+                  <Select
+                    name="user"
+                    value={UserID} // (undefined || '') = ''
+                    onChange={user_id_handleChange}
+                    style={{ width: 350 }}
+                  >
+                    {users.map((item: EntUser) => (
+                      <MenuItem value={item.id}>{item.name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-           
-            <Grid item xs={3}>
-              <div className={classes.paper}>จุดประสงค์ชมรม</div>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                id="filled-multiline-static"
-                label="ใส่จุดประสงค์ชมรม"
-                value={Purpose}
-                multiline
-                rows={2}
-                defaultValue=""
-                variant="filled"
-                style={{ width: 350, height: 50, marginBottom: 25 }}
-                onChange={purpose_handleChange}
-              />
-            </Grid>
-            <Grid item xs={1}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  CreateClub();
-                }}
-                style={{
-                  marginLeft: 100,
-                  width: 200,
-                  height: 60,
-                  marginTop: 0,
-                }}
-              >
-                บันทึกกิจกรรม
+
+              <Grid item xs={3}>
+                <div className={classes.paper}>จุดประสงค์ชมรม</div>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  id="filled-multiline-static"
+                  label="ใส่จุดประสงค์ชมรม"
+                  value={Purpose}
+                  multiline
+                  rows={2}
+                  defaultValue=""
+                  variant="filled"
+                  style={{ width: 350, height: 50, marginBottom: 25 }}
+                  onChange={purpose_handleChange}
+                />
+              </Grid>
+              <Grid item xs={1}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    CreateClub();
+                  }}
+                  style={{
+                    marginLeft: 100,
+                    width: 200,
+                    height: 60,
+                    marginTop: 0,
+                  }}
+                >
+                  บันทึกกิจกรรม
               </Button>
+              </Grid>
             </Grid>
-          </Grid>
-          {status ? (
-           <div>
-             {alert ? (
-               <Alert severity="success" >
-                 This is a success alert — check it out!
-               </Alert>
-             ) : (
-               <Alert severity="error" style={{ marginTop: 20 }}>
-                 This is a warning alert — check it out!
-               </Alert>
-             )}
-           </div>
-         ) : null}
+            {status ? (
+              <div>
+                {alert ? (
+                  <Alert severity="success" >
+                    This is a success alert — check it out!
+                  </Alert>
+                ) : (
+                    <Alert severity="error" style={{ marginTop: 20 }}>
+                      This is a warning alert — check it out!
+                    </Alert>
+                  )}
+              </div>
+            ) : null}
 
-        </Container>
-      </Content>
-    </Page>
+          </Container>
+        </Content>
+      </Page>
+    </SidebarPage>
   );
 }
 
