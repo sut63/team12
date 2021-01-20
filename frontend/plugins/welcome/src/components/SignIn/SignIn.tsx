@@ -1,4 +1,4 @@
-import React, { FC, useState , useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,7 +17,7 @@ function Copyright() {
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-          SE 63 ระบบจัดการชมรม
+        SE 63 ระบบจัดการชมรม
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -58,13 +58,13 @@ const SignIn: FC<{}> = () => {
   const [email, setEmail] = useState(String);
   const [password, setPassword] = useState(String);
 
-  const PasswordhandelChange = (event : any) => {
+  const PasswordhandelChange = (event: any) => {
     setPassword(event.target.value as string);
   }
-  const EmailhandelChange = (event : any) => {
+  const EmailhandelChange = (event: any) => {
     setEmail(event.target.value as string);
   };
-  console.log("email",email);
+  console.log("email", email);
 
 
   useEffect(() => {
@@ -86,20 +86,14 @@ const SignIn: FC<{}> = () => {
         localStorage.setItem('user-id', JSON.stringify(item.id));
         localStorage.setItem('user-name', JSON.stringify(item.name));
         localStorage.setItem('user-email', JSON.stringify(item.email));
-        localStorage.setItem(
-          'user-type',
-          JSON.stringify(item.edges?.usertype?.name),
-        );
-        localStorage.setItem(
-          'user-status',
-          JSON.stringify(item.edges?.userstatus?.userstatus),
-        );
+        localStorage.setItem('user-type', JSON.stringify(item.edges?.usertype?.name),);
+        localStorage.setItem('user-status', JSON.stringify(item.edges?.userstatus?.userstatus),);
         history.pushState('', '', '/welcome');
         window.location.reload(false);
       }
     })
 
-  SetStatus(true);
+    SetStatus(true);
     // const timer = setTimeout(() => {
     //   SetStatus(false);
     // }, 1000);
@@ -109,16 +103,16 @@ const SignIn: FC<{}> = () => {
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       {status ? (
-            <div>
-              {alert ? (
-                <Alert severity="success">Login Succese</Alert>
-              ) : (
-                <Alert severity="warning" style={{ marginTop: 20 }}>
-                  email or password incorrect!!!
-                </Alert>
-              )}
-            </div>
-          ) : null}
+        <div>
+          {alert ? (
+            <Alert severity="success">Login Succese</Alert>
+          ) : (
+              <Alert severity="warning" style={{ marginTop: 20 }}>
+                email or password incorrect!!!
+              </Alert>
+            )}
+        </div>
+      ) : null}
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <FaceIcon />

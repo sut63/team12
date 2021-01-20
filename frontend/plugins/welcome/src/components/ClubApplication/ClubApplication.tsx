@@ -1,5 +1,5 @@
-import React, { FC , useEffect, useState } from 'react';
-import { Content, Header, Page, pageTheme } from '@backstage/core';
+import React, { FC, useEffect, useState } from 'react';
+import { Content, Header, Page, pageTheme , SidebarPage } from '@backstage/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
@@ -12,6 +12,8 @@ import { Alert } from '@material-ui/lab';
 import Snackbar from '@material-ui/core/Snackbar';
 import CreateIcon from '@material-ui/icons/Create';
 import HomeIcon from '@material-ui/icons/Home';
+import { UserHeader } from '../UserHeader/UserHeader';
+import { AppSidebar } from '../Sidebar/Sidebar';
 
 // css header 
 const HeaderCustom = { minHeight: '50px', };
@@ -63,7 +65,7 @@ export default function CreateClubApplication() {
   // const [appstatus, SetAppstatus] = useState<EntClubappStatus[]>([]);
 
   //set UID from LocalStorage
-  const [uID, setUID] = useState(localStorage.getItem('user-id')); 
+  const [uID, setUID] = useState(localStorage.getItem('user-id'));
 
   let userID = Number(uID);
   let adderAge = Number(age);
@@ -148,7 +150,7 @@ export default function CreateClubApplication() {
     SetName(event.target.value as string);
   };
 
-  function handleClose(){
+  function handleClose() {
     window.location.reload(false);
     setOpen(false);
   };
@@ -207,41 +209,44 @@ export default function CreateClubApplication() {
   // };
 
   return (
-    <Page theme={pageTheme.home}>
-      <Header style={HeaderCustom} title={`ระบบสมัครเข้าชมรม`}>
-      </Header>
-      <Content>
-        <React.Fragment>
-          <CssBaseline />
-          <Grid />
-          {status ? (
-            <div>
-              {alert ? (
-                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                  <Alert onClose={handleClose} severity="success">
-                    ส่งคำร้องสำเร็จ
-                </Alert>
-                </Snackbar>
-              ) : (
+    <SidebarPage>
+      <AppSidebar />
+      <Page theme={pageTheme.home}>
+        <Header style={HeaderCustom} title={`ระบบสมัครเข้าชมรม`}>
+          <UserHeader />
+        </Header>
+        <Content>
+          <React.Fragment>
+            <CssBaseline />
+            <Grid />
+            {status ? (
+              <div>
+                {alert ? (
                   <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="error">
-                      ส่งคำร้องไม่สำเร็จกรุณาลองใหม่อีกครั้ง
+                    <Alert onClose={handleClose} severity="success">
+                      ส่งคำร้องสำเร็จ
                 </Alert>
                   </Snackbar>
-                )}
-            </div>
-          ) : null}
-          <Container maxWidth="sm">
-            <Typography variant="h5" gutterBottom style={{ height: '2cm' }}>
-              ใบคำร้องขอสมัครชมรม
+                ) : (
+                    <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                      <Alert onClose={handleClose} severity="error">
+                        ส่งคำร้องไม่สำเร็จกรุณาลองใหม่อีกครั้ง
+                </Alert>
+                    </Snackbar>
+                  )}
+              </div>
+            ) : null}
+            <Container maxWidth="sm">
+              <Typography variant="h5" gutterBottom style={{ height: '2cm' }}>
+                ใบคำร้องขอสมัครชมรม
           </Typography>
-            {/* <Grid item sm={12}>
+              {/* <Grid item sm={12}>
               <Hidden smDown>
                 <Paper className={classes.paper}></Paper>
               </Hidden>
             </Grid> */}
-             <Grid container spacing={4}>
-              {/*<Grid item sm={2}>
+              <Grid container spacing={4}>
+                {/*<Grid item sm={2}>
                 <div className={classes.paper}>เลือก Email</div>
               </Grid>
               <Grid item sm={10}>
@@ -257,173 +262,173 @@ export default function CreateClubApplication() {
                   </Select>
                 </form>
               </Grid> */}
-              <Grid item sm={2}>
-                <div className={classes.paper}>ชื่อ-นามสกุล</div>
-              </Grid>
-              <Grid item sm={6}>
-                <form className={classes.root_L} noValidate autoComplete="off">
+                <Grid item sm={2}>
+                  <div className={classes.paper}>ชื่อ-นามสกุล</div>
+                </Grid>
+                <Grid item sm={6}>
+                  <form className={classes.root_L} noValidate autoComplete="off">
 
-                  <TextField
-                    //type="reset"
-                    id="addername"
-                    size="medium"
-                    value={name}
-                    onChange={NamehandleChang}
-                  />
-                </form>
-              </Grid>
+                    <TextField
+                      //type="reset"
+                      id="addername"
+                      size="medium"
+                      value={name}
+                      onChange={NamehandleChang}
+                    />
+                  </form>
+                </Grid>
 
-              <Grid item sm={1}>
-                <div className={classes.paper}> อายุ</div>
-              </Grid>
-              <Grid item sm={3}>
-                <form className={classes.root_S} noValidate autoComplete="off">
+                <Grid item sm={1}>
+                  <div className={classes.paper}> อายุ</div>
+                </Grid>
+                <Grid item sm={3}>
+                  <form className={classes.root_S} noValidate autoComplete="off">
 
-                  <TextField
-                    id="age"
-                    size="medium"
-                    value={age}
-                    onChange={AgehandleChang}
-                  />
-                </form>
-              </Grid>
+                    <TextField
+                      id="age"
+                      size="medium"
+                      value={age}
+                      onChange={AgehandleChang}
+                    />
+                  </form>
+                </Grid>
 
-              <Grid item sm={1}>
-                <div className={classes.paper}> เพศ</div>
-              </Grid>
-              <Grid item sm={2}>
-                <form className={classes.root_B} noValidate autoComplete="off">
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="gender"
-                    value={genders}
-                    onChange={GendershabdleChang}
-                  >
-                    {gender.map((item: EntGender) => (
-                      <MenuItem value={item.gender}>{item.gender}</MenuItem>
-                    ))}
-                  </Select>
-                </form>
-              </Grid>
+                <Grid item sm={1}>
+                  <div className={classes.paper}> เพศ</div>
+                </Grid>
+                <Grid item sm={2}>
+                  <form className={classes.root_B} noValidate autoComplete="off">
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="gender"
+                      value={genders}
+                      onChange={GendershabdleChang}
+                    >
+                      {gender.map((item: EntGender) => (
+                        <MenuItem value={item.gender}>{item.gender}</MenuItem>
+                      ))}
+                    </Select>
+                  </form>
+                </Grid>
 
-              <Grid item sm={1}>
-                <div className={classes.paper}>สาขา</div>
-              </Grid>
-              <Grid item sm={5}>
-                <form className={classes.root_L1} noValidate autoComplete="off">
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="discipline"
-                    value={disciplines}
-                    onChange={DisciplineshandleChage}
-                  >
-                    {discipline.map((item: EntDiscipline) => (
-                      <MenuItem value={item.discipline}>{item.discipline}</MenuItem>
-                    ))}
-                  </Select>
-                </form>
-              </Grid>
+                <Grid item sm={1}>
+                  <div className={classes.paper}>สาขา</div>
+                </Grid>
+                <Grid item sm={5}>
+                  <form className={classes.root_L1} noValidate autoComplete="off">
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="discipline"
+                      value={disciplines}
+                      onChange={DisciplineshandleChage}
+                    >
+                      {discipline.map((item: EntDiscipline) => (
+                        <MenuItem value={item.discipline}>{item.discipline}</MenuItem>
+                      ))}
+                    </Select>
+                  </form>
+                </Grid>
 
-              <Grid item sm={1}>
-                <div className={classes.paper}> ชั้นปี</div>
-              </Grid>
-              <Grid item sm={2}>
-                <form className={classes.root_S} noValidate autoComplete="off">
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="year"
-                    value={years}
-                    onChange={YearshabdleChang}
-                  >
-                    {year.map((item: EntYear) => (
-                      <MenuItem value={item.year}>{item.year}</MenuItem>
-                    ))}
-                  </Select>
-                </form>
-              </Grid>
+                <Grid item sm={1}>
+                  <div className={classes.paper}> ชั้นปี</div>
+                </Grid>
+                <Grid item sm={2}>
+                  <form className={classes.root_S} noValidate autoComplete="off">
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="year"
+                      value={years}
+                      onChange={YearshabdleChang}
+                    >
+                      {year.map((item: EntYear) => (
+                        <MenuItem value={item.year}>{item.year}</MenuItem>
+                      ))}
+                    </Select>
+                  </form>
+                </Grid>
 
-              <Grid item sm={2}>
-                <div className={classes.paper}>ข้อมูลติดต่อ</div>
-              </Grid>
-              <Grid item sm={10}>
-                <form className={classes.root_XL} noValidate autoComplete="off">
-                  <TextField
-                    id="outlined-multiline-static"
-                    label="contact"
-                    multiline
-                    rows={2}
-                    defaultValue="ที่อยู่: เบอร์โทรศัพท์: "
-                    variant="outlined"
-                    value={contact}
-                    onChange={ContacthandleChang}
-                  />
-                </form>
-              </Grid>
-              <Grid item sm={12}>
-                <Hidden smDown>
-                  <Paper className={classes.paper}></Paper>
-                </Hidden>
-              </Grid>
-              <Grid item sm={4}>
-                <div className={classes.paper}>ชมรมที่ต้องการสมัครสมาชิก</div>
-              </Grid>
-              <Grid item sm={8}>
-                <form className={classes.root_L4} noValidate autoComplete="off">
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="club"
-                    value={clubID}
-                    onChange={ClubIDhandleChange}
-                  >
-                    {club.map((item: EntClub) => (
-                      <MenuItem value={item.id}>{item.name}</MenuItem>
-                    ))}
-                  </Select>
-                </form>
-              </Grid>
-              <Grid item sm={3}>
-                <div className={classes.paper}>เหตุผลการเข้าร่วม</div>
-              </Grid>
-              <Grid item sm={9}>
-                <form className={classes.root_L3} noValidate autoComplete="off">
-                  <TextField
-                    id="outlined-multiline-static"
-                    label="reason"
-                    multiline
-                    rows={2}
-                    defaultValue="ระบุเหตุผล"
-                    variant="outlined"
-                    value={reason}
-                    onChange={ReasonhandleChang}
-                  />
-                </form>
-              </Grid>
+                <Grid item sm={2}>
+                  <div className={classes.paper}>ข้อมูลติดต่อ</div>
+                </Grid>
+                <Grid item sm={10}>
+                  <form className={classes.root_XL} noValidate autoComplete="off">
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="contact"
+                      multiline
+                      rows={2}
+                      defaultValue="ที่อยู่: เบอร์โทรศัพท์: "
+                      variant="outlined"
+                      value={contact}
+                      onChange={ContacthandleChang}
+                    />
+                  </form>
+                </Grid>
+                <Grid item sm={12}>
+                  <Hidden smDown>
+                    <Paper className={classes.paper}></Paper>
+                  </Hidden>
+                </Grid>
+                <Grid item sm={4}>
+                  <div className={classes.paper}>ชมรมที่ต้องการสมัครสมาชิก</div>
+                </Grid>
+                <Grid item sm={8}>
+                  <form className={classes.root_L4} noValidate autoComplete="off">
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="club"
+                      value={clubID}
+                      onChange={ClubIDhandleChange}
+                    >
+                      {club.map((item: EntClub) => (
+                        <MenuItem value={item.id}>{item.name}</MenuItem>
+                      ))}
+                    </Select>
+                  </form>
+                </Grid>
+                <Grid item sm={3}>
+                  <div className={classes.paper}>เหตุผลการเข้าร่วม</div>
+                </Grid>
+                <Grid item sm={9}>
+                  <form className={classes.root_L3} noValidate autoComplete="off">
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="reason"
+                      multiline
+                      rows={2}
+                      defaultValue="ระบุเหตุผล"
+                      variant="outlined"
+                      value={reason}
+                      onChange={ReasonhandleChang}
+                    />
+                  </form>
+                </Grid>
 
-              <Grid item sm={4}>
-                <div className={classes.paper}>วันและเวลาที่กรอกใบคำร้อง</div>
-              </Grid>
-              <Grid item sm={8}>
-                <form className={classes.container1} noValidate>
-                  <TextField
-                    id="datetime-local"
-                    label="Month/Day/Year Added Time"
-                    type="datetime-local"
-                    defaultValue="2017-05-24T10:30"
-                    value={addedtime}
-                    onChange={AddedtimehandleChange}
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                </form>
-              </Grid>
-              <Grid item sm={12}>
-                <Hidden smDown>
-                  <Paper className={classes.paper}></Paper>
-                </Hidden>
-              </Grid>
-              {/* <Grid item sm={3}>
+                <Grid item sm={4}>
+                  <div className={classes.paper}>วันและเวลาที่กรอกใบคำร้อง</div>
+                </Grid>
+                <Grid item sm={8}>
+                  <form className={classes.container1} noValidate>
+                    <TextField
+                      id="datetime-local"
+                      label="Month/Day/Year Added Time"
+                      type="datetime-local"
+                      defaultValue="2017-05-24T10:30"
+                      value={addedtime}
+                      onChange={AddedtimehandleChange}
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </form>
+                </Grid>
+                <Grid item sm={12}>
+                  <Hidden smDown>
+                    <Paper className={classes.paper}></Paper>
+                  </Hidden>
+                </Grid>
+                {/* <Grid item sm={3}>
                 <div className={classes.paper}>สถานะใบคำร้อง</div>
               </Grid>
               <Grid item sm={5}>
@@ -439,48 +444,49 @@ export default function CreateClubApplication() {
                   </Select>
                 </form>
               </Grid> */}
-              <Grid item sm={1}></Grid>
-              <Grid item sm={5}
-                container
-                direction="column"
-                justify="center"
-                alignItems="center">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="medium"
-                  className={classes.button}
-                  startIcon={<CreateIcon />}
-                  onClick={() => {
-                    save();
-                  }}
-                >
-                  <h3>บันทึกใบสมัคร</h3>
-                </Button>
-               </Grid>
-              <Grid item sm={5}
-                container
-                direction="column"
-                justify="center"
-                alignItems="center">
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  size="medium"
-                  className={classes.button}
-                  startIcon={<HomeIcon />}
-                  onClick={() => {
-                    home()
-                  }}
-                >
-                  <h3>กลับหน้า Home</h3>
-                </Button>
+                <Grid item sm={1}></Grid>
+                <Grid item sm={5}
+                  container
+                  direction="column"
+                  justify="center"
+                  alignItems="center">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="medium"
+                    className={classes.button}
+                    startIcon={<CreateIcon />}
+                    onClick={() => {
+                      save();
+                    }}
+                  >
+                    <h3>บันทึกใบสมัคร</h3>
+                  </Button>
+                </Grid>
+                <Grid item sm={5}
+                  container
+                  direction="column"
+                  justify="center"
+                  alignItems="center">
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    size="medium"
+                    className={classes.button}
+                    startIcon={<HomeIcon />}
+                    onClick={() => {
+                      home()
+                    }}
+                  >
+                    <h3>กลับหน้า Home</h3>
+                  </Button>
+                </Grid>
+                <Grid item sm={1}></Grid>
               </Grid>
-              <Grid item sm={1}></Grid>
-            </Grid>
-          </Container>
-        </React.Fragment>
-      </Content>
-    </Page>
+            </Container>
+          </React.Fragment>
+        </Content>
+      </Page>
+    </SidebarPage>
   );
 }

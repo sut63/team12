@@ -5,6 +5,7 @@ import {
   Page,
   pageTheme,
   ContentHeader,
+  SidebarPage,
 } from '@backstage/core';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -27,6 +28,8 @@ import { EntActivities } from '../../api/models/EntActivities';
 import { DefaultApi } from '../../api/apis';
 import { Link as RouterLink } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
+import { UserHeader } from '../UserHeader/UserHeader';
+import { AppSidebar } from '../Sidebar/Sidebar';
 
 //set UID from LocalStorage
 //const [uID, setUID] = useState(localStorage.getItem('user-id'));
@@ -199,21 +202,11 @@ function Activities() {
   };
 
   return (
+    <SidebarPage>
+      <AppSidebar/>
     <Page theme={pageTheme.website}>
       <Header style={HeaderCustom} title={`กิจกรรม`}>
-        {/* <Avatar alt="Remy Sharp" src="../../image/account.jpg"></Avatar> */}
-        <div
-          style={{
-            background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-            height: 50,
-            width: 200,
-            margin: 0,
-            alignItems: 'center',
-          }}
-        >
-          {Email}
-        </div>
-        <div style={{ marginLeft: 10 }}></div>
+        <UserHeader/>
       </Header>
       <Content>
         <ContentHeader title="">
@@ -371,6 +364,7 @@ function Activities() {
         </Container>
       </Content>
     </Page>
+    </SidebarPage>
   );
 }
 
