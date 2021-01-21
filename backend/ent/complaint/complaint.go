@@ -7,6 +7,10 @@ const (
 	Label = "complaint"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldName holds the string denoting the name field in the database.
+	FieldName = "name"
+	// FieldPhonenumber holds the string denoting the phonenumber field in the database.
+	FieldPhonenumber = "phonenumber"
 	// FieldInfo holds the string denoting the info field in the database.
 	FieldInfo = "info"
 	// FieldDate holds the string denoting the date field in the database.
@@ -47,6 +51,8 @@ const (
 // Columns holds all SQL columns for complaint fields.
 var Columns = []string{
 	FieldID,
+	FieldName,
+	FieldPhonenumber,
 	FieldInfo,
 	FieldDate,
 }
@@ -57,3 +63,12 @@ var ForeignKeys = []string{
 	"TypeID",
 	"UserID",
 }
+
+var (
+	// NameValidator is a validator for the "name" field. It is called by the builders before save.
+	NameValidator func(string) error
+	// PhonenumberValidator is a validator for the "phonenumber" field. It is called by the builders before save.
+	PhonenumberValidator func(string) error
+	// InfoValidator is a validator for the "info" field. It is called by the builders before save.
+	InfoValidator func(string) error
+)

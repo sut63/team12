@@ -10,6 +10,7 @@ import (
 	"github.com/OMENX/app/ent/clubapplication"
 	"github.com/OMENX/app/ent/clubbranch"
 	"github.com/OMENX/app/ent/clubtype"
+	"github.com/OMENX/app/ent/complaint"
 	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
 	"github.com/OMENX/app/ent/schema"
@@ -91,6 +92,34 @@ func init() {
 	clubapplicationDescYaer := clubapplicationFields[7].Descriptor()
 	// clubapplication.YaerValidator is a validator for the "yaer" field. It is called by the builders before save.
 	clubapplication.YaerValidator = clubapplicationDescYaer.Validators[0].(func(int) error)
+	complaintFields := schema.Complaint{}.Fields()
+	_ = complaintFields
+	// complaintDescName is the schema descriptor for name field.
+	complaintDescName := complaintFields[0].Descriptor()
+	// complaint.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	complaint.NameValidator = complaintDescName.Validators[0].(func(string) error)
+	// complaintDescPhonenumber is the schema descriptor for phonenumber field.
+	complaintDescPhonenumber := complaintFields[1].Descriptor()
+	// complaint.PhonenumberValidator is a validator for the "phonenumber" field. It is called by the builders before save.
+	complaint.PhonenumberValidator = func() func(string) error {
+		validators := complaintDescPhonenumber.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(phonenumber string) error {
+			for _, fn := range fns {
+				if err := fn(phonenumber); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// complaintDescInfo is the schema descriptor for info field.
+	complaintDescInfo := complaintFields[2].Descriptor()
+	// complaint.InfoValidator is a validator for the "info" field. It is called by the builders before save.
+	complaint.InfoValidator = complaintDescInfo.Validators[0].(func(string) error)
 	purposeFields := schema.Purpose{}.Fields()
 	_ = purposeFields
 	// purposeDescPurpose is the schema descriptor for purpose field.

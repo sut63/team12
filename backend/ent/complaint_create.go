@@ -23,6 +23,18 @@ type ComplaintCreate struct {
 	hooks    []Hook
 }
 
+// SetName sets the name field.
+func (cc *ComplaintCreate) SetName(s string) *ComplaintCreate {
+	cc.mutation.SetName(s)
+	return cc
+}
+
+// SetPhonenumber sets the phonenumber field.
+func (cc *ComplaintCreate) SetPhonenumber(s string) *ComplaintCreate {
+	cc.mutation.SetPhonenumber(s)
+	return cc
+}
+
 // SetInfo sets the info field.
 func (cc *ComplaintCreate) SetInfo(s string) *ComplaintCreate {
 	cc.mutation.SetInfo(s)
@@ -99,8 +111,29 @@ func (cc *ComplaintCreate) Mutation() *ComplaintMutation {
 
 // Save creates the Complaint in the database.
 func (cc *ComplaintCreate) Save(ctx context.Context) (*Complaint, error) {
+	if _, ok := cc.mutation.Name(); !ok {
+		return nil, &ValidationError{Name: "name", err: errors.New("ent: missing required field \"name\"")}
+	}
+	if v, ok := cc.mutation.Name(); ok {
+		if err := complaint.NameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
+		}
+	}
+	if _, ok := cc.mutation.Phonenumber(); !ok {
+		return nil, &ValidationError{Name: "phonenumber", err: errors.New("ent: missing required field \"phonenumber\"")}
+	}
+	if v, ok := cc.mutation.Phonenumber(); ok {
+		if err := complaint.PhonenumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phonenumber", err: fmt.Errorf("ent: validator failed for field \"phonenumber\": %w", err)}
+		}
+	}
 	if _, ok := cc.mutation.Info(); !ok {
 		return nil, &ValidationError{Name: "info", err: errors.New("ent: missing required field \"info\"")}
+	}
+	if v, ok := cc.mutation.Info(); ok {
+		if err := complaint.InfoValidator(v); err != nil {
+			return nil, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
+		}
 	}
 	if _, ok := cc.mutation.Date(); !ok {
 		return nil, &ValidationError{Name: "date", err: errors.New("ent: missing required field \"date\"")}
@@ -165,6 +198,22 @@ func (cc *ComplaintCreate) createSpec() (*Complaint, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if value, ok := cc.mutation.Name(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: complaint.FieldName,
+		})
+		c.Name = value
+	}
+	if value, ok := cc.mutation.Phonenumber(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: complaint.FieldPhonenumber,
+		})
+		c.Phonenumber = value
+	}
 	if value, ok := cc.mutation.Info(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,

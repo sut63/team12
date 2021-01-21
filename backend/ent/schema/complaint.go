@@ -14,7 +14,9 @@ type Complaint struct {
 // Fields of the Complaint.
 func (Complaint) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("info"),
+		field.String("name").NotEmpty(),
+		field.String("phonenumber").MaxLen(10).MinLen(10),
+		field.String("info").MinLen(20),
 		field.Time("date"),
 	}
 }

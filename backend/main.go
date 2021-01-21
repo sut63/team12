@@ -23,22 +23,22 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
- type Users struct {
- 	User []User
- }
+type Users struct {
+	User []User
+}
 
- type User struct {
- 	Name         string
- 	Email        string
- 	Password     string
- 	UserdtypeID  int
- 	Age          int
- 	GenderID     int
- 	UserstatusID int
- 	DisciplineID int
+type User struct {
+	Name         string
+	Email        string
+	Password     string
+	UserdtypeID  int
+	Age          int
+	GenderID     int
+	UserstatusID int
+	DisciplineID int
 	YearID       int
-	ClubID int
- }
+	ClubID       int
+}
 
 type Usertypes struct {
 	Usertype []Usertype
@@ -124,7 +124,6 @@ type ClubappStatuses struct {
 	ClubappStatus []ClubappStatus
 }
 
-
 // ClubappStatus is ...
 type ClubappStatus struct {
 	Status string
@@ -132,11 +131,13 @@ type ClubappStatus struct {
 
 // Complaint struct
 type Complaint struct {
-	UserID int
-	ClubID int
-	TypeID int
-	Info   string
-	Date   string
+	UserID      int
+	ClubID      int
+	TypeID      int
+	Name        string
+	Phonenumber string
+	Info        string
+	Date        string
 }
 
 // Complaints struct
@@ -178,9 +179,10 @@ type Clubs struct {
 }
 
 type Club struct {
-	name string
+	name    string
 	purpose string
 }
+
 // @title SUT SA Example API
 // @version 1.0
 // @description This is a sample server for SUT SE 2563
@@ -260,9 +262,9 @@ func main() {
 	// Set Club Data
 	clubs := Clubs{
 		Club: []Club{
-			Club{"ONE","Suphasin"},
-			Club{"TWO","BBB"},
-			Club{"THREE","CCC"},
+			Club{"ONE", "Suphasin"},
+			Club{"TWO", "BBB"},
+			Club{"THREE", "CCC"},
 		},
 	}
 
@@ -402,73 +404,71 @@ func main() {
 			Save(context.Background())
 	}
 
-	 // Set Users Data
-	 users := Users{
-	 	User: []User{
-	 		User{"pon", "pon@gmail.com", "123", 1, 21,1,2,1,2,1},
-	 		User{"poom", "poom@gmail.com", "123", 2, 20,1,2,1,1,2},
-	 		User{"fuse", "fuse@gmail.com", "123", 3, 19,1,1,1,2,2},
-	 		User{"blue", "blue@gmail.com", "123", 4, 19,1,1,1,2,2},
-	 	},
-	 }
+	// Set Users Data
+	users := Users{
+		User: []User{
+			User{"pon", "pon@gmail.com", "123", 1, 21, 1, 2, 1, 2, 1},
+			User{"poom", "poom@gmail.com", "123", 2, 20, 1, 2, 1, 1, 2},
+			User{"fuse", "fuse@gmail.com", "123", 3, 19, 1, 1, 1, 2, 2},
+			User{"blue", "blue@gmail.com", "123", 4, 19, 1, 1, 1, 2, 2},
+		},
+	}
 
-	 for _, u := range users.User {
+	for _, u := range users.User {
 
-	 	t, err := client.Usertype.
-	 		Query().
-	 		Where(usertype.IDEQ(int(u.UserdtypeID))).
-	 		Only(context.Background())
-
-	 	if err != nil {
-	 		fmt.Println(err.Error())
-	 		return
-	 	}
-
-		 year, err := client.Year.
-		 Query().
-		 Where(year.IDEQ(int(u.YearID))).
-		  Only(context.Background())
-
-	 if err != nil {
-		 fmt.Println(err.Error())
-		 return
-	  }
-
-	 	c, err := client.Club.
+		t, err := client.Usertype.
 			Query().
-			Where(club.IDEQ(int(u.ClubID))).
-	 		Only(context.Background())
+			Where(usertype.IDEQ(int(u.UserdtypeID))).
+			Only(context.Background())
 
 		if err != nil {
 			fmt.Println(err.Error())
 			return
-		 }
-		 
-		
-		 
+		}
+
+		year, err := client.Year.
+			Query().
+			Where(year.IDEQ(int(u.YearID))).
+			Only(context.Background())
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
+		c, err := client.Club.
+			Query().
+			Where(club.IDEQ(int(u.ClubID))).
+			Only(context.Background())
+
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+
 		status, err := client.UserStatus.
-		 Query().
-		 Where(userstatus.IDEQ(int(u.UserstatusID))).
-		  Only(context.Background())
+			Query().
+			Where(userstatus.IDEQ(int(u.UserstatusID))).
+			Only(context.Background())
 
-	 if err != nil {
-		 fmt.Println(err.Error())
-		 return
-	  }
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
 
-	  gender, err := client.Gender.
-		 Query().
-		 Where(gender.IDEQ(int(u.GenderID))).
-		  Only(context.Background())
+		gender, err := client.Gender.
+			Query().
+			Where(gender.IDEQ(int(u.GenderID))).
+			Only(context.Background())
 
-	 if err != nil {
-		 fmt.Println(err.Error())
-		 return
-	  }
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
 
-	 	client.User.
-	 		Create().
-	 		SetName(u.Name).
+		client.User.
+			Create().
+			SetName(u.Name).
 			SetEmail(u.Email).
 			SetPassword(u.Password).
 			SetAge(u.Age).
@@ -477,8 +477,8 @@ func main() {
 			SetYear(year).
 			SetUserstatus(status).
 			SetGender(gender).
-	 		Save(context.Background())
-	 }
+			Save(context.Background())
+	}
 
 	// Set ActivityType Data
 
@@ -516,8 +516,8 @@ func main() {
 	// Set ComplaintType Data
 	complainttypes := ComplaintTypes{
 		ComplaintType: []ComplaintType{
-			//ComplaintType{"TestType1"},
-			//ComplaintType{"TestType2"},
+			ComplaintType{"TestType1"},
+			ComplaintType{"TestType2"},
 		},
 	}
 
@@ -531,7 +531,7 @@ func main() {
 	// Set Complaint Data
 	complaints := Complaints{
 		Complaint: []Complaint{
-			//Complaint{1, 1, 1, "Test1", "2000-19-01 00:00:00+00:00"},
+			//Complaint{1, 1, 1, "บูรพา ภูสามารถ", "0624357155", "Test1", "2000-19-01 00:00:00+00:00"},
 		},
 	}
 
@@ -574,6 +574,8 @@ func main() {
 			SetComplaintToUser(u).
 			SetComplaintToClub(cc).
 			SetComplaintToComplaintType(ct).
+			SetName(cp.Name).
+			SetPhonenumber(cp.Phonenumber).
 			SetInfo(cp.Info).
 			SetDate(time).
 			Save(context.Background())
