@@ -78,7 +78,7 @@ const SignIn: FC<{}> = () => {
   }, [loading]);
 
 
-  const SinginhandleChange = async () => {
+  const SigninhandleChange = async () => {
     user.map((item: EntUser) => {
       console.log(item.email);
       if (item.email == email && item.password == password) {
@@ -153,7 +153,7 @@ const SignIn: FC<{}> = () => {
             color="primary"
             className={classes.submit}
             onClick={() => {
-              SinginhandleChange()
+              SigninhandleChange()
             }
             }
           >
