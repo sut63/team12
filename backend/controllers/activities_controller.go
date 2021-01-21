@@ -29,6 +29,7 @@ type Activities struct {
 	Name           string
 	Detail         string
 	Endtime        string
+	Location        string
 	Starttime      string
 }
 
@@ -97,6 +98,8 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 		return
 	}
 
+
+
 	at, err := ctl.client.Activities.
 		Create().
 		SetAcademicyear(acy).
@@ -105,17 +108,23 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 		SetDetail(obj.Detail).
 		SetEndtime(E).
 		SetName(obj.Name).
+		SetLocation(obj.Location).
 		SetStarttime(St).
 		Save(context.Background())
 
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error": err,
 		})
 		return
 	}
 
-	c.JSON(200, at)
+	c.JSON(200, gin.H{
+		"status": true,
+		"error": at,
+	})
 }
 
 // GetActivities handles GET requests to retrieve a Activities entity
