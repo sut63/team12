@@ -27,6 +27,30 @@ export interface ControllersComplaint {
     clubID?: number;
     /**
      * 
+     * @type {string}
+     * @memberof ControllersComplaint
+     */
+    date?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersComplaint
+     */
+    info?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersComplaint
+     */
+    name?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersComplaint
+     */
+    phoneNumber?: string;
+    /**
+     * 
      * @type {number}
      * @memberof ControllersComplaint
      */
@@ -50,6 +74,10 @@ export function ControllersComplaintFromJSONTyped(json: any, ignoreDiscriminator
     return {
         
         'clubID': !exists(json, 'clubID') ? undefined : json['clubID'],
+        'date': !exists(json, 'date') ? undefined : json['date'],
+        'info': !exists(json, 'info') ? undefined : json['info'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
+        'phoneNumber': !exists(json, 'phoneNumber') ? undefined : json['phoneNumber'],
         'typeID': !exists(json, 'typeID') ? undefined : json['typeID'],
         'userID': !exists(json, 'userID') ? undefined : json['userID'],
     };
@@ -65,6 +93,10 @@ export function ControllersComplaintToJSON(value?: ControllersComplaint | null):
     return {
         
         'clubID': value.clubID,
+        'date': value.date,
+        'info': value.info,
+        'name': value.name,
+        'phoneNumber': value.phoneNumber,
         'typeID': value.typeID,
         'userID': value.userID,
     };
