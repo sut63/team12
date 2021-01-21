@@ -4282,6 +4282,8 @@ type ComplaintMutation struct {
 	op                               Op
 	typ                              string
 	id                               *int
+	name                             *string
+	phonenumber                      *string
 	info                             *string
 	date                             *time.Time
 	clearedFields                    map[string]struct{}
@@ -4372,6 +4374,80 @@ func (m *ComplaintMutation) ID() (id int, exists bool) {
 		return
 	}
 	return *m.id, true
+}
+
+// SetName sets the name field.
+func (m *ComplaintMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the name value in the mutation.
+func (m *ComplaintMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old name value of the Complaint.
+// If the Complaint object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ComplaintMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldName is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName reset all changes of the "name" field.
+func (m *ComplaintMutation) ResetName() {
+	m.name = nil
+}
+
+// SetPhonenumber sets the phonenumber field.
+func (m *ComplaintMutation) SetPhonenumber(s string) {
+	m.phonenumber = &s
+}
+
+// Phonenumber returns the phonenumber value in the mutation.
+func (m *ComplaintMutation) Phonenumber() (r string, exists bool) {
+	v := m.phonenumber
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPhonenumber returns the old phonenumber value of the Complaint.
+// If the Complaint object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ComplaintMutation) OldPhonenumber(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldPhonenumber is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldPhonenumber requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPhonenumber: %w", err)
+	}
+	return oldValue.Phonenumber, nil
+}
+
+// ResetPhonenumber reset all changes of the "phonenumber" field.
+func (m *ComplaintMutation) ResetPhonenumber() {
+	m.phonenumber = nil
 }
 
 // SetInfo sets the info field.
@@ -4579,7 +4655,13 @@ func (m *ComplaintMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *ComplaintMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 4)
+	if m.name != nil {
+		fields = append(fields, complaint.FieldName)
+	}
+	if m.phonenumber != nil {
+		fields = append(fields, complaint.FieldPhonenumber)
+	}
 	if m.info != nil {
 		fields = append(fields, complaint.FieldInfo)
 	}
@@ -4594,6 +4676,10 @@ func (m *ComplaintMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *ComplaintMutation) Field(name string) (ent.Value, bool) {
 	switch name {
+	case complaint.FieldName:
+		return m.Name()
+	case complaint.FieldPhonenumber:
+		return m.Phonenumber()
 	case complaint.FieldInfo:
 		return m.Info()
 	case complaint.FieldDate:
@@ -4607,6 +4693,10 @@ func (m *ComplaintMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *ComplaintMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
+	case complaint.FieldName:
+		return m.OldName(ctx)
+	case complaint.FieldPhonenumber:
+		return m.OldPhonenumber(ctx)
 	case complaint.FieldInfo:
 		return m.OldInfo(ctx)
 	case complaint.FieldDate:
@@ -4620,6 +4710,20 @@ func (m *ComplaintMutation) OldField(ctx context.Context, name string) (ent.Valu
 // type mismatch the field type.
 func (m *ComplaintMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case complaint.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case complaint.FieldPhonenumber:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPhonenumber(v)
+		return nil
 	case complaint.FieldInfo:
 		v, ok := value.(string)
 		if !ok {
@@ -4684,6 +4788,12 @@ func (m *ComplaintMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *ComplaintMutation) ResetField(name string) error {
 	switch name {
+	case complaint.FieldName:
+		m.ResetName()
+		return nil
+	case complaint.FieldPhonenumber:
+		m.ResetPhonenumber()
+		return nil
 	case complaint.FieldInfo:
 		m.ResetInfo()
 		return nil

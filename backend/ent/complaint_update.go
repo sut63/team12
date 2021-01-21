@@ -31,6 +31,18 @@ func (cu *ComplaintUpdate) Where(ps ...predicate.Complaint) *ComplaintUpdate {
 	return cu
 }
 
+// SetName sets the name field.
+func (cu *ComplaintUpdate) SetName(s string) *ComplaintUpdate {
+	cu.mutation.SetName(s)
+	return cu
+}
+
+// SetPhonenumber sets the phonenumber field.
+func (cu *ComplaintUpdate) SetPhonenumber(s string) *ComplaintUpdate {
+	cu.mutation.SetPhonenumber(s)
+	return cu
+}
+
 // SetInfo sets the info field.
 func (cu *ComplaintUpdate) SetInfo(s string) *ComplaintUpdate {
 	cu.mutation.SetInfo(s)
@@ -125,6 +137,21 @@ func (cu *ComplaintUpdate) ClearComplaintToClub() *ComplaintUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (cu *ComplaintUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := cu.mutation.Name(); ok {
+		if err := complaint.NameValidator(v); err != nil {
+			return 0, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
+		}
+	}
+	if v, ok := cu.mutation.Phonenumber(); ok {
+		if err := complaint.PhonenumberValidator(v); err != nil {
+			return 0, &ValidationError{Name: "phonenumber", err: fmt.Errorf("ent: validator failed for field \"phonenumber\": %w", err)}
+		}
+	}
+	if v, ok := cu.mutation.Info(); ok {
+		if err := complaint.InfoValidator(v); err != nil {
+			return 0, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -192,6 +219,20 @@ func (cu *ComplaintUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := cu.mutation.Name(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: complaint.FieldName,
+		})
+	}
+	if value, ok := cu.mutation.Phonenumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: complaint.FieldPhonenumber,
+		})
 	}
 	if value, ok := cu.mutation.Info(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -330,6 +371,18 @@ type ComplaintUpdateOne struct {
 	mutation *ComplaintMutation
 }
 
+// SetName sets the name field.
+func (cuo *ComplaintUpdateOne) SetName(s string) *ComplaintUpdateOne {
+	cuo.mutation.SetName(s)
+	return cuo
+}
+
+// SetPhonenumber sets the phonenumber field.
+func (cuo *ComplaintUpdateOne) SetPhonenumber(s string) *ComplaintUpdateOne {
+	cuo.mutation.SetPhonenumber(s)
+	return cuo
+}
+
 // SetInfo sets the info field.
 func (cuo *ComplaintUpdateOne) SetInfo(s string) *ComplaintUpdateOne {
 	cuo.mutation.SetInfo(s)
@@ -424,6 +477,21 @@ func (cuo *ComplaintUpdateOne) ClearComplaintToClub() *ComplaintUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (cuo *ComplaintUpdateOne) Save(ctx context.Context) (*Complaint, error) {
+	if v, ok := cuo.mutation.Name(); ok {
+		if err := complaint.NameValidator(v); err != nil {
+			return nil, &ValidationError{Name: "name", err: fmt.Errorf("ent: validator failed for field \"name\": %w", err)}
+		}
+	}
+	if v, ok := cuo.mutation.Phonenumber(); ok {
+		if err := complaint.PhonenumberValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phonenumber", err: fmt.Errorf("ent: validator failed for field \"phonenumber\": %w", err)}
+		}
+	}
+	if v, ok := cuo.mutation.Info(); ok {
+		if err := complaint.InfoValidator(v); err != nil {
+			return nil, &ValidationError{Name: "info", err: fmt.Errorf("ent: validator failed for field \"info\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -490,6 +558,20 @@ func (cuo *ComplaintUpdateOne) sqlSave(ctx context.Context) (c *Complaint, err e
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Complaint.ID for update")}
 	}
 	_spec.Node.ID.Value = id
+	if value, ok := cuo.mutation.Name(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: complaint.FieldName,
+		})
+	}
+	if value, ok := cuo.mutation.Phonenumber(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: complaint.FieldPhonenumber,
+		})
+	}
 	if value, ok := cuo.mutation.Info(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,

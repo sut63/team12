@@ -23,11 +23,13 @@ type ComplaintController struct {
 
 // Complaint defines the struct for the complaint
 type Complaint struct {
-	UserID int
-	ClubID int
-	TypeID int
-	info   string
-	date   string
+	UserID      int
+	ClubID      int
+	TypeID      int
+	Name        string
+	PhoneNumber string
+	Info        string
+	Date        string
 }
 
 // CreateComplaint handles POST requests for adding complaint entities
@@ -86,25 +88,32 @@ func (ctl *ComplaintController) CreateComplaint(c *gin.Context) {
 		return
 	}
 
-	time, err := time.Parse(time.RFC3339, obj.date)
+	time, err := time.Parse(time.RFC3339, obj.Date)
 
 	cp, err := ctl.client.Complaint.
 		Create().
 		SetComplaintToUser(u).
 		SetComplaintToClub(cb).
 		SetComplaintToComplaintType(ct).
-		SetInfo(obj.info).
+		SetName(obj.Name).
+		SetPhonenumber(obj.PhoneNumber).
+		SetInfo(obj.Info).
 		SetDate(time).
 		Save(context.Background())
 
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
 
-	c.JSON(200, cp)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   cp,
+	})
 }
 
 // GetComplaint handles GET requests to retrieve a complaint entity
