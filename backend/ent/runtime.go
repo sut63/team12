@@ -38,6 +38,10 @@ func init() {
 	activitiesDescDetail := activitiesFields[1].Descriptor()
 	// activities.DetailValidator is a validator for the "detail" field. It is called by the builders before save.
 	activities.DetailValidator = activitiesDescDetail.Validators[0].(func(string) error)
+	// activitiesDescLocation is the schema descriptor for location field.
+	activitiesDescLocation := activitiesFields[2].Descriptor()
+	// activities.LocationValidator is a validator for the "location" field. It is called by the builders before save.
+	activities.LocationValidator = activitiesDescLocation.Validators[0].(func(string) error)
 	activitytypeFields := schema.ActivityType{}.Fields()
 	_ = activitytypeFields
 	// activitytypeDescName is the schema descriptor for name field.
@@ -87,7 +91,21 @@ func init() {
 	// clubapplicationDescAge is the schema descriptor for age field.
 	clubapplicationDescAge := clubapplicationFields[6].Descriptor()
 	// clubapplication.AgeValidator is a validator for the "age" field. It is called by the builders before save.
-	clubapplication.AgeValidator = clubapplicationDescAge.Validators[0].(func(int) error)
+	clubapplication.AgeValidator = func() func(int) error {
+		validators := clubapplicationDescAge.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(age int) error {
+			for _, fn := range fns {
+				if err := fn(age); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	// clubapplicationDescYaer is the schema descriptor for yaer field.
 	clubapplicationDescYaer := clubapplicationFields[7].Descriptor()
 	// clubapplication.YaerValidator is a validator for the "yaer" field. It is called by the builders before save.

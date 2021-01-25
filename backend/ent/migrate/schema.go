@@ -25,6 +25,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
 		{Name: "detail", Type: field.TypeString},
+		{Name: "location", Type: field.TypeString},
 		{Name: "starttime", Type: field.TypeTime},
 		{Name: "endtime", Type: field.TypeTime},
 		{Name: "AcademicYearID", Type: field.TypeInt, Nullable: true},
@@ -39,21 +40,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "activities_academic_years_activities",
-				Columns: []*schema.Column{ActivitiesColumns[5]},
+				Columns: []*schema.Column{ActivitiesColumns[6]},
 
 				RefColumns: []*schema.Column{AcademicYearsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "activities_activity_types_activities",
-				Columns: []*schema.Column{ActivitiesColumns[6]},
+				Columns: []*schema.Column{ActivitiesColumns[7]},
 
 				RefColumns: []*schema.Column{ActivityTypesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "activities_clubs_activities",
-				Columns: []*schema.Column{ActivitiesColumns[7]},
+				Columns: []*schema.Column{ActivitiesColumns[8]},
 
 				RefColumns: []*schema.Column{ClubsColumns[0]},
 				OnDelete:   schema.SetNull,

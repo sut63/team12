@@ -438,6 +438,7 @@ type ActivitiesMutation struct {
 	id                  *int
 	name                *string
 	detail              *string
+	location            *string
 	starttime           *time.Time
 	endtime             *time.Time
 	clearedFields       map[string]struct{}
@@ -602,6 +603,43 @@ func (m *ActivitiesMutation) OldDetail(ctx context.Context) (v string, err error
 // ResetDetail reset all changes of the "detail" field.
 func (m *ActivitiesMutation) ResetDetail() {
 	m.detail = nil
+}
+
+// SetLocation sets the location field.
+func (m *ActivitiesMutation) SetLocation(s string) {
+	m.location = &s
+}
+
+// Location returns the location value in the mutation.
+func (m *ActivitiesMutation) Location() (r string, exists bool) {
+	v := m.location
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLocation returns the old location value of the Activities.
+// If the Activities object wasn't provided to the builder, the object is fetched
+// from the database.
+// An error is returned if the mutation operation is not UpdateOne, or database query fails.
+func (m *ActivitiesMutation) OldLocation(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, fmt.Errorf("OldLocation is allowed only on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, fmt.Errorf("OldLocation requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLocation: %w", err)
+	}
+	return oldValue.Location, nil
+}
+
+// ResetLocation reset all changes of the "location" field.
+func (m *ActivitiesMutation) ResetLocation() {
+	m.location = nil
 }
 
 // SetStarttime sets the starttime field.
@@ -809,12 +847,15 @@ func (m *ActivitiesMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *ActivitiesMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 5)
 	if m.name != nil {
 		fields = append(fields, activities.FieldName)
 	}
 	if m.detail != nil {
 		fields = append(fields, activities.FieldDetail)
+	}
+	if m.location != nil {
+		fields = append(fields, activities.FieldLocation)
 	}
 	if m.starttime != nil {
 		fields = append(fields, activities.FieldStarttime)
@@ -834,6 +875,8 @@ func (m *ActivitiesMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case activities.FieldDetail:
 		return m.Detail()
+	case activities.FieldLocation:
+		return m.Location()
 	case activities.FieldStarttime:
 		return m.Starttime()
 	case activities.FieldEndtime:
@@ -851,6 +894,8 @@ func (m *ActivitiesMutation) OldField(ctx context.Context, name string) (ent.Val
 		return m.OldName(ctx)
 	case activities.FieldDetail:
 		return m.OldDetail(ctx)
+	case activities.FieldLocation:
+		return m.OldLocation(ctx)
 	case activities.FieldStarttime:
 		return m.OldStarttime(ctx)
 	case activities.FieldEndtime:
@@ -877,6 +922,13 @@ func (m *ActivitiesMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetDetail(v)
+		return nil
+	case activities.FieldLocation:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLocation(v)
 		return nil
 	case activities.FieldStarttime:
 		v, ok := value.(time.Time)
@@ -947,6 +999,9 @@ func (m *ActivitiesMutation) ResetField(name string) error {
 		return nil
 	case activities.FieldDetail:
 		m.ResetDetail()
+		return nil
+	case activities.FieldLocation:
+		m.ResetLocation()
 		return nil
 	case activities.FieldStarttime:
 		m.ResetStarttime()
