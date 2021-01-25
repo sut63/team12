@@ -69,6 +69,12 @@ export interface EntActivities {
      */
     id?: number;
     /**
+     * Location holds the value of the "location" field.
+     * @type {string}
+     * @memberof EntActivities
+     */
+    location?: string;
+    /**
      * Name holds the value of the "name" field.
      * @type {string}
      * @memberof EntActivities
@@ -99,6 +105,7 @@ export function EntActivitiesFromJSONTyped(json: any, ignoreDiscriminator: boole
         'edges': !exists(json, 'edges') ? undefined : EntActivitiesEdgesFromJSON(json['edges']),
         'endtime': !exists(json, 'endtime') ? undefined : json['endtime'],
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'location': !exists(json, 'location') ? undefined : json['location'],
         'name': !exists(json, 'name') ? undefined : json['name'],
         'starttime': !exists(json, 'starttime') ? undefined : json['starttime'],
     };
@@ -120,6 +127,7 @@ export function EntActivitiesToJSON(value?: EntActivities | null): any {
         'edges': EntActivitiesEdgesToJSON(value.edges),
         'endtime': value.endtime,
         'id': value.id,
+        'location': value.location,
         'name': value.name,
         'starttime': value.starttime,
     };
