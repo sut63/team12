@@ -110,13 +110,18 @@ func (ctl *ClubapplicationController) CreateClubapplication(c *gin.Context) {
 		Save(context.Background())
 
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
 
-	c.JSON(200, ca)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   ca,
+	})
 }
 
 // GetClubapplication handles GET requests to retrieve a clubapplication entity
