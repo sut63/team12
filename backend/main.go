@@ -38,6 +38,7 @@ import (
  	DisciplineID int
 	YearID       int
 	ClubID int
+	PositionID int
  }
 
 type Usertypes struct {
@@ -45,6 +46,14 @@ type Usertypes struct {
 }
 
 type Usertype struct {
+	name string
+}
+
+type Positions struct {
+	Position []Position
+}
+
+type Position struct {
 	name string
 }
 
@@ -172,6 +181,7 @@ type Purposes struct {
 type Purpose struct {
 	PURPOSE string
 }
+
 
 type Clubs struct {
 	Club []Club
@@ -358,8 +368,6 @@ func main() {
 		Usertype: []Usertype{
 			Usertype{"นักศึกษา"},
 			Usertype{"เจ้าหน้าที่"},
-			Usertype{"ประธานชมรม"},
-			Usertype{"กรรมการชมรม"},
 		},
 	}
 
@@ -367,6 +375,23 @@ func main() {
 		client.Usertype.
 			Create().
 			SetName(t.name).
+			Save(context.Background())
+	}
+
+	// Set Position Data
+	position := Positions{
+		Position: []Position{
+			Position{"ประธาน"},
+			Position{"รองประธาน"},
+			Position{"เลขา"},
+			Position{"กรรมการ"},
+			Position{"สมาชิก"},
+		},
+	}
+
+	for _, t := range position.Position {
+		client.Position.
+			Create().SetName(t.name).
 			Save(context.Background())
 	}
 
@@ -405,10 +430,11 @@ func main() {
 	 // Set Users Data
 	 users := Users{
 	 	User: []User{
-	 		User{"pon", "pon@gmail.com", "123", 1, 21,1,2,1,2,1},
-	 		User{"poom", "poom@gmail.com", "123", 2, 20,1,2,1,1,2},
-	 		User{"fuse", "fuse@gmail.com", "123", 3, 19,1,1,1,2,2},
-	 		User{"blue", "blue@gmail.com", "123", 4, 19,1,1,1,2,2},
+	 		User{"pon", "pon@gmail.com", "123", 1, 21,1,2,1,2,1,1},
+	 		User{"poom", "poom@gmail.com", "123", 2, 20,1,2,1,1,2,2},
+	 		User{"fuse", "fuse@gmail.com", "123", 3, 19,1,1,1,2,2,3},
+	 		User{"blue", "blue@gmail.com", "123", 4, 19,1,1,1,2,2,4},
+	 		User{"phoom", "phoom@gmail.com", "123", 4, 19,1,1,1,2,2,5},
 	 	},
 	 }
 
