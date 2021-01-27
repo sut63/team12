@@ -8,6 +8,7 @@ import (
 	"github.com/OMENX/app/ent"
 	"github.com/OMENX/app/ent/discipline"
 	"github.com/OMENX/app/ent/gender"
+	"github.com/OMENX/app/ent/position"
 	"github.com/OMENX/app/ent/user"
 	"github.com/OMENX/app/ent/userstatus"
 	"github.com/OMENX/app/ent/usertype"
@@ -32,6 +33,7 @@ type User struct {
 	UserstatusID int
 	DisciplineID int
 	YearID       int
+	PositionID	 int
 }
 
 // CreateUser handles POST requests for adding user entities
@@ -113,6 +115,11 @@ func (ctl *UserController) CreateUser(c *gin.Context) {
 		return
 	}
 
+	po, err := ctl.client.Position.
+		Query().
+		Where(position.IDEQ(int(obj.PositionID))).
+		Only(context.Background())
+
 	u, err := ctl.client.User.
 		Create().
 		SetName(obj.Name).
@@ -124,6 +131,7 @@ func (ctl *UserController) CreateUser(c *gin.Context) {
 		SetYear(y).
 		SetUsertype(t).
 		SetUserstatus(us).
+		SetPosition(po).
 		Save(context.Background())
 
 	if err != nil {
