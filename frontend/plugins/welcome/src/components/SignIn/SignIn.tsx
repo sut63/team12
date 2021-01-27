@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: "#3333ff",
+    backgroundColor: '#3333ff',
   },
   form: {
     width: '100%',
@@ -46,7 +46,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SignIn: FC<{}> = () => {
-
   const classes = useStyles();
   const api = new DefaultApi();
 
@@ -60,12 +59,11 @@ const SignIn: FC<{}> = () => {
 
   const PasswordhandelChange = (event: any) => {
     setPassword(event.target.value as string);
-  }
+  };
   const EmailhandelChange = (event: any) => {
     setEmail(event.target.value as string);
   };
-  console.log("email", email);
-
+  console.log('email', email);
 
   useEffect(() => {
     const getUser = async () => {
@@ -77,7 +75,6 @@ const SignIn: FC<{}> = () => {
     localStorage.clear();
   }, [loading]);
 
-
   const SinginhandleChange = async () => {
     user.map((item: EntUser) => {
       console.log(item.email);
@@ -86,17 +83,22 @@ const SignIn: FC<{}> = () => {
         localStorage.setItem('user-id', JSON.stringify(item.id));
         localStorage.setItem('user-name', JSON.stringify(item.name));
         localStorage.setItem('user-email', JSON.stringify(item.email));
-        localStorage.setItem('user-type', JSON.stringify(item.edges?.usertype?.name),);
-        localStorage.setItem('user-status', JSON.stringify(item.edges?.userstatus?.userstatus),);
+        localStorage.setItem(
+          'user-position',
+          JSON.stringify(item.edges?.position?.name),
+        );
+        localStorage.setItem(
+          'user-status',
+          JSON.stringify(item.edges?.userstatus?.userstatus),
+        );
         history.pushState('', '', '/welcome');
-        window.location.reload(false);
       }
-    })
+    });
 
     SetStatus(true);
-    // const timer = setTimeout(() => {
-    //   SetStatus(false);
-    // }, 1000);
+    const timer = setTimeout(() => {
+      SetStatus(false);
+    }, 1000);
   };
 
   return (
@@ -107,10 +109,10 @@ const SignIn: FC<{}> = () => {
           {alert ? (
             <Alert severity="success">Login Succese</Alert>
           ) : (
-              <Alert severity="warning" style={{ marginTop: 20 }}>
-                email or password incorrect!!!
-              </Alert>
-            )}
+            <Alert severity="warning" style={{ marginTop: 20 }}>
+              email or password incorrect!!!
+            </Alert>
+          )}
         </div>
       ) : null}
       <div className={classes.paper}>
@@ -153,9 +155,8 @@ const SignIn: FC<{}> = () => {
             color="primary"
             className={classes.submit}
             onClick={() => {
-              SinginhandleChange()
-            }
-            }
+              SinginhandleChange();
+            }}
           >
             Sign In
           </Button>
