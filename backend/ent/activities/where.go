@@ -107,6 +107,13 @@ func Detail(v string) predicate.Activities {
 	})
 }
 
+// Location applies equality check predicate on the "location" field. It's identical to LocationEQ.
+func Location(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLocation), v))
+	})
+}
+
 // Starttime applies equality check predicate on the "starttime" field. It's identical to StarttimeEQ.
 func Starttime(v time.Time) predicate.Activities {
 	return predicate.Activities(func(s *sql.Selector) {
@@ -340,6 +347,117 @@ func DetailEqualFold(v string) predicate.Activities {
 func DetailContainsFold(v string) predicate.Activities {
 	return predicate.Activities(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldDetail), v))
+	})
+}
+
+// LocationEQ applies the EQ predicate on the "location" field.
+func LocationEQ(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldLocation), v))
+	})
+}
+
+// LocationNEQ applies the NEQ predicate on the "location" field.
+func LocationNEQ(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldLocation), v))
+	})
+}
+
+// LocationIn applies the In predicate on the "location" field.
+func LocationIn(vs ...string) predicate.Activities {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Activities(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldLocation), v...))
+	})
+}
+
+// LocationNotIn applies the NotIn predicate on the "location" field.
+func LocationNotIn(vs ...string) predicate.Activities {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Activities(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldLocation), v...))
+	})
+}
+
+// LocationGT applies the GT predicate on the "location" field.
+func LocationGT(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldLocation), v))
+	})
+}
+
+// LocationGTE applies the GTE predicate on the "location" field.
+func LocationGTE(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldLocation), v))
+	})
+}
+
+// LocationLT applies the LT predicate on the "location" field.
+func LocationLT(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldLocation), v))
+	})
+}
+
+// LocationLTE applies the LTE predicate on the "location" field.
+func LocationLTE(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldLocation), v))
+	})
+}
+
+// LocationContains applies the Contains predicate on the "location" field.
+func LocationContains(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldLocation), v))
+	})
+}
+
+// LocationHasPrefix applies the HasPrefix predicate on the "location" field.
+func LocationHasPrefix(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldLocation), v))
+	})
+}
+
+// LocationHasSuffix applies the HasSuffix predicate on the "location" field.
+func LocationHasSuffix(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldLocation), v))
+	})
+}
+
+// LocationEqualFold applies the EqualFold predicate on the "location" field.
+func LocationEqualFold(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldLocation), v))
+	})
+}
+
+// LocationContainsFold applies the ContainsFold predicate on the "location" field.
+func LocationContainsFold(v string) predicate.Activities {
+	return predicate.Activities(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldLocation), v))
 	})
 }
 

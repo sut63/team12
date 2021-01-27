@@ -23,6 +23,8 @@ type Activities struct {
 	Name string `json:"name,omitempty"`
 	// Detail holds the value of the "detail" field.
 	Detail string `json:"detail,omitempty"`
+	// Location holds the value of the "location" field.
+	Location string `json:"location,omitempty"`
 	// Starttime holds the value of the "starttime" field.
 	Starttime time.Time `json:"starttime,omitempty"`
 	// Endtime holds the value of the "endtime" field.
@@ -96,6 +98,7 @@ func (*Activities) scanValues() []interface{} {
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // name
 		&sql.NullString{}, // detail
+		&sql.NullString{}, // location
 		&sql.NullTime{},   // starttime
 		&sql.NullTime{},   // endtime
 	}
@@ -132,17 +135,22 @@ func (a *Activities) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		a.Detail = value.String
 	}
-	if value, ok := values[2].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field starttime", values[2])
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field location", values[2])
+	} else if value.Valid {
+		a.Location = value.String
+	}
+	if value, ok := values[3].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field starttime", values[3])
 	} else if value.Valid {
 		a.Starttime = value.Time
 	}
-	if value, ok := values[3].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field endtime", values[3])
+	if value, ok := values[4].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field endtime", values[4])
 	} else if value.Valid {
 		a.Endtime = value.Time
 	}
-	values = values[4:]
+	values = values[5:]
 	if len(values) == len(activities.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field AcademicYearID", value)
@@ -208,6 +216,8 @@ func (a *Activities) String() string {
 	builder.WriteString(a.Name)
 	builder.WriteString(", detail=")
 	builder.WriteString(a.Detail)
+	builder.WriteString(", location=")
+	builder.WriteString(a.Location)
 	builder.WriteString(", starttime=")
 	builder.WriteString(a.Starttime.Format(time.ANSIC))
 	builder.WriteString(", endtime=")

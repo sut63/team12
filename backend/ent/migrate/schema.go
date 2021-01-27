@@ -25,6 +25,7 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
 		{Name: "detail", Type: field.TypeString},
+		{Name: "location", Type: field.TypeString},
 		{Name: "starttime", Type: field.TypeTime},
 		{Name: "endtime", Type: field.TypeTime},
 		{Name: "AcademicYearID", Type: field.TypeInt, Nullable: true},
@@ -39,21 +40,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "activities_academic_years_activities",
-				Columns: []*schema.Column{ActivitiesColumns[5]},
+				Columns: []*schema.Column{ActivitiesColumns[6]},
 
 				RefColumns: []*schema.Column{AcademicYearsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "activities_activity_types_activities",
-				Columns: []*schema.Column{ActivitiesColumns[6]},
+				Columns: []*schema.Column{ActivitiesColumns[7]},
 
 				RefColumns: []*schema.Column{ActivityTypesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "activities_clubs_activities",
-				Columns: []*schema.Column{ActivitiesColumns[7]},
+				Columns: []*schema.Column{ActivitiesColumns[8]},
 
 				RefColumns: []*schema.Column{ClubsColumns[0]},
 				OnDelete:   schema.SetNull,
@@ -193,6 +194,8 @@ var (
 	// ComplaintsColumns holds the columns for the "complaints" table.
 	ComplaintsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "name", Type: field.TypeString},
+		{Name: "phonenumber", Type: field.TypeString, Size: 10},
 		{Name: "info", Type: field.TypeString},
 		{Name: "date", Type: field.TypeTime},
 		{Name: "ClubID", Type: field.TypeInt, Nullable: true},
@@ -207,21 +210,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "complaints_clubs_ClubToComplaint",
-				Columns: []*schema.Column{ComplaintsColumns[3]},
+				Columns: []*schema.Column{ComplaintsColumns[5]},
 
 				RefColumns: []*schema.Column{ClubsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "complaints_complaint_types_ComplaintTypeToComplaint",
-				Columns: []*schema.Column{ComplaintsColumns[4]},
+				Columns: []*schema.Column{ComplaintsColumns[6]},
 
 				RefColumns: []*schema.Column{ComplaintTypesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "complaints_users_UserToComplaint",
-				Columns: []*schema.Column{ComplaintsColumns[5]},
+				Columns: []*schema.Column{ComplaintsColumns[7]},
 
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.SetNull,

@@ -75,7 +75,7 @@ const SignIn: FC<{}> = () => {
     localStorage.clear();
   }, [loading]);
 
-  const SinginhandleChange = async () => {
+  const SigninhandleChange = async () => {
     user.map((item: EntUser) => {
       console.log(item.email);
       if (item.email == email && item.password == password) {
@@ -157,6 +157,7 @@ const SignIn: FC<{}> = () => {
             onClick={() => {
               SinginhandleChange();
             }}
+
           >
             Sign In
           </Button>
