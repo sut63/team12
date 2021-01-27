@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
 import {
-  ContentHeader,
   Content,
   Header,
   Page,
   pageTheme,
+  ContentHeader,
+  SidebarPage,
 } from '@backstage/core';
+import { makeStyles } from '@material-ui/core/styles';
 import {
   Container,
   Grid,
@@ -23,265 +20,507 @@ import {
   Avatar,
   Button,
 } from '@material-ui/core';
-import TableHead from '@material-ui/core/TableHead';
-import { Link as RouterLink } from 'react-router-dom';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import { DefaultApi } from '../../api/apis';
-import { EntActivities } from '../../api/models/EntActivities';
+import { EntUser } from '../../api/models/EntUser';
+import { EntActivityType } from '../../api/models/EntActivityType';
+import { EntAcademicYear } from '../../api/models/EntAcademicYear';
 import { EntClub } from '../../api/models/EntClub';
+import { EntActivities } from '../../api/models/EntActivities';
+import { DefaultApi } from '../../api/apis';
+import { Link as RouterLink } from 'react-router-dom';
+import Alert from '@material-ui/lab/Alert';
+import { UserHeader } from '../UserHeader/UserHeader';
+import { AppSidebar } from '../Sidebar/Sidebar';
+import Swal from 'sweetalert2'; // alert
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
+//set UID from LocalStorage
+//const [uID, setUID] = useState(localStorage.getItem('user-id'));
+
+let userID = Number(localStorage.getItem('user-id'));
+let Email = localStorage.getItem('user-email');
+
+// header css
+const HeaderCustom = {
+  minHeight: '50px',
+};
+
+// css style
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
   },
-});
+  paper: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+  formControl: {
+    width: 300,
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    width: 300,
+  },
+  alert: {
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(2),
+    },
+  },
+  user: {
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    border: 0,
+    borderRadius: 3,
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+    color: 'white',
+    height: 48,
+    padding: '0 30px',
+  },
+}));
 
-export default function ActivityTable() {
-  const profile = { givenName: 'ระบบจัดการชมรม' };
+function Activities() {
   const classes = useStyles();
+  /*   const profile = { givenName: 'ระบบโปรโมชัน' }; */
   const api = new DefaultApi();
-  const [activities, setActivities] = useState<EntActivities[]>();
-  const [getAct, setGetAct] = useState<EntActivities>();
-  const [clubs, setClubs] = useState<EntClub[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  const [ClubID, setClubID] = useState(Number);
-  const [FindClub, setFindClub] = useState(String);
-  const [CantFindClub, setCantFindClub] = useState(String);
+  const [activities, setActivities] = React.useState<Partial<EntActivities>>(
+    {},
+  );
+  const [activitytypes, setActivitytypes] = useState<EntActivityType[]>([]);
+  const [academicyears, setAcademicyears] = useState<EntAcademicYear[]>([]);
+
+  const [NameError, setNameError] = React.useState('');
+  const [DetailError, setDetailError] = React.useState('');
+  const [LocationError, setLocationError] = React.useState('');
+
+  const [status, setStatus] = useState(false);
+  const [alert, setAlert] = useState(true);
+
+  const [loading, setLoading] = useState(true);
+  const [UserID, setUserID] = useState(Number);
+  const [KK, setKK] = useState(Number);
+  const [ActivitytypeID, setActivitytypeID] = useState(Number);
+  const [AcademicyearID, setAcademicyearID] = useState(Number);
+  const [name, setName] = React.useState(String);
+  const [location, setLocation] = React.useState(String);
+  const [detail, setDetail] = React.useState(String);
+  const [starttime, setStarttime] = useState(String);
+  const [endtime, setEndtime] = useState(String);
 
   useEffect(() => {
-    const getActivities = async () => {
-      const res = await api.listActivities({ limit: 10, offset: 0 });
+    const checkUserType = async () => {
+      const userType = JSON.parse(
+        String(localStorage.getItem('user-position')),
+      );
       setLoading(false);
-
-      setActivities(res);
-      console.log(res);
+      const check1 = 'กรรมการ';
+      const check2 = 'ประธาน';
+      const check3 = 'รองประธาน';
+      const check4 = 'เลขา';
+      if (
+        userType != check1 &&
+        userType != check2 &&
+        userType != check3 &&
+        userType != check4
+      ) {
+        Swal.fire({
+          title: 'สถานะของผู้ใช้ระบบไม่สามารถจัดกิจกรรมได้',
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown',
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp',
+          },
+        });
+        setTimeout(() => {
+          history.pushState('', '', './welcome');
+          window.location.reload(false);
+        }, 3000);
+      } /* else {
+        setUser(Number(localStorage.getItem('userdata')));
+      } */
     };
+    checkUserType();
 
-    const getClub = async () => {
-      const res = await api.listClub({ limit: 10, offset: 0 });
+    const getAcademicYear = async () => {
+      const acy = await api.listAcademicYear({ limit: 10, offset: 0 });
       setLoading(false);
-
-      setClubs(res);
-      console.log(res);
+      setAcademicyears(acy);
     };
-    getClub();
-    getActivities();
+    getAcademicYear();
+
+    const getActivityType = async () => {
+      const act = await api.listActivityType({ limit: 10, offset: 0 });
+      setLoading(false);
+      setActivitytypes(act);
+    };
+    getActivityType();
   }, [loading]);
 
-  const ShowClub = async () => {
-    setFindClub('none');
-    setCantFindClub('block-inline');
-    history.pushState('', '', './ActivityTable');
-    window.location.reload(false);
+  // ฟังก์ชั่นสำหรับ validate ชื่อกิจกรรม
+  const validateName = (val: string) => {
+    return val.match('^[A-Z][A-Za-z_]{6,50}$');
   };
 
-  const findClub = async () => {
-    const findClubs = {
-      club: ClubID,
+  // ฟังก์ชั่นสำหรับ validate รายละเอียดกิจกรรม
+  const validateDetail = (val: string) => {
+    return val.match('.{49,}');
+  };
+
+  // ฟังก์ชั่นสำหรับ validate ชื่อกิจกรรม
+  const validateLocation = (val: string) => {
+    return val.match('^[A-Z][A-Za-z_0-9]{2,}$');
+  };
+
+  // สำหรับตรวจสอบรูปแบบข้อมูลที่กรอก ว่าเป็นไปตามที่กำหนดหรือไม่
+  const checkPattern = (id: string, value: string) => {
+    switch (id) {
+      case 'name':
+        validateName(value)
+          ? setNameError('')
+          : setNameError(
+              'ชื่อกิจกรรมต้องขึ้นต้นด้วยตัวอักษร [A-Z] มีอย่างน้อย 7 ตัว ไม่เกิน 35 ตัว และห้ามเป็นตัวเลข [0-9]',
+            );
+        return;
+      case 'detail':
+        validateDetail(value)
+          ? setDetailError('')
+          : setDetailError('รายละเอียดกิจกรรมต้องมีตัวอักษรอย่างน้อย 50 ตัว');
+        return;
+      case 'location':
+        validateLocation(value)
+          ? setLocationError('')
+          : setLocationError(
+              'ชื่อสถานที่จัดกิจกรรมต้องขึ้นต้นด้วยตัวอักษร [A-Z] มีอย่างน้อย 3 ตัว และไม่เกิน 50 ตัว',
+            );
+        return;
+      default:
+        return;
+    }
+  };
+  // alert setting
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: toast => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    },
+  });
+
+  // alert error
+  const aleartMessage = (icon: any, title: any) => {
+    Toast.fire({
+      icon: icon,
+      title: title,
+    });
+  };
+  // check error
+  const checkCaseSaveError = (field: string) => {
+    switch (field) {
+      case 'name':
+        aleartMessage(
+          'error',
+          'บันทึกข้อมูลไม่สำเร็จ : ชื่อกิจกรรมต้องขึ้นต้นด้วยตัวอักษร [A-Z] มีอย่างน้อย 7 ตัว ไม่เกิน 35 ตัว และห้ามเป็นตัวเลข [0-9]',
+        );
+        return;
+      case 'detail':
+        aleartMessage(
+          'error',
+          'บันทึกข้อมูลไม่สำเร็จ : รายละเอียดกิจกรรมต้องมีตัวอักษรอย่างน้อย 50 ตัว',
+        );
+        return;
+      case 'location':
+        aleartMessage(
+          'error',
+          'บันทึกข้อมูลไม่สำเร็จ: ชื่อสถานที่จัดกิจกรรมต้องขึ้นต้นด้วยตัวอักษร [A-Z] มีอย่างน้อย 3 ตัว และไม่เกิน 50 ตัว',
+        );
+        return;
+
+      default:
+        aleartMessage('error', 'บันทึกข้อมูลไม่สำเร็จ');
+        return;
+    }
+  };
+
+  const CreateActivities = async () => {
+    const Activities = {
+      academicYearID: AcademicyearID,
+      activityTypeID: ActivitytypeID,
+      clubID: userID,
+      detail: detail,
+      endtime: endtime + ':00+07:00',
+      name: name,
+      location: location,
+      starttime: starttime + ':00+07:00',
     };
 
-    const getClub = async () => {
-      const res = await api.getActivities({ id: ClubID });
-      setCantFindClub('none');
-      setFindClub('block');
-      setLoading(false);
-
-      setGetAct(res);
-      console.log(res);
-    };
-    getClub();
-    /*  const apiUrl = 'http://localhost:8080/api/v1/activities';
+    const apiUrl = 'http://localhost:8080/api/v1/activities';
     const requestOptions = {
-      method: 'GET',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(findClubs),
+      body: JSON.stringify(Activities),
     };
 
     fetch(apiUrl, requestOptions)
       .then(response => response.json())
       .then(data => {
         console.log(data);
-          if (data.status === true) {
+        if (data.status === true) {
           Toast.fire({
             icon: 'success',
             title: 'บันทึกข้อมูลสำเร็จ',
           });
         } else {
-        } 
-      });  */
+          checkCaseSaveError(data.error.Name);
+        }
+      });
   };
 
-  const deleteActivities = async (id: number) => {
-    const res = await api.deleteActivities({ id: id });
-    setLoading(true);
+  const handleStarttimeChange = (event: any) => {
+    setStarttime(event.target.value as string);
   };
 
-  const club_id_handleChange = (
+  const handleEndtimeChange = (event: any) => {
+    setEndtime(event.target.value as string);
+  };
+
+  const activitytype_id_handleChange = (
     event: React.ChangeEvent<{ value: unknown }>,
   ) => {
-    setClubID(event.target.value as number);
+    setActivitytypeID(event.target.value as number);
+  };
+
+  const academicyear_id_handleChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
+    setAcademicyearID(event.target.value as number);
+  };
+
+  const user_id_handleChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
+    setUserID(event.target.value as number);
+  };
+
+  const name_handleChange = (event: React.ChangeEvent<{ value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value;
+    checkPattern('name', validateValue);
+    setName(event.target.value as string);
+  };
+
+  const location_handleChange = (event: React.ChangeEvent<{ value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value;
+    checkPattern('location', validateValue);
+    setLocation(event.target.value as string);
+  };
+
+  const detail_handleChange = (event: React.ChangeEvent<{ value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value;
+    checkPattern('detail', validateValue);
+    setDetail(event.target.value as string);
   };
 
   return (
-    <Page theme={pageTheme.website}>
-      <Header title={`${profile.givenName || 'to Backstage'}`} subtitle="">
-        <Link component={RouterLink} to="/welcome">
-          <Button variant="contained" color="primary">
-            กลับสู่หน้าหนัก
-          </Button>
-        </Link>
-        {/* <Button
-          component={RouterLink}
-          to="/"
-          variant="contained"
-          color="secondary"
-          disableElevation
-          style={{ marginLeft: 20 }}
-        >
-          LOGOUT
-        </Button> */}
-      </Header>
-      <Content>
-        <ContentHeader title="ตารางข้อมูลโปรโมชัน">
-          <FormControl variant="outlined">
-            <InputLabel id="demo-mutiple-name-label">
-              เลือกชมรมที่ต้องการค้นหากิจกรรม
-            </InputLabel>
-            <Select
-              id="type"
-              name="activitytype"
-              value={ClubID} // (undefined || '') = ''
-              onChange={club_id_handleChange}
-              style={{ width: 350, marginRight: 20 }}
-            >
-              {clubs.map((item: EntClub) => (
-                <MenuItem value={item.id}>{item.name}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+    <SidebarPage>
+      <AppSidebar />
+      <Page theme={pageTheme.website}>
+        <Header style={HeaderCustom} title={`กิจกรรม`}>
+          <UserHeader />
+        </Header>
+        <Content>
+          <ContentHeader title="">
+            {status ? (
+              <div style={{ margin: 0, position: 'relative', width: 1500 }}>
+                {alert ? (
+                  <Alert severity="success">บันทึกสำเร็จ </Alert>
+                ) : (
+                  <Alert severity="error">บันทึกไม่สำเร็จ</Alert>
+                )}
+              </div>
+            ) : null}
+            {
+              <Link component={RouterLink} to="/ActivityTable">
+                <Button variant="contained" color="primary">
+                  ตารางข้อมูลกิจกรรม
+                </Button>
+              </Link>
+            }
+          </ContentHeader>
+          <Container maxWidth="sm">
+            <Grid container spacing={2}>
+              <Grid item xs={12}></Grid>
+              <Grid item xs={3}>
+                <div className={classes.paper}>กิจกรรม</div>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  error={NameError ? true : false}
+                  helperText={NameError}
+                  id="name"
+                  name="name"
+                  label="ใส่ชื่อกิจกรรม"
+                  variant="filled"
+                  value={name}
+                  style={{ width: 350 }}
+                  onChange={name_handleChange}
+                />
+              </Grid>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              findClub();
-            }}
-          >
-            ค้นหากิจกรรมชมรม
-          </Button>
+              <Grid item xs={3}>
+                <div className={classes.paper}>รายละเอียดกิจกรรม</div>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  error={DetailError ? true : false}
+                  helperText={DetailError}
+                  id="detail"
+                  name="detail"
+                  label="ใส่รายละเอียดกิจกรรม"
+                  value={detail}
+                  multiline
+                  rows={2}
+                  defaultValue=""
+                  variant="filled"
+                  style={{ width: 350, height: 50, marginBottom: 25 }}
+                  onChange={detail_handleChange}
+                />
+              </Grid>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              ShowClub();
-            }}
-          >
-            ดูกิจกรรมชมรมทั้งหมด
-          </Button>
-        </ContentHeader>
+              <Grid item xs={3}>
+                <div className={classes.paper}>สถานที่จัดกิจกรรม</div>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  error={LocationError ? true : false}
+                  helperText={LocationError}
+                  id="location"
+                  name="location"
+                  label="ใส่สถานที่จัดกิจกรรม"
+                  variant="filled"
+                  value={location}
+                  style={{ width: 350 }}
+                  onChange={location_handleChange}
+                />
+              </Grid>
 
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">รหัสกิจกรรม</TableCell>
-                <TableCell align="center">ชมรม</TableCell>
-                <TableCell align="center">กิจกรรม</TableCell>
-                <TableCell align="center">รายละเอียดกิจกรรม</TableCell>
-                <TableCell align="center">ประเภทกิจกรรม</TableCell>
-                <TableCell align="center">ภาคการศึกษาที่จัดกิจกรรม</TableCell>
-                <TableCell align="center">เวลาเริ่มกิจกรรม</TableCell>
-                <TableCell align="center">เวลาสิ้นสุดกิจกรรม</TableCell>
-                {/* <TableCell align="center">Manage</TableCell> */}
-              </TableRow>
-            </TableHead>
+              <Grid item xs={3}>
+                <div className={classes.paper}>ประเภทกิจกรรม</div>
+              </Grid>
+              <Grid item xs={9}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-mutiple-name-label">
+                    เลือกประเภทของกิจกรรม
+                  </InputLabel>
+                  <Select
+                    id="type"
+                    name="activitytype"
+                    value={ActivitytypeID} // (undefined || '') = ''
+                    onChange={activitytype_id_handleChange}
+                    style={{ width: 350 }}
+                  >
+                    {activitytypes.map((item: EntActivityType) => (
+                      <MenuItem value={item.id}>{item.name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-            <TableBody style={{ display: CantFindClub }}>
-              {activities === undefined
-                ? null
-                : activities.map(item => (
-                    <TableRow key={item.id}>
-                      <TableCell align="center">{item.id}</TableCell>
-                      <TableCell align="center">
-                        {item.edges?.club?.name}
-                      </TableCell>
-                      <TableCell align="center">{item.name}</TableCell>
-                      <TableCell align="center">{item.detail}</TableCell>
-                      <TableCell align="center">
-                        {item.edges?.activitytype?.name}
-                      </TableCell>
-                      <TableCell align="center">
-                        {item.edges?.academicyear?.semester}
-                      </TableCell>
-                      <TableCell align="center">{item.starttime}</TableCell>
-                      <TableCell align="center">{item.endtime}</TableCell>
+              <Grid item xs={3}>
+                <div className={classes.paper}>ภาคการศึกษา</div>
+              </Grid>
+              <Grid item xs={9}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-mutiple-name-label">
+                    เลือกภาคการศึกษา
+                  </InputLabel>
+                  <Select
+                    id="acadamicyear"
+                    name="acadamicyear"
+                    value={AcademicyearID} // (undefined || '') = ''
+                    onChange={academicyear_id_handleChange}
+                    style={{ width: 350 }}
+                  >
+                    {academicyears.map((item: EntAcademicYear) => (
+                      <MenuItem value={item.id}>{item.semester}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
 
-                      {/* <TableCell align="center">
-                        <Button
-                          onClick={() => {
-                            deleteActivities(item.id);
-                          }}
-                          style={{ marginLeft: 10 }}
-                          variant="contained"
-                          color="secondary"
-                        >
-                          Delete
-                        </Button>
-                      </TableCell> */}
-                    </TableRow>
-                  ))}
-            </TableBody>
+              <Grid item xs={3}>
+                <div className={classes.paper}>เลือกเวลาเริ่มต้น</div>
+              </Grid>
+              <Grid item xs={9}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <TextField
+                    id="startdate"
+                    type="datetime-local"
+                    value={starttime}
+                    onChange={handleStarttimeChange}
+                    //defaultValue="2017-05-24"
+                    className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    style={{ width: 350 }}
+                  />
+                </FormControl>
+              </Grid>
 
-            <TableBody style={{ display: FindClub }}>
-              {getAct === undefined ? null : (
-                <TableRow key={getAct.id}>
-                  <TableCell align="center">{getAct.id}</TableCell>
-                  <TableCell align="center">
-                    {getAct.edges?.club?.name}
-                  </TableCell>
-                  <TableCell align="center">{getAct.name}</TableCell>
-                  <TableCell align="center">{getAct.detail}</TableCell>
-                  <TableCell align="center">
-                    {getAct.edges?.activitytype?.name}
-                  </TableCell>
-                  <TableCell align="center">
-                    {getAct.edges?.academicyear?.semester}
-                  </TableCell>
-                  <TableCell align="center">{getAct.starttime}</TableCell>
-                  <TableCell align="center">{getAct.endtime}</TableCell>
+              <Grid item xs={3}>
+                <div className={classes.paper}>เลือกเวลาสิ้นสุด</div>
+              </Grid>
+              <Grid item xs={8}>
+                <FormControl variant="outlined" className={classes.formControl}>
+                  <TextField
+                    id="enddate"
+                    type="datetime-local"
+                    value={endtime}
+                    onChange={handleEndtimeChange}
+                    //defaultValue="2017-05-24"
+                    className={classes.textField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    style={{ width: 350 }}
+                  />
+                </FormControl>
+              </Grid>
 
-                  {/* <TableCell align="center">
-                        <Button
-                          onClick={() => {
-                            deleteActivities(item.id);
-                          }}
-                          style={{ marginLeft: 10 }}
-                          variant="contained"
-                          color="secondary"
-                        >
-                          Delete
-                        </Button>
-                      </TableCell> */}
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        {/* <div
-          style={{
-            display: FindClub,
-            marginTop: 50,
-            fontSize: 36,
-            textAlign: 'center',
-          }}
-        >
-          ไม่พบกิจกรรมของชมรมที่เลือก
-        </div> */}
-      </Content>
-    </Page>
+              <Grid item xs={1}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    CreateActivities();
+                  }}
+                  style={{
+                    marginLeft: 100,
+                    width: 200,
+                    height: 60,
+                    marginTop: 0,
+                  }}
+                >
+                  บันทึกกิจกรรม
+                </Button>
+              </Grid>
+            </Grid>
+          </Container>
+        </Content>
+      </Page>
+    </SidebarPage>
   );
 }
+
+export default Activities;
