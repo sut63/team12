@@ -113,9 +113,11 @@ function Activities() {
 
   useEffect(() => {
     const checkUserType = async () => {
-      const userType = JSON.parse(String(localStorage.getItem('user-type')));
+      const userType = JSON.parse(
+        String(localStorage.getItem('user-position')),
+      );
       setLoading(false);
-      if (userType != ('กรรมการชมรม' || 'ประธานชมรม')) {
+      if (userType != ('กรรมการ' || 'ประธาน' || 'รองประธาน' || 'เลขา')) {
         Swal.fire({
           title: 'สถานะของผู้ใช้ระบบไม่สามารถจัดกิจกรรมได้',
           showClass: {
@@ -338,11 +340,13 @@ function Activities() {
                 )}
               </div>
             ) : null}
-            {/*  <Link component={RouterLink} to="/ActivityTable">
-            <Button variant="contained" color="primary">
-              ตารางข้อมูลกิจกรรม
-            </Button>
-          </Link> */}
+            {
+              <Link component={RouterLink} to="/ActivityTable">
+                <Button variant="contained" color="primary">
+                  ตารางข้อมูลกิจกรรม
+                </Button>
+              </Link>
+            }
           </ContentHeader>
           <Container maxWidth="sm">
             <Grid container spacing={2}>
