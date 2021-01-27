@@ -117,7 +117,11 @@ function Activities() {
         String(localStorage.getItem('user-position')),
       );
       setLoading(false);
-      if (userType != ('กรรมการ' || 'ประธาน' || 'รองประธาน' || 'เลขา')) {
+      const check1 = 'กรรมการ';
+      const check2 = 'ประธาน';
+      const check3 = 'รองประธาน';
+      const check4 = 'เลขา';
+      if (userType != (check1 || check2 || check3 || check4)) {
         Swal.fire({
           title: 'สถานะของผู้ใช้ระบบไม่สามารถจัดกิจกรรมได้',
           showClass: {
