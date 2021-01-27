@@ -332,12 +332,12 @@ func (cq *ComplaintQuery) WithComplaintToClub(opts ...func(*ClubQuery)) *Complai
 // Example:
 //
 //	var v []struct {
-//		Info string `json:"info,omitempty"`
+//		Name string `json:"name,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Complaint.Query().
-//		GroupBy(complaint.FieldInfo).
+//		GroupBy(complaint.FieldName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -358,11 +358,11 @@ func (cq *ComplaintQuery) GroupBy(field string, fields ...string) *ComplaintGrou
 // Example:
 //
 //	var v []struct {
-//		Info string `json:"info,omitempty"`
+//		Name string `json:"name,omitempty"`
 //	}
 //
 //	client.Complaint.Query().
-//		Select(complaint.FieldInfo).
+//		Select(complaint.FieldName).
 //		Scan(ctx, &v)
 //
 func (cq *ComplaintQuery) Select(field string, fields ...string) *ComplaintSelect {

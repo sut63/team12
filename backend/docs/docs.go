@@ -4229,6 +4229,18 @@ var doc = `{
                 "clubID": {
                     "type": "integer"
                 },
+                "date": {
+                    "type": "string"
+                },
+                "info": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
                 "typeID": {
                     "type": "integer"
                 },
@@ -4320,6 +4332,10 @@ var doc = `{
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "location": {
+                    "description": "Location holds the value of the \"location\" field.",
+                    "type": "string"
                 },
                 "name": {
                     "description": "Name holds the value of the \"name\" field.",
@@ -4643,6 +4659,14 @@ var doc = `{
                 },
                 "info": {
                     "description": "Info holds the value of the \"info\" field.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name holds the value of the \"name\" field.",
+                    "type": "string"
+                },
+                "phonenumber": {
+                    "description": "Phonenumber holds the value of the \"phonenumber\" field.",
                     "type": "string"
                 },
                 "typeID": {

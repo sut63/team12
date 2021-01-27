@@ -57,6 +57,18 @@ export interface EntComplaint {
      */
     info?: string;
     /**
+     * Name holds the value of the "name" field.
+     * @type {string}
+     * @memberof EntComplaint
+     */
+    name?: string;
+    /**
+     * Phonenumber holds the value of the "phonenumber" field.
+     * @type {string}
+     * @memberof EntComplaint
+     */
+    phonenumber?: string;
+    /**
      * 
      * @type {number}
      * @memberof EntComplaint
@@ -85,6 +97,8 @@ export function EntComplaintFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'edges': !exists(json, 'edges') ? undefined : EntComplaintEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
         'info': !exists(json, 'info') ? undefined : json['info'],
+        'name': !exists(json, 'name') ? undefined : json['name'],
+        'phonenumber': !exists(json, 'phonenumber') ? undefined : json['phonenumber'],
         'typeID': !exists(json, 'typeID') ? undefined : json['typeID'],
         'userID': !exists(json, 'userID') ? undefined : json['userID'],
     };
@@ -104,6 +118,8 @@ export function EntComplaintToJSON(value?: EntComplaint | null): any {
         'edges': EntComplaintEdgesToJSON(value.edges),
         'id': value.id,
         'info': value.info,
+        'name': value.name,
+        'phonenumber': value.phonenumber,
         'typeID': value.typeID,
         'userID': value.userID,
     };

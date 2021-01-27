@@ -43,6 +43,12 @@ func (au *ActivitiesUpdate) SetDetail(s string) *ActivitiesUpdate {
 	return au
 }
 
+// SetLocation sets the location field.
+func (au *ActivitiesUpdate) SetLocation(s string) *ActivitiesUpdate {
+	au.mutation.SetLocation(s)
+	return au
+}
+
 // SetStarttime sets the starttime field.
 func (au *ActivitiesUpdate) SetStarttime(t time.Time) *ActivitiesUpdate {
 	au.mutation.SetStarttime(t)
@@ -147,6 +153,11 @@ func (au *ActivitiesUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "detail", err: fmt.Errorf("ent: validator failed for field \"detail\": %w", err)}
 		}
 	}
+	if v, ok := au.mutation.Location(); ok {
+		if err := activities.LocationValidator(v); err != nil {
+			return 0, &ValidationError{Name: "location", err: fmt.Errorf("ent: validator failed for field \"location\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -227,6 +238,13 @@ func (au *ActivitiesUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: activities.FieldDetail,
+		})
+	}
+	if value, ok := au.mutation.Location(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: activities.FieldLocation,
 		})
 	}
 	if value, ok := au.mutation.Starttime(); ok {
@@ -378,6 +396,12 @@ func (auo *ActivitiesUpdateOne) SetDetail(s string) *ActivitiesUpdateOne {
 	return auo
 }
 
+// SetLocation sets the location field.
+func (auo *ActivitiesUpdateOne) SetLocation(s string) *ActivitiesUpdateOne {
+	auo.mutation.SetLocation(s)
+	return auo
+}
+
 // SetStarttime sets the starttime field.
 func (auo *ActivitiesUpdateOne) SetStarttime(t time.Time) *ActivitiesUpdateOne {
 	auo.mutation.SetStarttime(t)
@@ -482,6 +506,11 @@ func (auo *ActivitiesUpdateOne) Save(ctx context.Context) (*Activities, error) {
 			return nil, &ValidationError{Name: "detail", err: fmt.Errorf("ent: validator failed for field \"detail\": %w", err)}
 		}
 	}
+	if v, ok := auo.mutation.Location(); ok {
+		if err := activities.LocationValidator(v); err != nil {
+			return nil, &ValidationError{Name: "location", err: fmt.Errorf("ent: validator failed for field \"location\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -560,6 +589,13 @@ func (auo *ActivitiesUpdateOne) sqlSave(ctx context.Context) (a *Activities, err
 			Type:   field.TypeString,
 			Value:  value,
 			Column: activities.FieldDetail,
+		})
+	}
+	if value, ok := auo.mutation.Location(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: activities.FieldLocation,
 		})
 	}
 	if value, ok := auo.mutation.Starttime(); ok {

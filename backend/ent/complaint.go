@@ -19,6 +19,10 @@ type Complaint struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
+	// Name holds the value of the "name" field.
+	Name string `json:"name,omitempty"`
+	// Phonenumber holds the value of the "phonenumber" field.
+	Phonenumber string `json:"phonenumber,omitempty"`
 	// Info holds the value of the "info" field.
 	Info string `json:"info,omitempty"`
 	// Date holds the value of the "date" field.
@@ -90,6 +94,8 @@ func (e ComplaintEdges) ComplaintToClubOrErr() (*Club, error) {
 func (*Complaint) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
+		&sql.NullString{}, // name
+		&sql.NullString{}, // phonenumber
 		&sql.NullString{}, // info
 		&sql.NullTime{},   // date
 	}
@@ -117,16 +123,26 @@ func (c *Complaint) assignValues(values ...interface{}) error {
 	c.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field info", values[0])
+		return fmt.Errorf("unexpected type %T for field name", values[0])
+	} else if value.Valid {
+		c.Name = value.String
+	}
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field phonenumber", values[1])
+	} else if value.Valid {
+		c.Phonenumber = value.String
+	}
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field info", values[2])
 	} else if value.Valid {
 		c.Info = value.String
 	}
-	if value, ok := values[1].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field date", values[1])
+	if value, ok := values[3].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field date", values[3])
 	} else if value.Valid {
 		c.Date = value.Time
 	}
-	values = values[2:]
+	values = values[4:]
 	if len(values) == len(complaint.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field ClubID", value)
@@ -188,6 +204,10 @@ func (c *Complaint) String() string {
 	var builder strings.Builder
 	builder.WriteString("Complaint(")
 	builder.WriteString(fmt.Sprintf("id=%v", c.ID))
+	builder.WriteString(", name=")
+	builder.WriteString(c.Name)
+	builder.WriteString(", phonenumber=")
+	builder.WriteString(c.Phonenumber)
 	builder.WriteString(", info=")
 	builder.WriteString(c.Info)
 	builder.WriteString(", date=")
