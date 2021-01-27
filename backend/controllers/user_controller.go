@@ -220,6 +220,7 @@ func (ctl *UserController) ListUser(c *gin.Context) {
 		WithUserstatus().
 		WithUsertype().
 		WithYear().
+		WithPosition().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())
