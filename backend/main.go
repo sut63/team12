@@ -12,6 +12,7 @@ import (
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/complainttype"
 	"github.com/OMENX/app/ent/gender"
+	"github.com/OMENX/app/ent/position"
 	"github.com/OMENX/app/ent/user"
 	"github.com/OMENX/app/ent/userstatus"
 	"github.com/OMENX/app/ent/usertype"
@@ -382,7 +383,7 @@ func main() {
 	}
 
 	// Set Position Data
-	position := Positions{
+	posi := Positions{
 		Position: []Position{
 			Position{"ประธาน"},
 			Position{"รองประธาน"},
@@ -392,7 +393,7 @@ func main() {
 		},
 	}
 
-	for _, t := range position.Position {
+	for _, t := range posi.Position {
 		client.Position.
 			Create().SetName(t.name).
 			Save(context.Background())
@@ -476,28 +477,38 @@ func main() {
 		}
 
 		status, err := client.UserStatus.
-			Query().
-			Where(userstatus.IDEQ(int(u.UserstatusID))).
-			Only(context.Background())
+		 Query().
+		 Where(userstatus.IDEQ(int(u.UserstatusID))).
+		  Only(context.Background())
 
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
+	 if err != nil {
+		 fmt.Println(err.Error())
+		 return
+	  }
 
-		gender, err := client.Gender.
-			Query().
-			Where(gender.IDEQ(int(u.GenderID))).
-			Only(context.Background())
+	  gender, err := client.Gender.
+		 Query().
+		 Where(gender.IDEQ(int(u.GenderID))).
+		  Only(context.Background())
 
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
+	 if err != nil {
+		 fmt.Println(err.Error())
+		 return
+	  }
 
-		client.User.
-			Create().
-			SetName(u.Name).
+	  po, err := client.Position.
+	  Query().
+	  Where(position.IDEQ(int(u.PositionID))).
+	  Only(context.Background())
+
+  if err != nil {
+	  fmt.Println(err.Error())
+	  return
+   }
+
+	 	client.User.
+	 		Create().
+	 		SetName(u.Name).
 			SetEmail(u.Email).
 			SetPassword(u.Password).
 			SetAge(u.Age).
@@ -506,8 +517,10 @@ func main() {
 			SetYear(year).
 			SetUserstatus(status).
 			SetGender(gender).
-			Save(context.Background())
-	}
+			SetPosition(po).
+	 		Save(context.Background())
+	 }
+
 
 	// Set ActivityType Data
 
