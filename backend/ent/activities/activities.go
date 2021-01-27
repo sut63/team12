@@ -11,6 +11,8 @@ const (
 	FieldName = "name"
 	// FieldDetail holds the string denoting the detail field in the database.
 	FieldDetail = "detail"
+	// FieldLocation holds the string denoting the location field in the database.
+	FieldLocation = "location"
 	// FieldStarttime holds the string denoting the starttime field in the database.
 	FieldStarttime = "starttime"
 	// FieldEndtime holds the string denoting the endtime field in the database.
@@ -53,6 +55,7 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldDetail,
+	FieldLocation,
 	FieldStarttime,
 	FieldEndtime,
 }
@@ -69,4 +72,6 @@ var (
 	NameValidator func(string) error
 	// DetailValidator is a validator for the "detail" field. It is called by the builders before save.
 	DetailValidator func(string) error
+	// LocationValidator is a validator for the "location" field. It is called by the builders before save.
+	LocationValidator func(string) error
 )

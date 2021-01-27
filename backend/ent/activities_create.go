@@ -35,6 +35,12 @@ func (ac *ActivitiesCreate) SetDetail(s string) *ActivitiesCreate {
 	return ac
 }
 
+// SetLocation sets the location field.
+func (ac *ActivitiesCreate) SetLocation(s string) *ActivitiesCreate {
+	ac.mutation.SetLocation(s)
+	return ac
+}
+
 // SetStarttime sets the starttime field.
 func (ac *ActivitiesCreate) SetStarttime(t time.Time) *ActivitiesCreate {
 	ac.mutation.SetStarttime(t)
@@ -127,6 +133,14 @@ func (ac *ActivitiesCreate) Save(ctx context.Context) (*Activities, error) {
 			return nil, &ValidationError{Name: "detail", err: fmt.Errorf("ent: validator failed for field \"detail\": %w", err)}
 		}
 	}
+	if _, ok := ac.mutation.Location(); !ok {
+		return nil, &ValidationError{Name: "location", err: errors.New("ent: missing required field \"location\"")}
+	}
+	if v, ok := ac.mutation.Location(); ok {
+		if err := activities.LocationValidator(v); err != nil {
+			return nil, &ValidationError{Name: "location", err: fmt.Errorf("ent: validator failed for field \"location\": %w", err)}
+		}
+	}
 	if _, ok := ac.mutation.Starttime(); !ok {
 		return nil, &ValidationError{Name: "starttime", err: errors.New("ent: missing required field \"starttime\"")}
 	}
@@ -208,6 +222,14 @@ func (ac *ActivitiesCreate) createSpec() (*Activities, *sqlgraph.CreateSpec) {
 			Column: activities.FieldDetail,
 		})
 		a.Detail = value
+	}
+	if value, ok := ac.mutation.Location(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: activities.FieldLocation,
+		})
+		a.Location = value
 	}
 	if value, ok := ac.mutation.Starttime(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
