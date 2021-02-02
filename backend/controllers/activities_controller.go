@@ -127,13 +127,13 @@ func (ctl *ActivitiesController) CreateActivities(c *gin.Context) {
 	})
 }
 
-// GetActivities handles GET requests to retrieve a Activities entity
-// @Summary Get a Activities entity by ID
-// @Description get Activities by ID
-// @ID get-Activities
+// GetActivities handles GET requests to retrieve a activities entity
+// @Summary Get a activities entity by ID
+// @Description get activities by ID
+// @ID get-activities
 // @Produce  json
 // @Param id path int true "Activities ID"
-// @Success 200 {object} ent.Activities
+// @Success 200 {array} ent.Activities
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
@@ -142,23 +142,29 @@ func (ctl *ActivitiesController) GetActivities(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": err.Error(),
+			"error": err,
+			"status": false,
 		})
 		return
 	}
 
-	u, err := ctl.client.Activities.
+	ahc, err := ctl.client.Activities.
 		Query().
-		Where(activities.IDEQ(int(id))).
-		Only(context.Background())
+		WithAcademicyear().
+		WithActivitytype().
+		WithClub().
+		Where(activities.HasClubWith(club.IDEQ(int(id)))).
+		All(context.Background())
+
 	if err != nil {
 		c.JSON(404, gin.H{
-			"error": err.Error(),
+			"error": err,
+			"status": false,
 		})
 		return
 	}
 
-	c.JSON(200, u)
+	c.JSON(200, ahc)
 }
 
 // ListActivities handles request to get a list of activities entities
@@ -295,7 +301,6 @@ func (ctl *ActivitiesController) register() {
 	activities := ctl.router.Group("/activities")
 
 	activities.GET("", ctl.ListActivities)
-
 	// CRUD
 	activities.POST("", ctl.CreateActivities)
 	activities.GET(":id", ctl.GetActivities)
