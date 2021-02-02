@@ -9,15 +9,30 @@ import {
   Content,
   Header,
   Page,
+  SidebarPage,
   pageTheme,
 } from '@backstage/core';
-import { Link, Button } from '@material-ui/core';
+import {
+  Container,
+  Grid,
+  FormControl,
+  Select,
+  InputLabel,
+  MenuItem,
+  Link,
+  TextField,
+  Avatar,
+  Button,
+} from '@material-ui/core';
 import TableHead from '@material-ui/core/TableHead';
 import { Link as RouterLink } from 'react-router-dom';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { DefaultApi } from '../../api/apis';
 import { EntActivities } from '../../api/models/EntActivities';
+import { EntClub } from '../../api/models/EntClub';
+import Swal from 'sweetalert2'; // alert
+import { AppSidebar } from '../Sidebar/Sidebar';
 
 const useStyles = makeStyles({
   table: {
@@ -30,7 +45,15 @@ export default function ActivityTable() {
   const classes = useStyles();
   const api = new DefaultApi();
   const [activities, setActivities] = useState<EntActivities[]>();
+  const [getAct, setGetAct] = useState<EntActivities[]>();
+  const [clubs, setClubs] = useState<EntClub[]>([]);
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(true);
+  const [close, setClose] = useState(false);
+
+  const [ClubID, setClubID] = useState(Number);
+  const [FindClub, setFindClub] = useState(String);
+  const [CantFindClub, setCantFindClub] = useState(String);
 
   useEffect(() => {
     const getActivities = async () => {
@@ -41,73 +64,221 @@ export default function ActivityTable() {
       console.log(res);
     };
 
+    const getClub = async () => {
+      const res = await api.listClub({ limit: 10, offset: 0 });
+      setLoading(false);
+
+      setClubs(res);
+      console.log(res);
+    };
+    getClub();
     getActivities();
   }, [loading]);
+
+  const ShowClub = async () => {
+    setFindClub('none');
+    setCantFindClub('block-inline');
+    history.pushState('', '', './ActivityTable');
+    window.location.reload(false);
+  };
+
+  // alert setting
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: toast => {
+      toast.addEventListener('mouseenter', Swal.stopTimer);
+      toast.addEventListener('mouseleave', Swal.resumeTimer);
+    },
+  });
+
+  // alert error
+  const aleartMessage = (icon: any, title: any) => {
+    Toast.fire({
+      icon: icon,
+      title: title,
+    });
+  };
+
+  const findClub = async () => {
+    setOpen(false);
+    setClose(true);
+    const findClubs = {
+      club: ClubID,
+    };
+    const getClub = async () => {
+      var ActArray: number;
+      const res = await api.getActivities({ id: ClubID });
+      setCantFindClub('none');
+      setFindClub('block');
+      setLoading(false);
+      setGetAct(res);
+      ActArray = res.length;
+      if (ActArray > 0) {
+        Toast.fire({
+          icon: 'success',
+          title: 'ค้นหาสำเร็จ',
+        });
+      } else {
+        Toast.fire({
+          icon: 'error',
+          title: 'ไม่พบกิจกรรมของชมรมที่ค้นหา',
+        });
+      }
+      console.log(res);
+    };
+    /* if (getAct?.id == undefined) {
+      Toast.fire({
+        icon: 'error',
+        title: 'ไม่พบกิจกรรมของชมรมที่ค้นหา',
+      });
+    } */
+    getClub();
+
+    /*  const apiUrl = 'http://localhost:8080/api/v1/activities';
+    const requestOptions = {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(findClubs),
+    };
+
+    fetch(apiUrl, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+          if (data.status === true) {
+          Toast.fire({
+            icon: 'success',
+            title: 'บันทึกข้อมูลสำเร็จ',
+          });
+        } else {
+        } 
+      });  */
+  };
 
   const deleteActivities = async (id: number) => {
     const res = await api.deleteActivities({ id: id });
     setLoading(true);
   };
 
+  const club_id_handleChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
+    setClubID(event.target.value as number);
+  };
+
   return (
-    <Page theme={pageTheme.website}>
-      <Header title={`${profile.givenName || 'to Backstage'}`} subtitle="">
-        <Button
+    <SidebarPage>
+      <AppSidebar />
+      <Page theme={pageTheme.website}>
+        <Header title={`${profile.givenName || 'to Backstage'}`} subtitle="">
+          {/*   <Link component={RouterLink} to="/welcome">
+            <Button variant="contained" color="secondary">
+              กลับสู่หน้าหนัก
+            </Button>
+          </Link> */}
+          {/* <Button
           component={RouterLink}
           to="/"
           variant="contained"
           color="secondary"
           disableElevation
+          style={{ marginLeft: 20 }}
         >
           LOGOUT
-        </Button>
-      </Header>
-      <Content>
-        <ContentHeader title="ตารางข้อมูลโปรโมชัน">
-          <Link component={RouterLink} to="/Activities">
-            <Button variant="contained" color="primary">
-              บันทึกข้อมูลกิจกรรม
+        </Button> */}
+        </Header>
+        <Content>
+          <ContentHeader title="ตารางกิจกรรมชมรม">
+            <FormControl variant="outlined">
+              <InputLabel id="demo-mutiple-name-label">
+                เลือกชมรมที่ต้องการค้นหากิจกรรม
+              </InputLabel>
+              <Select
+                id="club"
+                name="club"
+                value={ClubID} // (undefined || '') = ''
+                onChange={club_id_handleChange}
+                style={{ width: 350, marginRight: 20 }}
+              >
+                {clubs.map((item: EntClub) => (
+                  <MenuItem value={item.id}>{item.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                findClub();
+              }}
+              style={{ marginRight: 10 }}
+            >
+              ค้นหากิจกรรมชมรม
             </Button>
-          </Link>
-        </ContentHeader>
 
-        <TableContainer component={Paper}>
-          <Table className={classes.table} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">รหัสกิจกรรม</TableCell>
-                <TableCell align="center">ชมรม</TableCell>
-                <TableCell align="center">กิจกรรม</TableCell>
-                <TableCell align="center">รายละเอียดกิจกรรม</TableCell>
-                <TableCell align="center">ประเภทกิจกรรม</TableCell>
-                <TableCell align="center">ภาคการศึกษาที่จัดกิจกรรม</TableCell>
-                <TableCell align="center">เวลาเริ่มกิจกรรม</TableCell>
-                <TableCell align="center">เวลาสิ้นสุดกิจกรรม</TableCell>
-                <TableCell align="center">Manage</TableCell>
-              </TableRow>
-            </TableHead>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                ShowClub();
+              }}
+            >
+              ดูกิจกรรมชมรมทั้งหมด
+            </Button>
+          </ContentHeader>
 
-            <TableBody>
-              {activities === undefined
-                ? null
-                : activities.map(item => (
-                    <TableRow key={item.id}>
-                      <TableCell align="center">{item.id}</TableCell>
-                      <TableCell align="center">
-                        {item.edges?.club?.name}
+          <div>
+            {open ? (
+              <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      {/*  <TableCell align="center">รหัสกิจกรรม</TableCell> */}
+                      <TableCell align="center" style={{ width: 100 }}>
+                        ชมรม
                       </TableCell>
-                      <TableCell align="center">{item.name}</TableCell>
-                      <TableCell align="center">{item.detail}</TableCell>
-                      <TableCell align="center">
-                        {item.edges?.activitytype?.name}
+                      <TableCell align="center">กิจกรรม</TableCell>
+                      <TableCell align="center" style={{ width: 300 }}>
+                        รายละเอียดกิจกรรม
                       </TableCell>
+                      <TableCell align="center">ประเภทกิจกรรม</TableCell>
                       <TableCell align="center">
-                        {item.edges?.academicyear?.semester}
+                        ภาคการศึกษาที่จัดกิจกรรม
                       </TableCell>
-                      <TableCell align="center">{item.starttime}</TableCell>
-                      <TableCell align="center">{item.endtime}</TableCell>
+                      <TableCell align="center">เวลาเริ่มกิจกรรม</TableCell>
+                      <TableCell align="center">เวลาสิ้นสุดกิจกรรม</TableCell>
+                      {/* <TableCell align="center">Manage</TableCell> */}
+                    </TableRow>
+                  </TableHead>
 
-                      <TableCell align="center">
+                  <TableBody>
+                    {activities === undefined
+                      ? null
+                      : activities.map(item => (
+                          <TableRow key={item.id}>
+                            {/*  <TableCell align="center">{item.id}</TableCell> */}
+                            <TableCell align="center" style={{ width: 100 }}>
+                              {item.edges?.club?.name}
+                            </TableCell>
+                            <TableCell align="left">{item.name}</TableCell>
+                            <TableCell align="left" style={{ width: 300 }}>
+                              {item.detail}
+                            </TableCell>
+                            <TableCell align="center">
+                              {item.edges?.activitytype?.name}
+                            </TableCell>
+                            <TableCell align="center">
+                              {item.edges?.academicyear?.semester}
+                            </TableCell>
+                            <TableCell align="left">{item.starttime}</TableCell>
+                            <TableCell align="left">{item.endtime}</TableCell>
+
+                            {/* <TableCell align="center">
                         <Button
                           onClick={() => {
                             deleteActivities(item.id);
@@ -118,13 +289,80 @@ export default function ActivityTable() {
                         >
                           Delete
                         </Button>
+                      </TableCell> */}
+                          </TableRow>
+                        ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            ) : (
+              <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      {/*  <TableCell align="center">รหัสกิจกรรม</TableCell> */}
+                      <TableCell align="center" style={{ width: 100 }}>
+                        ชมรม
                       </TableCell>
+                      <TableCell align="center">กิจกรรม</TableCell>
+                      <TableCell align="center" style={{ width: 300 }}>
+                        รายละเอียดกิจกรรม
+                      </TableCell>
+                      <TableCell align="center">ประเภทกิจกรรม</TableCell>
+                      <TableCell align="center">
+                        ภาคการศึกษาที่จัดกิจกรรม
+                      </TableCell>
+                      <TableCell align="center">เวลาเริ่มกิจกรรม</TableCell>
+                      <TableCell align="center">เวลาสิ้นสุดกิจกรรม</TableCell>
+                      {/* <TableCell align="center">Manage</TableCell> */}
                     </TableRow>
-                  ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Content>
-    </Page>
+                  </TableHead>
+
+                  <TableBody>
+                    {getAct === undefined
+                      ? null
+                      : getAct.map(getAct => (
+                          <TableRow key={getAct.id}>
+                            {/*   <TableCell align="center">{getAct.id}</TableCell> */}
+                            <TableCell align="center" style={{ width: 100 }}>
+                              {getAct.edges?.club?.name}
+                            </TableCell>
+                            <TableCell align="left">{getAct.name}</TableCell>
+                            <TableCell align="left" style={{ width: 300 }}>
+                              {getAct.detail}
+                            </TableCell>
+                            <TableCell align="center">
+                              {getAct.edges?.activitytype?.name}
+                            </TableCell>
+                            <TableCell align="center">
+                              {getAct.edges?.academicyear?.semester}
+                            </TableCell>
+                            <TableCell align="left">
+                              {getAct.starttime}
+                            </TableCell>
+                            <TableCell align="left">{getAct.endtime}</TableCell>
+
+                            {/* <TableCell align="center">
+                        <Button
+                          onClick={() => {
+                            deleteActivities(item.id);
+                          }}
+                          style={{ marginLeft: 10 }}
+                          variant="contained"
+                          color="secondary"
+                        >
+                          Delete
+                        </Button>
+                      </TableCell> */}
+                          </TableRow>
+                        ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            )}
+          </div>
+        </Content>
+      </Page>
+    </SidebarPage>
   );
 }
