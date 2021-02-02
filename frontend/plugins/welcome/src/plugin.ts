@@ -14,11 +14,11 @@ export const plugin = createPlugin({
   register({ router }) {
     router.registerRoute('/Welcome', WelcomePage);
     router.registerRoute('/', SignIn);
-    router.registerRoute('/Activities', Activities);
     router.registerRoute('/ClubApplication', ClubApplication);
     router.registerRoute('/Club', Club);
     router.registerRoute('/Roomuse', Roomuse);
     router.registerRoute('/ActivityTable', ActivityTable);
     router.registerRoute('/Complaint', Complaint);
+    router.registerRoute('/Activities', Activities);
   },
 });
