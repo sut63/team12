@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,15 +13,10 @@ import {
   pageTheme,
 } from '@backstage/core';
 import {
-  Container,
-  Grid,
   FormControl,
   Select,
   InputLabel,
   MenuItem,
-  Link,
-  TextField,
-  Avatar,
   Button,
 } from '@material-ui/core';
 import TableHead from '@material-ui/core/TableHead';
@@ -34,11 +29,21 @@ import { EntClub } from '../../api/models/EntClub';
 import Swal from 'sweetalert2'; // alert
 import { AppSidebar } from '../Sidebar/Sidebar';
 
-const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    formControl: {
+      margin: theme.spacing(1),
+      minWidth: 120,
+      fontSize: 24,
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2),
+    },
+    table: {
+      minWidth: 650,
+    },
+  }),
+);
 
 export default function ActivityTable() {
   const profile = { givenName: 'ระบบจัดการชมรม' };
@@ -127,36 +132,14 @@ export default function ActivityTable() {
           icon: 'error',
           title: 'ไม่พบกิจกรรมของชมรมที่ค้นหา',
         });
+        /*  setTimeout(() => {
+          history.pushState('', '', './ActivityTable');
+          window.location.reload(false);
+        }, 3000); */
       }
       console.log(res);
     };
-    /* if (getAct?.id == undefined) {
-      Toast.fire({
-        icon: 'error',
-        title: 'ไม่พบกิจกรรมของชมรมที่ค้นหา',
-      });
-    } */
     getClub();
-
-    /*  const apiUrl = 'http://localhost:8080/api/v1/activities';
-    const requestOptions = {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(findClubs),
-    };
-
-    fetch(apiUrl, requestOptions)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-          if (data.status === true) {
-          Toast.fire({
-            icon: 'success',
-            title: 'บันทึกข้อมูลสำเร็จ',
-          });
-        } else {
-        } 
-      });  */
   };
 
   const deleteActivities = async (id: number) => {
@@ -193,8 +176,8 @@ export default function ActivityTable() {
         </Header>
         <Content>
           <ContentHeader title="ตารางกิจกรรมชมรม">
-            <FormControl variant="outlined">
-              <InputLabel id="demo-mutiple-name-label">
+            <FormControl className={classes.formControl}>
+              <InputLabel id="demo-simple-select-readonly-label">
                 เลือกชมรมที่ต้องการค้นหากิจกรรม
               </InputLabel>
               <Select
@@ -204,6 +187,9 @@ export default function ActivityTable() {
                 onChange={club_id_handleChange}
                 style={{ width: 350, marginRight: 20 }}
               >
+                <MenuItem value="" disabled>
+                  เลือกชมรมที่ต้องการค้นหากิจกรรม
+                </MenuItem>
                 {clubs.map((item: EntClub) => (
                   <MenuItem value={item.id}>{item.name}</MenuItem>
                 ))}
@@ -265,7 +251,7 @@ export default function ActivityTable() {
                             <TableCell align="center" style={{ width: 100 }}>
                               {item.edges?.club?.name}
                             </TableCell>
-                            <TableCell align="left">{item.name}</TableCell>
+                            <TableCell align="center">{item.name}</TableCell>
                             <TableCell align="left" style={{ width: 300 }}>
                               {item.detail}
                             </TableCell>
@@ -275,8 +261,10 @@ export default function ActivityTable() {
                             <TableCell align="center">
                               {item.edges?.academicyear?.semester}
                             </TableCell>
-                            <TableCell align="left">{item.starttime}</TableCell>
-                            <TableCell align="left">{item.endtime}</TableCell>
+                            <TableCell align="center">
+                              {item.starttime}
+                            </TableCell>
+                            <TableCell align="center">{item.endtime}</TableCell>
 
                             {/* <TableCell align="center">
                         <Button
@@ -327,7 +315,7 @@ export default function ActivityTable() {
                             <TableCell align="center" style={{ width: 100 }}>
                               {getAct.edges?.club?.name}
                             </TableCell>
-                            <TableCell align="left">{getAct.name}</TableCell>
+                            <TableCell align="center">{getAct.name}</TableCell>
                             <TableCell align="left" style={{ width: 300 }}>
                               {getAct.detail}
                             </TableCell>
@@ -337,10 +325,12 @@ export default function ActivityTable() {
                             <TableCell align="center">
                               {getAct.edges?.academicyear?.semester}
                             </TableCell>
-                            <TableCell align="left">
+                            <TableCell align="center">
                               {getAct.starttime}
                             </TableCell>
-                            <TableCell align="left">{getAct.endtime}</TableCell>
+                            <TableCell align="center">
+                              {getAct.endtime}
+                            </TableCell>
 
                             {/* <TableCell align="center">
                         <Button
