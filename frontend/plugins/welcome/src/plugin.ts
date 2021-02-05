@@ -9,6 +9,7 @@ import ClubApplication from './components/ClubApplication';
 import Complaint from './components/Complaint';
 import ComplaintSearch from './components/ComplaintSearch';
 import Roomuse from './components/Roomuse';
+import RoomuseSearch from './components/RoomuseSearch';
 import ClubappSearch from './components/ClubappSearch';
 
 export const plugin = createPlugin({
@@ -24,5 +25,6 @@ export const plugin = createPlugin({
     router.registerRoute('/ComplaintSearch', ComplaintSearch);
     router.registerRoute('/Activities', Activities);
     router.registerRoute('/ClubappSearch', ClubappSearch);
+    router.registerRoute('/RoomuseSearch', RoomuseSearch);
   },
 });
