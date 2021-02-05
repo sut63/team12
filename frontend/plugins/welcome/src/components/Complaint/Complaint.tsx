@@ -15,9 +15,11 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
+//import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import Swal from 'sweetalert2';
+import { Link as RouterLink } from 'react-router-dom';
+import { Link, Button } from '@material-ui/core';
 import { UserHeader } from '../UserHeader/UserHeader';
 import { AppSidebar } from '../Sidebar/Sidebar';
 import { DefaultApi } from '../../api/apis';
@@ -308,6 +310,11 @@ export default function CreateComplaint() {
         <Header title={`ระบบร้องเรียน`}><UserHeader /></Header>
         <Content>
           <ContentHeader title="ส่งเรื่องร้องเรียน">
+          <Link component={RouterLink} to="/ComplaintSearch">
+            <Button variant="contained" color="primary">
+              ค้นหาเรื่องร้องเรียน
+            </Button>
+          </Link>
           {/* {status ? (
             <div>
               {alert ? (
