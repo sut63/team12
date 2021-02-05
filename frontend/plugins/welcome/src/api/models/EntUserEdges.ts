@@ -34,6 +34,10 @@ import {
     EntGenderFromJSON,
     EntGenderFromJSONTyped,
     EntGenderToJSON,
+    EntPosition,
+    EntPositionFromJSON,
+    EntPositionFromJSONTyped,
+    EntPositionToJSON,
     EntRoomuse,
     EntRoomuseFromJSON,
     EntRoomuseFromJSONTyped,
@@ -89,6 +93,12 @@ export interface EntUserEdges {
      */
     gender?: EntGender;
     /**
+     * 
+     * @type {EntPosition}
+     * @memberof EntUserEdges
+     */
+    position?: EntPosition;
+    /**
      * Roomuse holds the value of the Roomuse edge.
      * @type {Array<EntRoomuse>}
      * @memberof EntUserEdges
@@ -135,6 +145,7 @@ export function EntUserEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'discipline': !exists(json, 'Discipline') ? undefined : EntDisciplineFromJSON(json['Discipline']),
         'fromClub': !exists(json, 'FromClub') ? undefined : EntClubFromJSON(json['FromClub']),
         'gender': !exists(json, 'Gender') ? undefined : EntGenderFromJSON(json['Gender']),
+        'position': !exists(json, 'Position') ? undefined : EntPositionFromJSON(json['Position']),
         'roomuse': !exists(json, 'Roomuse') ? undefined : ((json['Roomuse'] as Array<any>).map(EntRoomuseFromJSON)),
         'userToComplaint': !exists(json, 'UserToComplaint') ? undefined : ((json['UserToComplaint'] as Array<any>).map(EntComplaintFromJSON)),
         'userstatus': !exists(json, 'Userstatus') ? undefined : EntUserStatusFromJSON(json['Userstatus']),
@@ -157,6 +168,7 @@ export function EntUserEdgesToJSON(value?: EntUserEdges | null): any {
         'discipline': EntDisciplineToJSON(value.discipline),
         'fromClub': EntClubToJSON(value.fromClub),
         'gender': EntGenderToJSON(value.gender),
+        'position': EntPositionToJSON(value.position),
         'roomuse': value.roomuse === undefined ? undefined : ((value.roomuse as Array<any>).map(EntRoomuseToJSON)),
         'userToComplaint': value.userToComplaint === undefined ? undefined : ((value.userToComplaint as Array<any>).map(EntComplaintToJSON)),
         'userstatus': EntUserStatusToJSON(value.userstatus),

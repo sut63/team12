@@ -26,6 +26,8 @@ export * from './EntDiscipline';
 export * from './EntDisciplineEdges';
 export * from './EntGender';
 export * from './EntGenderEdges';
+export * from './EntPosition';
+export * from './EntPositionEdges';
 export * from './EntPurpose';
 export * from './EntPurposeEdges';
 export * from './EntRoom';

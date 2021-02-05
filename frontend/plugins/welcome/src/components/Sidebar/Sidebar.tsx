@@ -36,6 +36,7 @@ export const AppSidebar = () => (
 
     {/* End global nav */}
     <SidebarDivider />
+    <SidebarItem icon={MessageIcon} to="/Complaint" text="ร้องเรียน" />
     <SidebarSpace />
     <SidebarDivider />
     <SidebarItem icon={SignOut} to="/" text="Sign Out" />

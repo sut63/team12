@@ -73,6 +73,12 @@ export interface EntUser {
      * @type {number}
      * @memberof EntUser
      */
+    positionID?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof EntUser
+     */
     userTypeID?: number;
 }
 
@@ -93,6 +99,7 @@ export function EntUserFromJSONTyped(json: any, ignoreDiscriminator: boolean): E
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': !exists(json, 'name') ? undefined : json['name'],
         'password': !exists(json, 'password') ? undefined : json['password'],
+        'positionID': !exists(json, 'position_ID') ? undefined : json['position_ID'],
         'userTypeID': !exists(json, 'userTypeID') ? undefined : json['userTypeID'],
     };
 }
@@ -113,6 +120,7 @@ export function EntUserToJSON(value?: EntUser | null): any {
         'id': value.id,
         'name': value.name,
         'password': value.password,
+        'position_ID': value.positionID,
         'userTypeID': value.userTypeID,
     };
 }
