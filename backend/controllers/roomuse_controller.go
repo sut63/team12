@@ -9,6 +9,7 @@ import (
 	"github.com/OMENX/app/ent"
 	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
+	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
 	"github.com/gin-gonic/gin"
 )
@@ -24,7 +25,11 @@ type Roomuse struct {
 	RoomID    int
 	PurposeID int
 	UserID    int
-	AddedTime string
+	AdderAge  int
+	Note      string
+	Contact   string
+	InTime    string
+	OutTime   string
 }
 
 // CreateRoomuse handles POST requests for adding roomuse entities
@@ -83,23 +88,33 @@ func (ctl *RoomuseController) CreateRoomuse(c *gin.Context) {
 		return
 	}
 
-	times, err := time.Parse(time.RFC3339, obj.AddedTime)
+	intimes, err := time.Parse(time.RFC3339, obj.InTime)
+	outtimes, err := time.Parse(time.RFC3339, obj.OutTime)
 
 	ru, err := ctl.client.Roomuse.
 		Create().
 		SetUsers(u).
 		SetRooms(r).
 		SetPurposes(p).
-		SetAddedTime(times).
+		SetAge(obj.AdderAge).
+		SetNote(obj.Note).
+		SetContact(obj.Contact).
+		SetInTime(intimes).
+		SetOutTime(outtimes).
 		Save(context.Background())
+
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
 
-	c.JSON(200, ru)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   ru,
+	})
 }
 
 // ListRoomuse handles request to get a list of roomuse entities
@@ -146,6 +161,43 @@ func (ctl *RoomuseController) ListRoomuse(c *gin.Context) {
 	}
 
 	c.JSON(200, roomuses)
+}
+
+// GetRoomuse handles GET requests to retrieve a roomuse entity
+// @Summary Get a roomuse entity by ID
+// @Description get roomuse by ID
+// @ID get-roomuse
+// @Produce  json
+// @Param id path int true "Roomuse ID"
+// @Success 200 {array} ent.Roomuse
+// @Failure 400 {object} gin.H
+// @Failure 404 {object} gin.H
+// @Failure 500 {object} gin.H
+// @Router /roomuses/{id} [get]
+func (ctl *RoomuseController) GetRoomuse(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	ru, err := ctl.client.Roomuse.
+		Query().
+		WithRooms().
+		WithPurposes().
+		WithUsers().
+		Where(roomuse.HasRoomsWith(room.IDEQ(int(id)))).
+		All(context.Background())
+
+	if err != nil {
+		c.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, ru)
 }
 
 // DeleteRoomuse handles DELETE requests to delete a roomuse entity
@@ -198,6 +250,7 @@ func (ctl *RoomuseController) register() {
 	roomuses.GET("", ctl.ListRoomuse)
 
 	// CRUD
+	roomuses.GET(":id", ctl.GetRoomuse)
 	roomuses.POST("", ctl.CreateRoomuse)
 	roomuses.DELETE(":id", ctl.DeleteRoomuse)
 }
