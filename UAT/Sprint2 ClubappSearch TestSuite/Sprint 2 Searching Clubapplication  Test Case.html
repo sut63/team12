@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+	<title>Sprint 2 Test Case Clupapplication  Searching</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Case 1 ค้นหา ทั้งหมด </td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/main/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/main/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>poom@gmail.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/main/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/main/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>123</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/main/div/form<datalist><option>//div[@id='root']/main/div/form</option><option>//form</option><option>css=form.makeStyles-form-52</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/main/div/form/button/span<datalist><option>//div[@id='root']/main/div/form/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div/div<datalist><option>//div[@id='root']/div/div/div/div</option><option>//div/div/div/div/div</option><option>css=div.makeStyles-drawer-5.makeStyles-drawerOpen-6</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div/div/a[7]/h6<datalist><option>//div[@id='root']/div/div/div/div/a[7]/h6</option><option>//a[7]/h6</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//input[@value='']<datalist><option>//input[@value='']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/header/div/label/span/span/span/input</option><option>//input</option><option>css=input.PrivateSwitchBase-input-49.MuiSwitch-input</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>css=span.MuiIconButton-label &gt; svg.MuiSvgIcon-root<datalist><option>css=span.MuiIconButton-label &gt; svg.MuiSvgIcon-root</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div/div[4]/div/div/div/div[2]<datalist><option>//div[@id='root']/div/div[2]/article/div/div/div[4]/div/div/div/div[2]</option><option>//div[4]/div/div/div/div[2]</option><option>css=div.MuiAlert-message</option></datalist></td><td>ค้นหาข้อมูลสำเร็จ</td>
+</tr>
+<tr><td>click</td><td>css=span.MuiIconButton-label &gt; svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeSmall<datalist><option>css=span.MuiIconButton-label &gt; svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeSmall</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div<datalist><option>//div[@id='root']/div/div/div</option><option>//div/div/div/div</option><option>css=div.makeStyles-drawer-5.makeStyles-drawerOpen-6</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div/a[8]/h6<datalist><option>//div[@id='root']/div/div/div/a[8]/h6</option><option>//a[8]/h6</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Case 2 ค้นหาแบบมีเงื่อนไข _ ค้นหาสำเร็จ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/main/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/main/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>poom@gmail.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/main/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/main/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>123</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/main/div/form<datalist><option>//div[@id='root']/main/div/form</option><option>//form</option><option>css=form.makeStyles-form-52</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/main/div/form/button/span<datalist><option>//div[@id='root']/main/div/form/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div/div<datalist><option>//div[@id='root']/div/div/div/div</option><option>//div/div/div/div/div</option><option>css=div.makeStyles-drawer-5.makeStyles-drawerOpen-6</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div/div/a[7]/h6<datalist><option>//div[@id='root']/div/div/div/div/a[7]/h6</option><option>//a[7]/h6</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//input[@value='']<datalist><option>//input[@value='']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/header/div/label/span/span/span/input</option><option>//input</option><option>css=input.PrivateSwitchBase-input-49.MuiSwitch-input</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=club<datalist><option>//body</option><option>css=body</option><option>id=club</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=application status<datalist><option>//body</option><option>css=body</option><option>id=application status</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[2]<datalist><option>//div[@id='menu-']/div[3]/ul/li[2]</option><option>//li[2]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div/div/header/div/span/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div/div/header/div/span/span</option><option>//div/span/span</option><option>css=span.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit &gt; span.MuiIconButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div/div[4]/div/div/div/div[2]<datalist><option>//div[@id='root']/div/div[2]/article/div/div/div[4]/div/div/div/div[2]</option><option>//div[4]/div/div/div/div[2]</option><option>css=div.MuiAlert-message</option></datalist></td><td>ค้นหาข้อมูลสำเร็จ</td>
+</tr>
+<tr><td>click</td><td>css=span.MuiIconButton-label &gt; svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeSmall<datalist><option>css=span.MuiIconButton-label &gt; svg.MuiSvgIcon-root.MuiSvgIcon-fontSizeSmall</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div<datalist><option>//div[@id='root']/div/div/div</option><option>//div/div/div/div</option><option>css=div.makeStyles-drawer-5.makeStyles-drawerOpen-6</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div/a[8]/h6<datalist><option>//div[@id='root']/div/div/div/a[8]/h6</option><option>//a[8]/h6</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Case 3 ค้นหาแบบมีเงื่อนไข _ ค้นหาไม่สำเร็จ</td></tr>
+</thead>
+<tbody>
+<tr><td>open</td><td>http://localhost:3000/<datalist><option>http://localhost:3000/</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/main/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=email<datalist><option>id=email</option><option>name=email</option><option>//input[@id='email']</option><option>//div[@id='root']/main/div/form/div/div/input</option><option>//input</option><option>css=#email</option></datalist></td><td>poom@gmail.com</td>
+</tr>
+<tr><td>click</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/main/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td></td>
+</tr>
+<tr><td>type</td><td>id=password<datalist><option>id=password</option><option>name=password</option><option>//input[@id='password']</option><option>//div[@id='root']/main/div/form/div[2]/div/input</option><option>//div[2]/div/input</option><option>css=#password</option></datalist></td><td>123</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/main/div/form<datalist><option>//div[@id='root']/main/div/form</option><option>//form</option><option>css=form.makeStyles-form-54</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/main/div/form/button/span<datalist><option>//div[@id='root']/main/div/form/button/span</option><option>//button/span</option><option>css=span.MuiButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div/div<datalist><option>//div[@id='root']/div/div/div/div</option><option>//div/div/div/div/div</option><option>css=div.makeStyles-drawer-5.makeStyles-drawerOpen-6</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div/div/a[7]/h6<datalist><option>//div[@id='root']/div/div/div/div/a[7]/h6</option><option>//a[7]/h6</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//input[@value='']<datalist><option>//input[@value='']</option><option>//div[@id='root']/div/div[2]/article/div/div/div/header/div/label/span/span/span/input</option><option>//input</option><option>css=input.PrivateSwitchBase-input-49.MuiSwitch-input</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=club<datalist><option>//body</option><option>css=body</option><option>id=club</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>id=application status<datalist><option>//body</option><option>css=body</option><option>id=application status</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='menu-']/div[3]/ul/li[3]<datalist><option>//div[@id='menu-']/div[3]/ul/li[3]</option><option>//li[3]</option><option>css=li.MuiButtonBase-root.MuiListItem-root.MuiMenuItem-root.Mui-selected.MuiMenuItem-gutters.MuiListItem-gutters.MuiListItem-button.Mui-selected</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div[2]/article/div/div/div/header/div/span/span<datalist><option>//div[@id='root']/div/div[2]/article/div/div/div/header/div/span/span</option><option>//div/span/span</option><option>css=span.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit &gt; span.MuiIconButton-label</option></datalist></td><td></td>
+</tr>
+<tr><td>assertText</td><td>//div[@id='root']/div/div[2]/article/div/div/div[4]/div/div/div/div[2]<datalist><option>//div[@id='root']/div/div[2]/article/div/div/div[4]/div/div/div/div[2]</option><option>//div[4]/div/div/div/div[2]</option><option>css=div.MuiAlert-message</option></datalist></td><td>ค้นหาข้อมูลไม่สำเร็จ</td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div<datalist><option>//div[@id='root']/div/div/div</option><option>//div/div/div/div</option><option>css=div.makeStyles-drawer-5.makeStyles-drawerOpen-6</option></datalist></td><td></td>
+</tr>
+<tr><td>click</td><td>//div[@id='root']/div/div/div/a[8]/h6<datalist><option>//div[@id='root']/div/div/div/a[8]/h6</option><option>//a[8]/h6</option></datalist></td><td></td>
+</tr>
+</tbody></table>
+</body>
+</html>
