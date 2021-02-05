@@ -32,7 +32,7 @@ export const AppSidebar = () => (
     <SidebarItem icon={PostAddIcon} to="/club" text="สร้างชมรม" />
     <SidebarItem icon={PersonAddIcon} to="/ClubApplication" text="สมัครชมรม" />
     <SidebarItem icon={EmojiEventsIcon} to="/Activities" text="จัดกิจกรรม" />
-    <SidebarItem icon={EventIcon} to="/Roomuse" text="จองห้องชมรม" />
+    <SidebarItem icon={EventIcon} to="/Roomuse" text="เข้าใช้ห้องชมรม" />
     <SidebarItem icon={MessageIcon} to="/Complaint" text="ร้องเรียน" />
 
     {/* End global nav */}
