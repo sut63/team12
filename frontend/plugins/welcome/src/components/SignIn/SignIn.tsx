@@ -91,6 +91,10 @@ const SignIn: FC<{}> = () => {
           'user-status',
           JSON.stringify(item.edges?.userstatus?.userstatus),
         );
+        localStorage.setItem(
+          'user-type',
+          JSON.stringify(item.edges?.usertype?.name),
+        );
         history.pushState('', '', '/welcome');
       }
     });
@@ -155,9 +159,8 @@ const SignIn: FC<{}> = () => {
             color="primary"
             className={classes.submit}
             onClick={() => {
-              SinginhandleChange();
+              SigninhandleChange();
             }}
-
           >
             Sign In
           </Button>

@@ -1759,10 +1759,10 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
-     * get Activities by ID
-     * Get a Activities entity by ID
+     * get activities by ID
+     * Get a activities entity by ID
      */
-    async getActivitiesRaw(requestParameters: GetActivitiesRequest): Promise<runtime.ApiResponse<EntActivities>> {
+    async getActivitiesRaw(requestParameters: GetActivitiesRequest): Promise<runtime.ApiResponse<Array<EntActivities>>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getActivities.');
         }
@@ -1778,14 +1778,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntActivitiesFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntActivitiesFromJSON));
     }
 
     /**
-     * get Activities by ID
-     * Get a Activities entity by ID
+     * get activities by ID
+     * Get a activities entity by ID
      */
-    async getActivities(requestParameters: GetActivitiesRequest): Promise<EntActivities> {
+    async getActivities(requestParameters: GetActivitiesRequest): Promise<Array<EntActivities>> {
         const response = await this.getActivitiesRaw(requestParameters);
         return await response.value();
     }
