@@ -11,6 +11,7 @@ import {
   SidebarThemeToggle,
   SidebarPinButton,
 } from '@backstage/core';
+import SearchIcon from '@material-ui/icons/Search';
 import EventIcon from '@material-ui/icons/Event';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
@@ -36,7 +37,7 @@ export const AppSidebar = () => (
 
     {/* End global nav */}
     <SidebarDivider />
-    <SidebarItem icon={MessageIcon} to="/Complaint" text="ร้องเรียน" />
+    <SidebarItem icon={SearchIcon} to="/ClubappSearch" text="ค้นหาใบสมัครชมรม" />
     <SidebarSpace />
     <SidebarDivider />
     <SidebarItem icon={SignOut} to="/" text="Sign Out" />

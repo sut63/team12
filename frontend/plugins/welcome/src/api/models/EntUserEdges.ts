@@ -145,7 +145,7 @@ export function EntUserEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'discipline': !exists(json, 'Discipline') ? undefined : EntDisciplineFromJSON(json['Discipline']),
         'fromClub': !exists(json, 'FromClub') ? undefined : EntClubFromJSON(json['FromClub']),
         'gender': !exists(json, 'Gender') ? undefined : EntGenderFromJSON(json['Gender']),
-        'position': !exists(json, 'Position') ? undefined : EntPositionFromJSON(json['Position']),
+        'position': !exists(json, 'Psition') ? undefined : EntPositionFromJSON(json['Position']),
         'roomuse': !exists(json, 'Roomuse') ? undefined : ((json['Roomuse'] as Array<any>).map(EntRoomuseFromJSON)),
         'userToComplaint': !exists(json, 'UserToComplaint') ? undefined : ((json['UserToComplaint'] as Array<any>).map(EntComplaintFromJSON)),
         'userstatus': !exists(json, 'Userstatus') ? undefined : EntUserStatusFromJSON(json['Userstatus']),
