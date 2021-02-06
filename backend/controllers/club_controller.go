@@ -20,13 +20,13 @@ type ClubController struct {
 	router gin.IRouter
 }
 
-// Club defines the struct for the club ...
 type Club struct {
 	UserID       int
 	ClubBranchID int
 	ClubTypeID   int
 	Name         string
 	Purpose      string
+	Phone        string
 }
 
 // CreateClub handles POST requests for adding club entities
@@ -91,17 +91,23 @@ func (ctl *ClubController) CreateClub(c *gin.Context) {
 		SetClubbranch(cb).
 		SetClubtype(ct).
 		SetPurpose(obj.Purpose).
+		SetPhone(obj.Phone).
 		SetName(obj.Name).
 		Save(context.Background())
 
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(400, gin.H{
-			"error": "saving failed",
+			"status": false,
+			"error":  err,
 		})
 		return
 	}
 
-	c.JSON(200, cl)
+	c.JSON(200, gin.H{
+		"status": true,
+		"data":   cl,
+	})
 }
 
 // GetClub handles GET requests to retrieve a club entity
@@ -110,7 +116,7 @@ func (ctl *ClubController) CreateClub(c *gin.Context) {
 // @ID get-club
 // @Produce  json
 // @Param id path int true "Club ID"
-// @Success 200 {object} ent.Club
+// @Success 200 {array} ent.Club
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H
@@ -126,8 +132,13 @@ func (ctl *ClubController) GetClub(c *gin.Context) {
 
 	u, err := ctl.client.Club.
 		Query().
-		Where(club.IDEQ(int(id))).
-		Only(context.Background())
+		WithClubbranch().
+		WithClubtype().
+		WithUser().
+		// 	Where(checkout.HasStatusopinionWith(statusopinion.IDEQ(int(id)))).
+		// Where(club.IDEQ(int(id))).
+		Where(club.HasClubtypeWith(clubtype.IDEQ(int(id)))).
+		All(context.Background())
 	if err != nil {
 		c.JSON(404, gin.H{
 			"error": err.Error(),
@@ -276,3 +287,4 @@ func (ctl *ClubController) register() {
 	club.PUT(":id", ctl.UpdateClub)
 	club.DELETE(":id", ctl.DeleteClub)
 }
+
