@@ -1,11 +1,11 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles, withStyles, createStyles, Theme } from '@material-ui/core/styles'
 import { Content, Header, Page, pageTheme, SidebarPage } from '@backstage/core';
 import { AppSidebar } from '../Sidebar/Sidebar';
 import { UserHeader } from '../UserHeader/UserHeader';
-import { Grid, Typography, AppBar, Toolbar, MenuItem, Select, Switch,
-        Grow , FormControlLabel, IconButton, Container, Paper, Table,
-        TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core';
+import { Grid, Typography, AppBar, Toolbar, MenuItem, Select,
+         IconButton, Container, Paper, Table,
+         TableBody, TableCell, TableContainer, TableHead, TableRow} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import { DefaultApi } from '../../api/apis';
 import { EntClub, EntComplaintType, EntComplaint } from '../../api/models';
@@ -40,7 +40,6 @@ export default function ComplaintSearch() {
     const classes = useStyles();
     const api = new DefaultApi();
     const HeaderCustom = { minHeight: '50px', };
-    const [checked, setChecked] = React.useState(false);
 
     const [loading, setLoading] = useState(true);
     const [clubID, SetClubID] = useState(Number);
@@ -56,10 +55,6 @@ export default function ComplaintSearch() {
     const [type, SetType] = useState<EntComplaintType[]>([]);
     const [complaint, SetComplaint] = useState<EntComplaint[]>([]);
     const [data, SetData] = useState<EntComplaint[]>([]);
-
-    const GrowhandleChange = () => {
-        setChecked((prev) => !prev);
-    };
 
     const ClubIDhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         SetClubID(event.target.value as number);
@@ -113,7 +108,6 @@ export default function ComplaintSearch() {
     const SearchComplaint = async () => {
         SetSearch(false)
         const res = complaint.filter((filter: EntComplaint) => filter.edges?.complaintToUser?.name?.includes(uname))
-        //console.log(res.length)
 
         if (res.length > 0) {
             if (clubID == 0 || typeID == 0) {
@@ -202,20 +196,13 @@ export default function ComplaintSearch() {
                                 <AppBar position="static">
                                     <Toolbar style={{ backgroundColor: "#217567" }}>
                                         <FiberManualRecordTwoToneIcon style={{ fontSize: "15" }} />
-                                        <Typography variant="h6" noWrap style={{ marginRight: "0.5cm", marginLeft: "0.1cm" }}>
+                                        <Typography variant="h6" noWrap style={{ marginRight: "0.5cm", marginLeft: "0.1cm"}}>
                                             ตัวเลือกการค้นหา
                                         </Typography>
-                                        {/* <FormControlLabel
-                                            control={<Switch size="small" color="secondary" checked={checked} onChange={GrowhandleChange} />}
-                                            label="แสดง"
-                                            style={{ flexGrow: 1 }}
-                                        /> */}
-                                        
                                     </Toolbar>
                                 </AppBar>
                             </Grid>
                             <Grid item xs={12} style={{ marginTop: "0.1cm", marginBottom: "0.5cm" }}>
-
                                     <Grid item xs={12} sm container>
                                         <Grid item xs container direction="column" spacing={2}>
                                             <Grid item xs style={{ marginLeft: "4cm" }}>
@@ -235,7 +222,6 @@ export default function ComplaintSearch() {
                                                         ))}
                                                     </Select>
                                                 </form>
-
                                             </Grid>
                                         </Grid>
                                         <Grid item xs>
@@ -266,7 +252,6 @@ export default function ComplaintSearch() {
                                     </Grid>
 
                             </Grid>
-
                             <Grid item xs={12} style={{ marginTop: "0cm", marginBottom: "0cm" }}>
                                 <AppBar position="static">
                                     <Toolbar style={{ backgroundColor: "#217567" }}>
@@ -278,38 +263,7 @@ export default function ComplaintSearch() {
                                     </IconButton>
                                     </Toolbar>
                                 </AppBar>
-                                {search ? (
-                                    <TableContainer component={Paper} style={{ marginTop: "0.2cm" }}>
-                                        <Table className={classes.table} aria-label="simple table">
-                                            <TableHead>
-                                                <TableRow>
-                                                    <StyledTableCell align="center">หมายเลขคำร้อง</StyledTableCell>
-                                                    <StyledTableCell align="center">ชื่อผู้ร้องเรียน</StyledTableCell>
-                                                    <StyledTableCell align="center">เบอร์โทรศัพท์</StyledTableCell>
-                                                    <StyledTableCell align="center">วันและเวลา</StyledTableCell>
-                                                    <StyledTableCell align="center">ชมรม</StyledTableCell>
-                                                    <StyledTableCell align="center">ประเภท</StyledTableCell>
-                                                    <StyledTableCell align="center">ข้อมูล</StyledTableCell>
-                                                </TableRow>
-                                            </TableHead>
-                                            <TableBody>{
-                                                data.map((item: EntComplaint) => (
-                                                    <TableRow key={item.id}>
-                                                        <TableCell align="center">{item.id}</TableCell>
-                                                        <TableCell align="center">{item.name}</TableCell>
-                                                        <TableCell align="center">{item.phonenumber}</TableCell>
-                                                        <TableCell align="center">{moment(item.date).format('MM/DD/YYYY HH.mm')}</TableCell>
-                                                        <TableCell align="center">{item.edges?.complaintToClub?.name}</TableCell>
-                                                        <TableCell align="center">{item.edges?.complaintToComplaintType?.description}</TableCell>
-                                                        <TableCell align="center">{item.info}</TableCell>
-                                                    </TableRow>
-                                                ))
-                                            }
-                                            </TableBody>
-                                        </Table>
-                                    </TableContainer>
-                                ) : (null)}
-
+                                
                             </Grid>
                             {status ? (
                                 <div>
@@ -342,6 +296,37 @@ export default function ComplaintSearch() {
                             ) : null}
                         </Grid>
                     </Container>
+                    {search ? (
+                                    <TableContainer component={Paper} style={{ marginTop: "0.2cm" }}>
+                                        <Table className={classes.table} aria-label="simple table">
+                                            <TableHead>
+                                                <TableRow>
+                                                    <StyledTableCell align="center">หมายเลขคำร้อง</StyledTableCell>
+                                                    <StyledTableCell align="center">ชื่อผู้ร้องเรียน</StyledTableCell>
+                                                    <StyledTableCell align="center">เบอร์โทรศัพท์</StyledTableCell>
+                                                    <StyledTableCell align="center">วันและเวลา</StyledTableCell>
+                                                    <StyledTableCell align="center">ชมรม</StyledTableCell>
+                                                    <StyledTableCell align="center">ประเภท</StyledTableCell>
+                                                    <StyledTableCell align="center">ข้อมูล</StyledTableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>{
+                                                data.map((item: EntComplaint) => (
+                                                    <TableRow key={item.id}>
+                                                        <TableCell align="center">{item.id}</TableCell>
+                                                        <TableCell align="center">{item.name}</TableCell>
+                                                        <TableCell align="center">{item.phonenumber}</TableCell>
+                                                        <TableCell align="center">{moment(item.date).format('MM/DD/YYYY HH.mm')}</TableCell>
+                                                        <TableCell align="center">{item.edges?.complaintToClub?.name}</TableCell>
+                                                        <TableCell align="center">{item.edges?.complaintToComplaintType?.description}</TableCell>
+                                                        <TableCell align="center">{item.info}</TableCell>
+                                                    </TableRow>
+                                                ))
+                                            }
+                                            </TableBody>
+                                        </Table>
+                                    </TableContainer>
+                                ) : (null)}
                 </Content>
             </Page>
         </SidebarPage >
