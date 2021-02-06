@@ -64,9 +64,9 @@ export function EntComplaintEdgesFromJSONTyped(json: any, ignoreDiscriminator: b
     }
     return {
         
-        'complaintToClub': !exists(json, 'complaintToClub') ? undefined : EntClubFromJSON(json['complaintToClub']),
-        'complaintToComplaintType': !exists(json, 'complaintToComplaintType') ? undefined : EntComplaintTypeFromJSON(json['complaintToComplaintType']),
-        'complaintToUser': !exists(json, 'complaintToUser') ? undefined : EntUserFromJSON(json['complaintToUser']),
+        'complaintToClub': !exists(json, 'ComplaintToClub') ? undefined : EntClubFromJSON(json['ComplaintToClub']),
+        'complaintToComplaintType': !exists(json, 'ComplaintToComplaintType') ? undefined : EntComplaintTypeFromJSON(json['ComplaintToComplaintType']),
+        'complaintToUser': !exists(json, 'ComplaintToUser') ? undefined : EntUserFromJSON(json['ComplaintToUser']),
     };
 }
 
