@@ -18,7 +18,6 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import MessageIcon from '@material-ui/icons/Message';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 
-
 export const AppSidebar = () => (
   <Sidebar>
     <SidebarDivider />
@@ -28,7 +27,6 @@ export const AppSidebar = () => (
     <SidebarItem icon={CreateComponentIcon} to="welcome" text="Welcome" /> */}
     <SidebarDivider />
 
-    
     <SidebarItem icon={PostAddIcon} to="/club" text="สร้างชมรม" />
     <SidebarItem icon={PersonAddIcon} to="/ClubApplication" text="สมัครชมรม" />
     <SidebarItem icon={EmojiEventsIcon} to="/Activities" text="จัดกิจกรรม" />
@@ -37,7 +35,16 @@ export const AppSidebar = () => (
 
     {/* End global nav */}
     <SidebarDivider />
-    <SidebarItem icon={SearchIcon} to="/ClubappSearch" text="ค้นหาใบสมัครชมรม" />
+    <SidebarItem
+      icon={SearchIcon}
+      to="/ClubappSearch"
+      text="ค้นหาใบสมัครชมรม"
+    />
+    <SidebarItem
+      icon={SearchIcon}
+      to="/ActivityTable"
+      text="ค้นหากิจกรรมชมรม"
+    />
     <SidebarSpace />
     <SidebarDivider />
     <SidebarItem icon={SignOut} to="/" text="Sign Out" />
