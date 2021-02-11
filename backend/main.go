@@ -38,10 +38,9 @@ type User struct {
 	UserstatusID int
 	DisciplineID int
 	YearID       int
-	ClubID int
-	PositionID int
+	ClubID       int
+	PositionID   int
 }
-
 
 type Usertypes struct {
 	Usertype []Usertype
@@ -185,7 +184,6 @@ type Purpose struct {
 	PURPOSE string
 }
 
-
 type Clubs struct {
 	Club []Club
 }
@@ -193,6 +191,7 @@ type Clubs struct {
 type Club struct {
 	name    string
 	purpose string
+	phone   string
 }
 
 // @title SUT SA Example API
@@ -274,9 +273,9 @@ func main() {
 	// Set Club Data
 	clubs := Clubs{
 		Club: []Club{
-			Club{"ONE", "Suphasin"},
-			Club{"TWO", "BBB"},
-			Club{"THREE", "CCC"},
+			Club{"ONE", "AAAAAAAAAA", "0987654321"},
+			Club{"TWO", "BBBBBBBBB", "0987654321"},
+			Club{"THREE", "CCCCCCCCC", "0987654321"},
 		},
 	}
 
@@ -285,6 +284,7 @@ func main() {
 			Create().
 			SetName(club.name).
 			SetPurpose(club.purpose).
+			SetPhone(club.phone).
 			Save(context.Background())
 	}
 
@@ -431,18 +431,16 @@ func main() {
 			Save(context.Background())
 	}
 
-
-	 // Set Users Data
-	 users := Users{
-	 	User: []User{
-	 		User{"pon", "pon@gmail.com", "123", 1, 21,1,2,1,2,1,1},
-	 		User{"poom", "poom@gmail.com", "123", 2, 20,1,2,1,1,2,2},
-	 		User{"fuse", "fuse@gmail.com", "123", 3, 19,1,1,1,2,2,3},
-	 		User{"blue", "blue@gmail.com", "123", 4, 19,1,1,1,2,2,4},
-	 		User{"phoom", "phoom@gmail.com", "123", 4, 19,1,1,1,2,2,5},
-	 	},
-	 }
-
+	// Set Users Data
+	users := Users{
+		User: []User{
+			User{"pon", "pon@gmail.com", "123", 1, 21, 1, 2, 1, 2, 1, 1},
+			User{"poom", "poom@gmail.com", "123", 2, 20, 1, 2, 1, 1, 2, 2},
+			User{"fuse", "fuse@gmail.com", "123", 2, 19, 1, 1, 1, 2, 2, 3},
+			User{"blue", "blue@gmail.com", "123", 1, 19, 1, 1, 1, 2, 2, 4},
+			User{"phoom", "phoom@gmail.com", "123", 2, 19, 1, 1, 1, 2, 2, 5},
+		},
+	}
 
 	for _, u := range users.User {
 
@@ -477,38 +475,38 @@ func main() {
 		}
 
 		status, err := client.UserStatus.
-		 Query().
-		 Where(userstatus.IDEQ(int(u.UserstatusID))).
-		  Only(context.Background())
+			Query().
+			Where(userstatus.IDEQ(int(u.UserstatusID))).
+			Only(context.Background())
 
-	 if err != nil {
-		 fmt.Println(err.Error())
-		 return
-	  }
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
 
-	  gender, err := client.Gender.
-		 Query().
-		 Where(gender.IDEQ(int(u.GenderID))).
-		  Only(context.Background())
+		gender, err := client.Gender.
+			Query().
+			Where(gender.IDEQ(int(u.GenderID))).
+			Only(context.Background())
 
-	 if err != nil {
-		 fmt.Println(err.Error())
-		 return
-	  }
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
 
-	  po, err := client.Position.
-	  Query().
-	  Where(position.IDEQ(int(u.PositionID))).
-	  Only(context.Background())
+		po, err := client.Position.
+			Query().
+			Where(position.IDEQ(int(u.PositionID))).
+			Only(context.Background())
 
-  if err != nil {
-	  fmt.Println(err.Error())
-	  return
-   }
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
 
-	 	client.User.
-	 		Create().
-	 		SetName(u.Name).
+		client.User.
+			Create().
+			SetName(u.Name).
 			SetEmail(u.Email).
 			SetPassword(u.Password).
 			SetAge(u.Age).
@@ -518,9 +516,8 @@ func main() {
 			SetUserstatus(status).
 			SetGender(gender).
 			SetPosition(po).
-	 		Save(context.Background())
-	 }
-
+			Save(context.Background())
+	}
 
 	// Set ActivityType Data
 
