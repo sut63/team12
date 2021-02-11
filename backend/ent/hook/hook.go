@@ -165,6 +165,19 @@ func (f GenderFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, erro
 	return f(ctx, mv)
 }
 
+// The PositionFunc type is an adapter to allow the use of ordinary
+// function as Position mutator.
+type PositionFunc func(context.Context, *ent.PositionMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PositionFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.PositionMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PositionMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The PurposeFunc type is an adapter to allow the use of ordinary
 // function as Purpose mutator.
 type PurposeFunc func(context.Context, *ent.PurposeMutation) (ent.Value, error)

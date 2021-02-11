@@ -20,6 +20,8 @@ const (
 	EdgeUsertype = "usertype"
 	// EdgeFromClub holds the string denoting the fromclub edge name in mutations.
 	EdgeFromClub = "FromClub"
+	// EdgePosition holds the string denoting the position edge name in mutations.
+	EdgePosition = "position"
 	// EdgeGender holds the string denoting the gender edge name in mutations.
 	EdgeGender = "gender"
 	// EdgeUserstatus holds the string denoting the userstatus edge name in mutations.
@@ -53,6 +55,13 @@ const (
 	FromClubInverseTable = "clubs"
 	// FromClubColumn is the table column denoting the FromClub relation/edge.
 	FromClubColumn = "ClubID"
+	// PositionTable is the table the holds the position relation/edge.
+	PositionTable = "users"
+	// PositionInverseTable is the table name for the Position entity.
+	// It exists in this package in order to avoid circular dependency with the "position" package.
+	PositionInverseTable = "positions"
+	// PositionColumn is the table column denoting the position relation/edge.
+	PositionColumn = "Position_ID"
 	// GenderTable is the table the holds the gender relation/edge.
 	GenderTable = "users"
 	// GenderInverseTable is the table name for the Gender entity.
@@ -125,6 +134,7 @@ var ForeignKeys = []string{
 	"ClubID",
 	"discipline_id",
 	"gender_id",
+	"Position_ID",
 	"userstatus_id",
 	"UserTypeID",
 	"year_id",

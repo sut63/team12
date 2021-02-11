@@ -332,12 +332,12 @@ func (rq *RoomuseQuery) WithUsers(opts ...func(*UserQuery)) *RoomuseQuery {
 // Example:
 //
 //	var v []struct {
-//		AddedTime time.Time `json:"added_time,omitempty"`
+//		Age int `json:"age,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Roomuse.Query().
-//		GroupBy(roomuse.FieldAddedTime).
+//		GroupBy(roomuse.FieldAge).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -358,11 +358,11 @@ func (rq *RoomuseQuery) GroupBy(field string, fields ...string) *RoomuseGroupBy 
 // Example:
 //
 //	var v []struct {
-//		AddedTime time.Time `json:"added_time,omitempty"`
+//		Age int `json:"age,omitempty"`
 //	}
 //
 //	client.Roomuse.Query().
-//		Select(roomuse.FieldAddedTime).
+//		Select(roomuse.FieldAge).
 //		Scan(ctx, &v)
 //
 func (rq *RoomuseQuery) Select(field string, fields ...string) *RoomuseSelect {

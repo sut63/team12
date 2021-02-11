@@ -31,9 +31,40 @@ func (ru *RoomuseUpdate) Where(ps ...predicate.Roomuse) *RoomuseUpdate {
 	return ru
 }
 
-// SetAddedTime sets the added_time field.
-func (ru *RoomuseUpdate) SetAddedTime(t time.Time) *RoomuseUpdate {
-	ru.mutation.SetAddedTime(t)
+// SetAge sets the age field.
+func (ru *RoomuseUpdate) SetAge(i int) *RoomuseUpdate {
+	ru.mutation.ResetAge()
+	ru.mutation.SetAge(i)
+	return ru
+}
+
+// AddAge adds i to age.
+func (ru *RoomuseUpdate) AddAge(i int) *RoomuseUpdate {
+	ru.mutation.AddAge(i)
+	return ru
+}
+
+// SetNote sets the note field.
+func (ru *RoomuseUpdate) SetNote(s string) *RoomuseUpdate {
+	ru.mutation.SetNote(s)
+	return ru
+}
+
+// SetContact sets the contact field.
+func (ru *RoomuseUpdate) SetContact(s string) *RoomuseUpdate {
+	ru.mutation.SetContact(s)
+	return ru
+}
+
+// SetInTime sets the in_time field.
+func (ru *RoomuseUpdate) SetInTime(t time.Time) *RoomuseUpdate {
+	ru.mutation.SetInTime(t)
+	return ru
+}
+
+// SetOutTime sets the out_time field.
+func (ru *RoomuseUpdate) SetOutTime(t time.Time) *RoomuseUpdate {
+	ru.mutation.SetOutTime(t)
 	return ru
 }
 
@@ -119,6 +150,21 @@ func (ru *RoomuseUpdate) ClearUsers() *RoomuseUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *RoomuseUpdate) Save(ctx context.Context) (int, error) {
+	if v, ok := ru.mutation.Age(); ok {
+		if err := roomuse.AgeValidator(v); err != nil {
+			return 0, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Note(); ok {
+		if err := roomuse.NoteValidator(v); err != nil {
+			return 0, &ValidationError{Name: "note", err: fmt.Errorf("ent: validator failed for field \"note\": %w", err)}
+		}
+	}
+	if v, ok := ru.mutation.Contact(); ok {
+		if err := roomuse.ContactValidator(v); err != nil {
+			return 0, &ValidationError{Name: "contact", err: fmt.Errorf("ent: validator failed for field \"contact\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -187,11 +233,46 @@ func (ru *RoomuseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := ru.mutation.AddedTime(); ok {
+	if value, ok := ru.mutation.Age(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomuse.FieldAge,
+		})
+	}
+	if value, ok := ru.mutation.AddedAge(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomuse.FieldAge,
+		})
+	}
+	if value, ok := ru.mutation.Note(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomuse.FieldNote,
+		})
+	}
+	if value, ok := ru.mutation.Contact(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomuse.FieldContact,
+		})
+	}
+	if value, ok := ru.mutation.InTime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: roomuse.FieldAddedTime,
+			Column: roomuse.FieldInTime,
+		})
+	}
+	if value, ok := ru.mutation.OutTime(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: roomuse.FieldOutTime,
 		})
 	}
 	if ru.mutation.RoomsCleared() {
@@ -317,9 +398,40 @@ type RoomuseUpdateOne struct {
 	mutation *RoomuseMutation
 }
 
-// SetAddedTime sets the added_time field.
-func (ruo *RoomuseUpdateOne) SetAddedTime(t time.Time) *RoomuseUpdateOne {
-	ruo.mutation.SetAddedTime(t)
+// SetAge sets the age field.
+func (ruo *RoomuseUpdateOne) SetAge(i int) *RoomuseUpdateOne {
+	ruo.mutation.ResetAge()
+	ruo.mutation.SetAge(i)
+	return ruo
+}
+
+// AddAge adds i to age.
+func (ruo *RoomuseUpdateOne) AddAge(i int) *RoomuseUpdateOne {
+	ruo.mutation.AddAge(i)
+	return ruo
+}
+
+// SetNote sets the note field.
+func (ruo *RoomuseUpdateOne) SetNote(s string) *RoomuseUpdateOne {
+	ruo.mutation.SetNote(s)
+	return ruo
+}
+
+// SetContact sets the contact field.
+func (ruo *RoomuseUpdateOne) SetContact(s string) *RoomuseUpdateOne {
+	ruo.mutation.SetContact(s)
+	return ruo
+}
+
+// SetInTime sets the in_time field.
+func (ruo *RoomuseUpdateOne) SetInTime(t time.Time) *RoomuseUpdateOne {
+	ruo.mutation.SetInTime(t)
+	return ruo
+}
+
+// SetOutTime sets the out_time field.
+func (ruo *RoomuseUpdateOne) SetOutTime(t time.Time) *RoomuseUpdateOne {
+	ruo.mutation.SetOutTime(t)
 	return ruo
 }
 
@@ -405,6 +517,21 @@ func (ruo *RoomuseUpdateOne) ClearUsers() *RoomuseUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (ruo *RoomuseUpdateOne) Save(ctx context.Context) (*Roomuse, error) {
+	if v, ok := ruo.mutation.Age(); ok {
+		if err := roomuse.AgeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Note(); ok {
+		if err := roomuse.NoteValidator(v); err != nil {
+			return nil, &ValidationError{Name: "note", err: fmt.Errorf("ent: validator failed for field \"note\": %w", err)}
+		}
+	}
+	if v, ok := ruo.mutation.Contact(); ok {
+		if err := roomuse.ContactValidator(v); err != nil {
+			return nil, &ValidationError{Name: "contact", err: fmt.Errorf("ent: validator failed for field \"contact\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -471,11 +598,46 @@ func (ruo *RoomuseUpdateOne) sqlSave(ctx context.Context) (r *Roomuse, err error
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Roomuse.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := ruo.mutation.AddedTime(); ok {
+	if value, ok := ruo.mutation.Age(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomuse.FieldAge,
+		})
+	}
+	if value, ok := ruo.mutation.AddedAge(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomuse.FieldAge,
+		})
+	}
+	if value, ok := ruo.mutation.Note(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomuse.FieldNote,
+		})
+	}
+	if value, ok := ruo.mutation.Contact(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomuse.FieldContact,
+		})
+	}
+	if value, ok := ruo.mutation.InTime(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: roomuse.FieldAddedTime,
+			Column: roomuse.FieldInTime,
+		})
+	}
+	if value, ok := ruo.mutation.OutTime(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: roomuse.FieldOutTime,
 		})
 	}
 	if ruo.mutation.RoomsCleared() {

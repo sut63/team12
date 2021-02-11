@@ -36,6 +36,8 @@ type Tx struct {
 	Discipline *DisciplineClient
 	// Gender is the client for interacting with the Gender builders.
 	Gender *GenderClient
+	// Position is the client for interacting with the Position builders.
+	Position *PositionClient
 	// Purpose is the client for interacting with the Purpose builders.
 	Purpose *PurposeClient
 	// Room is the client for interacting with the Room builders.
@@ -197,6 +199,7 @@ func (tx *Tx) init() {
 	tx.ComplaintType = NewComplaintTypeClient(tx.config)
 	tx.Discipline = NewDisciplineClient(tx.config)
 	tx.Gender = NewGenderClient(tx.config)
+	tx.Position = NewPositionClient(tx.config)
 	tx.Purpose = NewPurposeClient(tx.config)
 	tx.Room = NewRoomClient(tx.config)
 	tx.Roomuse = NewRoomuseClient(tx.config)

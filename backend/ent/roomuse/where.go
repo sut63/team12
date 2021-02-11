@@ -93,29 +93,57 @@ func IDLTE(id int) predicate.Roomuse {
 	})
 }
 
-// AddedTime applies equality check predicate on the "added_time" field. It's identical to AddedTimeEQ.
-func AddedTime(v time.Time) predicate.Roomuse {
+// Age applies equality check predicate on the "age" field. It's identical to AgeEQ.
+func Age(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAddedTime), v))
+		s.Where(sql.EQ(s.C(FieldAge), v))
 	})
 }
 
-// AddedTimeEQ applies the EQ predicate on the "added_time" field.
-func AddedTimeEQ(v time.Time) predicate.Roomuse {
+// Note applies equality check predicate on the "note" field. It's identical to NoteEQ.
+func Note(v string) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAddedTime), v))
+		s.Where(sql.EQ(s.C(FieldNote), v))
 	})
 }
 
-// AddedTimeNEQ applies the NEQ predicate on the "added_time" field.
-func AddedTimeNEQ(v time.Time) predicate.Roomuse {
+// Contact applies equality check predicate on the "contact" field. It's identical to ContactEQ.
+func Contact(v string) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAddedTime), v))
+		s.Where(sql.EQ(s.C(FieldContact), v))
 	})
 }
 
-// AddedTimeIn applies the In predicate on the "added_time" field.
-func AddedTimeIn(vs ...time.Time) predicate.Roomuse {
+// InTime applies equality check predicate on the "in_time" field. It's identical to InTimeEQ.
+func InTime(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldInTime), v))
+	})
+}
+
+// OutTime applies equality check predicate on the "out_time" field. It's identical to OutTimeEQ.
+func OutTime(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldOutTime), v))
+	})
+}
+
+// AgeEQ applies the EQ predicate on the "age" field.
+func AgeEQ(v int) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldAge), v))
+	})
+}
+
+// AgeNEQ applies the NEQ predicate on the "age" field.
+func AgeNEQ(v int) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldAge), v))
+	})
+}
+
+// AgeIn applies the In predicate on the "age" field.
+func AgeIn(vs ...int) predicate.Roomuse {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -127,12 +155,12 @@ func AddedTimeIn(vs ...time.Time) predicate.Roomuse {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldAddedTime), v...))
+		s.Where(sql.In(s.C(FieldAge), v...))
 	})
 }
 
-// AddedTimeNotIn applies the NotIn predicate on the "added_time" field.
-func AddedTimeNotIn(vs ...time.Time) predicate.Roomuse {
+// AgeNotIn applies the NotIn predicate on the "age" field.
+func AgeNotIn(vs ...int) predicate.Roomuse {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -144,35 +172,409 @@ func AddedTimeNotIn(vs ...time.Time) predicate.Roomuse {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldAddedTime), v...))
+		s.Where(sql.NotIn(s.C(FieldAge), v...))
 	})
 }
 
-// AddedTimeGT applies the GT predicate on the "added_time" field.
-func AddedTimeGT(v time.Time) predicate.Roomuse {
+// AgeGT applies the GT predicate on the "age" field.
+func AgeGT(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAddedTime), v))
+		s.Where(sql.GT(s.C(FieldAge), v))
 	})
 }
 
-// AddedTimeGTE applies the GTE predicate on the "added_time" field.
-func AddedTimeGTE(v time.Time) predicate.Roomuse {
+// AgeGTE applies the GTE predicate on the "age" field.
+func AgeGTE(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAddedTime), v))
+		s.Where(sql.GTE(s.C(FieldAge), v))
 	})
 }
 
-// AddedTimeLT applies the LT predicate on the "added_time" field.
-func AddedTimeLT(v time.Time) predicate.Roomuse {
+// AgeLT applies the LT predicate on the "age" field.
+func AgeLT(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAddedTime), v))
+		s.Where(sql.LT(s.C(FieldAge), v))
 	})
 }
 
-// AddedTimeLTE applies the LTE predicate on the "added_time" field.
-func AddedTimeLTE(v time.Time) predicate.Roomuse {
+// AgeLTE applies the LTE predicate on the "age" field.
+func AgeLTE(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAddedTime), v))
+		s.Where(sql.LTE(s.C(FieldAge), v))
+	})
+}
+
+// NoteEQ applies the EQ predicate on the "note" field.
+func NoteEQ(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldNote), v))
+	})
+}
+
+// NoteNEQ applies the NEQ predicate on the "note" field.
+func NoteNEQ(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldNote), v))
+	})
+}
+
+// NoteIn applies the In predicate on the "note" field.
+func NoteIn(vs ...string) predicate.Roomuse {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomuse(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldNote), v...))
+	})
+}
+
+// NoteNotIn applies the NotIn predicate on the "note" field.
+func NoteNotIn(vs ...string) predicate.Roomuse {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomuse(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldNote), v...))
+	})
+}
+
+// NoteGT applies the GT predicate on the "note" field.
+func NoteGT(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldNote), v))
+	})
+}
+
+// NoteGTE applies the GTE predicate on the "note" field.
+func NoteGTE(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldNote), v))
+	})
+}
+
+// NoteLT applies the LT predicate on the "note" field.
+func NoteLT(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldNote), v))
+	})
+}
+
+// NoteLTE applies the LTE predicate on the "note" field.
+func NoteLTE(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldNote), v))
+	})
+}
+
+// NoteContains applies the Contains predicate on the "note" field.
+func NoteContains(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldNote), v))
+	})
+}
+
+// NoteHasPrefix applies the HasPrefix predicate on the "note" field.
+func NoteHasPrefix(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldNote), v))
+	})
+}
+
+// NoteHasSuffix applies the HasSuffix predicate on the "note" field.
+func NoteHasSuffix(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldNote), v))
+	})
+}
+
+// NoteEqualFold applies the EqualFold predicate on the "note" field.
+func NoteEqualFold(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldNote), v))
+	})
+}
+
+// NoteContainsFold applies the ContainsFold predicate on the "note" field.
+func NoteContainsFold(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldNote), v))
+	})
+}
+
+// ContactEQ applies the EQ predicate on the "contact" field.
+func ContactEQ(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldContact), v))
+	})
+}
+
+// ContactNEQ applies the NEQ predicate on the "contact" field.
+func ContactNEQ(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldContact), v))
+	})
+}
+
+// ContactIn applies the In predicate on the "contact" field.
+func ContactIn(vs ...string) predicate.Roomuse {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomuse(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldContact), v...))
+	})
+}
+
+// ContactNotIn applies the NotIn predicate on the "contact" field.
+func ContactNotIn(vs ...string) predicate.Roomuse {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomuse(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldContact), v...))
+	})
+}
+
+// ContactGT applies the GT predicate on the "contact" field.
+func ContactGT(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldContact), v))
+	})
+}
+
+// ContactGTE applies the GTE predicate on the "contact" field.
+func ContactGTE(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldContact), v))
+	})
+}
+
+// ContactLT applies the LT predicate on the "contact" field.
+func ContactLT(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldContact), v))
+	})
+}
+
+// ContactLTE applies the LTE predicate on the "contact" field.
+func ContactLTE(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldContact), v))
+	})
+}
+
+// ContactContains applies the Contains predicate on the "contact" field.
+func ContactContains(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldContact), v))
+	})
+}
+
+// ContactHasPrefix applies the HasPrefix predicate on the "contact" field.
+func ContactHasPrefix(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldContact), v))
+	})
+}
+
+// ContactHasSuffix applies the HasSuffix predicate on the "contact" field.
+func ContactHasSuffix(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldContact), v))
+	})
+}
+
+// ContactEqualFold applies the EqualFold predicate on the "contact" field.
+func ContactEqualFold(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldContact), v))
+	})
+}
+
+// ContactContainsFold applies the ContainsFold predicate on the "contact" field.
+func ContactContainsFold(v string) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldContact), v))
+	})
+}
+
+// InTimeEQ applies the EQ predicate on the "in_time" field.
+func InTimeEQ(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldInTime), v))
+	})
+}
+
+// InTimeNEQ applies the NEQ predicate on the "in_time" field.
+func InTimeNEQ(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldInTime), v))
+	})
+}
+
+// InTimeIn applies the In predicate on the "in_time" field.
+func InTimeIn(vs ...time.Time) predicate.Roomuse {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomuse(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldInTime), v...))
+	})
+}
+
+// InTimeNotIn applies the NotIn predicate on the "in_time" field.
+func InTimeNotIn(vs ...time.Time) predicate.Roomuse {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomuse(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldInTime), v...))
+	})
+}
+
+// InTimeGT applies the GT predicate on the "in_time" field.
+func InTimeGT(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldInTime), v))
+	})
+}
+
+// InTimeGTE applies the GTE predicate on the "in_time" field.
+func InTimeGTE(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldInTime), v))
+	})
+}
+
+// InTimeLT applies the LT predicate on the "in_time" field.
+func InTimeLT(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldInTime), v))
+	})
+}
+
+// InTimeLTE applies the LTE predicate on the "in_time" field.
+func InTimeLTE(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldInTime), v))
+	})
+}
+
+// OutTimeEQ applies the EQ predicate on the "out_time" field.
+func OutTimeEQ(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldOutTime), v))
+	})
+}
+
+// OutTimeNEQ applies the NEQ predicate on the "out_time" field.
+func OutTimeNEQ(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldOutTime), v))
+	})
+}
+
+// OutTimeIn applies the In predicate on the "out_time" field.
+func OutTimeIn(vs ...time.Time) predicate.Roomuse {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomuse(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldOutTime), v...))
+	})
+}
+
+// OutTimeNotIn applies the NotIn predicate on the "out_time" field.
+func OutTimeNotIn(vs ...time.Time) predicate.Roomuse {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Roomuse(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldOutTime), v...))
+	})
+}
+
+// OutTimeGT applies the GT predicate on the "out_time" field.
+func OutTimeGT(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldOutTime), v))
+	})
+}
+
+// OutTimeGTE applies the GTE predicate on the "out_time" field.
+func OutTimeGTE(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldOutTime), v))
+	})
+}
+
+// OutTimeLT applies the LT predicate on the "out_time" field.
+func OutTimeLT(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldOutTime), v))
+	})
+}
+
+// OutTimeLTE applies the LTE predicate on the "out_time" field.
+func OutTimeLTE(v time.Time) predicate.Roomuse {
+	return predicate.Roomuse(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldOutTime), v))
 	})
 }
 

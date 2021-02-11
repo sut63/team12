@@ -9,6 +9,7 @@ import (
 	"github.com/OMENX/app/ent/club"
 	"github.com/OMENX/app/ent/discipline"
 	"github.com/OMENX/app/ent/gender"
+	"github.com/OMENX/app/ent/position"
 	"github.com/OMENX/app/ent/user"
 	"github.com/OMENX/app/ent/userstatus"
 	"github.com/OMENX/app/ent/usertype"
@@ -35,6 +36,7 @@ type User struct {
 	ClubID        *int
 	discipline_id *int
 	gender_id     *int
+	Position_ID   *int
 	userstatus_id *int
 	UserTypeID    *int
 	year_id       *int
@@ -46,6 +48,8 @@ type UserEdges struct {
 	Usertype *Usertype
 	// FromClub holds the value of the FromClub edge.
 	FromClub *Club
+	// Position holds the value of the position edge.
+	Position *Position
 	// Gender holds the value of the gender edge.
 	Gender *Gender
 	// Userstatus holds the value of the userstatus edge.
@@ -64,7 +68,7 @@ type UserEdges struct {
 	Roomuse []*Roomuse
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [10]bool
+	loadedTypes [11]bool
 }
 
 // UsertypeOrErr returns the Usertype value or an error if the edge
@@ -95,10 +99,24 @@ func (e UserEdges) FromClubOrErr() (*Club, error) {
 	return nil, &NotLoadedError{edge: "FromClub"}
 }
 
+// PositionOrErr returns the Position value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e UserEdges) PositionOrErr() (*Position, error) {
+	if e.loadedTypes[2] {
+		if e.Position == nil {
+			// The edge position was loaded in eager-loading,
+			// but was not found.
+			return nil, &NotFoundError{label: position.Label}
+		}
+		return e.Position, nil
+	}
+	return nil, &NotLoadedError{edge: "position"}
+}
+
 // GenderOrErr returns the Gender value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e UserEdges) GenderOrErr() (*Gender, error) {
-	if e.loadedTypes[2] {
+	if e.loadedTypes[3] {
 		if e.Gender == nil {
 			// The edge gender was loaded in eager-loading,
 			// but was not found.
@@ -112,7 +130,7 @@ func (e UserEdges) GenderOrErr() (*Gender, error) {
 // UserstatusOrErr returns the Userstatus value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e UserEdges) UserstatusOrErr() (*UserStatus, error) {
-	if e.loadedTypes[3] {
+	if e.loadedTypes[4] {
 		if e.Userstatus == nil {
 			// The edge userstatus was loaded in eager-loading,
 			// but was not found.
@@ -126,7 +144,7 @@ func (e UserEdges) UserstatusOrErr() (*UserStatus, error) {
 // DisciplineOrErr returns the Discipline value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e UserEdges) DisciplineOrErr() (*Discipline, error) {
-	if e.loadedTypes[4] {
+	if e.loadedTypes[5] {
 		if e.Discipline == nil {
 			// The edge discipline was loaded in eager-loading,
 			// but was not found.
@@ -140,7 +158,7 @@ func (e UserEdges) DisciplineOrErr() (*Discipline, error) {
 // YearOrErr returns the Year value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e UserEdges) YearOrErr() (*Year, error) {
-	if e.loadedTypes[5] {
+	if e.loadedTypes[6] {
 		if e.Year == nil {
 			// The edge year was loaded in eager-loading,
 			// but was not found.
@@ -154,7 +172,7 @@ func (e UserEdges) YearOrErr() (*Year, error) {
 // ClubOrErr returns the Club value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) ClubOrErr() ([]*Club, error) {
-	if e.loadedTypes[6] {
+	if e.loadedTypes[7] {
 		return e.Club, nil
 	}
 	return nil, &NotLoadedError{edge: "club"}
@@ -163,7 +181,7 @@ func (e UserEdges) ClubOrErr() ([]*Club, error) {
 // ClubapplicationOrErr returns the Clubapplication value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) ClubapplicationOrErr() ([]*Clubapplication, error) {
-	if e.loadedTypes[7] {
+	if e.loadedTypes[8] {
 		return e.Clubapplication, nil
 	}
 	return nil, &NotLoadedError{edge: "clubapplication"}
@@ -172,7 +190,7 @@ func (e UserEdges) ClubapplicationOrErr() ([]*Clubapplication, error) {
 // UserToComplaintOrErr returns the UserToComplaint value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) UserToComplaintOrErr() ([]*Complaint, error) {
-	if e.loadedTypes[8] {
+	if e.loadedTypes[9] {
 		return e.UserToComplaint, nil
 	}
 	return nil, &NotLoadedError{edge: "UserToComplaint"}
@@ -181,7 +199,7 @@ func (e UserEdges) UserToComplaintOrErr() ([]*Complaint, error) {
 // RoomuseOrErr returns the Roomuse value or an error if the edge
 // was not loaded in eager-loading.
 func (e UserEdges) RoomuseOrErr() ([]*Roomuse, error) {
-	if e.loadedTypes[9] {
+	if e.loadedTypes[10] {
 		return e.Roomuse, nil
 	}
 	return nil, &NotLoadedError{edge: "Roomuse"}
@@ -204,6 +222,7 @@ func (*User) fkValues() []interface{} {
 		&sql.NullInt64{}, // ClubID
 		&sql.NullInt64{}, // discipline_id
 		&sql.NullInt64{}, // gender_id
+		&sql.NullInt64{}, // Position_ID
 		&sql.NullInt64{}, // userstatus_id
 		&sql.NullInt64{}, // UserTypeID
 		&sql.NullInt64{}, // year_id
@@ -263,18 +282,24 @@ func (u *User) assignValues(values ...interface{}) error {
 			*u.gender_id = int(value.Int64)
 		}
 		if value, ok := values[3].(*sql.NullInt64); !ok {
+			return fmt.Errorf("unexpected type %T for edge-field Position_ID", value)
+		} else if value.Valid {
+			u.Position_ID = new(int)
+			*u.Position_ID = int(value.Int64)
+		}
+		if value, ok := values[4].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field userstatus_id", value)
 		} else if value.Valid {
 			u.userstatus_id = new(int)
 			*u.userstatus_id = int(value.Int64)
 		}
-		if value, ok := values[4].(*sql.NullInt64); !ok {
+		if value, ok := values[5].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field UserTypeID", value)
 		} else if value.Valid {
 			u.UserTypeID = new(int)
 			*u.UserTypeID = int(value.Int64)
 		}
-		if value, ok := values[5].(*sql.NullInt64); !ok {
+		if value, ok := values[6].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field year_id", value)
 		} else if value.Valid {
 			u.year_id = new(int)
@@ -292,6 +317,11 @@ func (u *User) QueryUsertype() *UsertypeQuery {
 // QueryFromClub queries the FromClub edge of the User.
 func (u *User) QueryFromClub() *ClubQuery {
 	return (&UserClient{config: u.config}).QueryFromClub(u)
+}
+
+// QueryPosition queries the position edge of the User.
+func (u *User) QueryPosition() *PositionQuery {
+	return (&UserClient{config: u.config}).QueryPosition(u)
 }
 
 // QueryGender queries the gender edge of the User.

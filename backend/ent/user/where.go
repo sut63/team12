@@ -584,6 +584,34 @@ func HasFromClubWith(preds ...predicate.Club) predicate.User {
 	})
 }
 
+// HasPosition applies the HasEdge predicate on the "position" edge.
+func HasPosition() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PositionTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PositionTable, PositionColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasPositionWith applies the HasEdge predicate on the "position" edge with a given conditions (other predicates).
+func HasPositionWith(preds ...predicate.Position) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(PositionInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, PositionTable, PositionColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // HasGender applies the HasEdge predicate on the "gender" edge.
 func HasGender() predicate.User {
 	return predicate.User(func(s *sql.Selector) {

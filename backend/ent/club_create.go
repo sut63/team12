@@ -37,6 +37,12 @@ func (cc *ClubCreate) SetPurpose(s string) *ClubCreate {
 	return cc
 }
 
+// SetPhone sets the phone field.
+func (cc *ClubCreate) SetPhone(s string) *ClubCreate {
+	cc.mutation.SetPhone(s)
+	return cc
+}
+
 // SetUserID sets the user edge to User by id.
 func (cc *ClubCreate) SetUserID(id int) *ClubCreate {
 	cc.mutation.SetUserID(id)
@@ -177,6 +183,14 @@ func (cc *ClubCreate) Save(ctx context.Context) (*Club, error) {
 			return nil, &ValidationError{Name: "purpose", err: fmt.Errorf("ent: validator failed for field \"purpose\": %w", err)}
 		}
 	}
+	if _, ok := cc.mutation.Phone(); !ok {
+		return nil, &ValidationError{Name: "phone", err: errors.New("ent: missing required field \"phone\"")}
+	}
+	if v, ok := cc.mutation.Phone(); ok {
+		if err := club.PhoneValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
+		}
+	}
 	var (
 		err  error
 		node *Club
@@ -252,6 +266,14 @@ func (cc *ClubCreate) createSpec() (*Club, *sqlgraph.CreateSpec) {
 			Column: club.FieldPurpose,
 		})
 		c.Purpose = value
+	}
+	if value, ok := cc.mutation.Phone(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: club.FieldPhone,
+		})
+		c.Phone = value
 	}
 	if nodes := cc.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

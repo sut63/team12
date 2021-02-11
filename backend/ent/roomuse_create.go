@@ -23,9 +23,33 @@ type RoomuseCreate struct {
 	hooks    []Hook
 }
 
-// SetAddedTime sets the added_time field.
-func (rc *RoomuseCreate) SetAddedTime(t time.Time) *RoomuseCreate {
-	rc.mutation.SetAddedTime(t)
+// SetAge sets the age field.
+func (rc *RoomuseCreate) SetAge(i int) *RoomuseCreate {
+	rc.mutation.SetAge(i)
+	return rc
+}
+
+// SetNote sets the note field.
+func (rc *RoomuseCreate) SetNote(s string) *RoomuseCreate {
+	rc.mutation.SetNote(s)
+	return rc
+}
+
+// SetContact sets the contact field.
+func (rc *RoomuseCreate) SetContact(s string) *RoomuseCreate {
+	rc.mutation.SetContact(s)
+	return rc
+}
+
+// SetInTime sets the in_time field.
+func (rc *RoomuseCreate) SetInTime(t time.Time) *RoomuseCreate {
+	rc.mutation.SetInTime(t)
+	return rc
+}
+
+// SetOutTime sets the out_time field.
+func (rc *RoomuseCreate) SetOutTime(t time.Time) *RoomuseCreate {
+	rc.mutation.SetOutTime(t)
 	return rc
 }
 
@@ -93,8 +117,35 @@ func (rc *RoomuseCreate) Mutation() *RoomuseMutation {
 
 // Save creates the Roomuse in the database.
 func (rc *RoomuseCreate) Save(ctx context.Context) (*Roomuse, error) {
-	if _, ok := rc.mutation.AddedTime(); !ok {
-		return nil, &ValidationError{Name: "added_time", err: errors.New("ent: missing required field \"added_time\"")}
+	if _, ok := rc.mutation.Age(); !ok {
+		return nil, &ValidationError{Name: "age", err: errors.New("ent: missing required field \"age\"")}
+	}
+	if v, ok := rc.mutation.Age(); ok {
+		if err := roomuse.AgeValidator(v); err != nil {
+			return nil, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+		}
+	}
+	if _, ok := rc.mutation.Note(); !ok {
+		return nil, &ValidationError{Name: "note", err: errors.New("ent: missing required field \"note\"")}
+	}
+	if v, ok := rc.mutation.Note(); ok {
+		if err := roomuse.NoteValidator(v); err != nil {
+			return nil, &ValidationError{Name: "note", err: fmt.Errorf("ent: validator failed for field \"note\": %w", err)}
+		}
+	}
+	if _, ok := rc.mutation.Contact(); !ok {
+		return nil, &ValidationError{Name: "contact", err: errors.New("ent: missing required field \"contact\"")}
+	}
+	if v, ok := rc.mutation.Contact(); ok {
+		if err := roomuse.ContactValidator(v); err != nil {
+			return nil, &ValidationError{Name: "contact", err: fmt.Errorf("ent: validator failed for field \"contact\": %w", err)}
+		}
+	}
+	if _, ok := rc.mutation.InTime(); !ok {
+		return nil, &ValidationError{Name: "in_time", err: errors.New("ent: missing required field \"in_time\"")}
+	}
+	if _, ok := rc.mutation.OutTime(); !ok {
+		return nil, &ValidationError{Name: "out_time", err: errors.New("ent: missing required field \"out_time\"")}
 	}
 	var (
 		err  error
@@ -156,13 +207,45 @@ func (rc *RoomuseCreate) createSpec() (*Roomuse, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := rc.mutation.AddedTime(); ok {
+	if value, ok := rc.mutation.Age(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: roomuse.FieldAge,
+		})
+		r.Age = value
+	}
+	if value, ok := rc.mutation.Note(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomuse.FieldNote,
+		})
+		r.Note = value
+	}
+	if value, ok := rc.mutation.Contact(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: roomuse.FieldContact,
+		})
+		r.Contact = value
+	}
+	if value, ok := rc.mutation.InTime(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeTime,
 			Value:  value,
-			Column: roomuse.FieldAddedTime,
+			Column: roomuse.FieldInTime,
 		})
-		r.AddedTime = value
+		r.InTime = value
+	}
+	if value, ok := rc.mutation.OutTime(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: roomuse.FieldOutTime,
+		})
+		r.OutTime = value
 	}
 	if nodes := rc.mutation.RoomsIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

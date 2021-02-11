@@ -13,6 +13,7 @@ import (
 	"github.com/OMENX/app/ent/complaint"
 	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
+	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/schema"
 	"github.com/OMENX/app/ent/user"
 	"github.com/OMENX/app/ent/usertype"
@@ -53,11 +54,57 @@ func init() {
 	// clubDescName is the schema descriptor for name field.
 	clubDescName := clubFields[0].Descriptor()
 	// club.NameValidator is a validator for the "name" field. It is called by the builders before save.
-	club.NameValidator = clubDescName.Validators[0].(func(string) error)
+	club.NameValidator = func() func(string) error {
+		validators := clubDescName.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(name string) error {
+			for _, fn := range fns {
+				if err := fn(name); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	// clubDescPurpose is the schema descriptor for purpose field.
 	clubDescPurpose := clubFields[1].Descriptor()
 	// club.PurposeValidator is a validator for the "purpose" field. It is called by the builders before save.
-	club.PurposeValidator = clubDescPurpose.Validators[0].(func(string) error)
+	club.PurposeValidator = func() func(string) error {
+		validators := clubDescPurpose.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(purpose string) error {
+			for _, fn := range fns {
+				if err := fn(purpose); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// clubDescPhone is the schema descriptor for phone field.
+	clubDescPhone := clubFields[2].Descriptor()
+	// club.PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
+	club.PhoneValidator = func() func(string) error {
+		validators := clubDescPhone.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(phone string) error {
+			for _, fn := range fns {
+				if err := fn(phone); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	clubbranchFields := schema.ClubBranch{}.Fields()
 	_ = clubbranchFields
 	// clubbranchDescName is the schema descriptor for name field.
@@ -162,6 +209,63 @@ func init() {
 	roomDescMaxContain := roomFields[3].Descriptor()
 	// room.MaxContainValidator is a validator for the "max_contain" field. It is called by the builders before save.
 	room.MaxContainValidator = roomDescMaxContain.Validators[0].(func(int) error)
+	roomuseFields := schema.Roomuse{}.Fields()
+	_ = roomuseFields
+	// roomuseDescAge is the schema descriptor for age field.
+	roomuseDescAge := roomuseFields[0].Descriptor()
+	// roomuse.AgeValidator is a validator for the "age" field. It is called by the builders before save.
+	roomuse.AgeValidator = func() func(int) error {
+		validators := roomuseDescAge.Validators
+		fns := [...]func(int) error{
+			validators[0].(func(int) error),
+			validators[1].(func(int) error),
+		}
+		return func(age int) error {
+			for _, fn := range fns {
+				if err := fn(age); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// roomuseDescNote is the schema descriptor for note field.
+	roomuseDescNote := roomuseFields[1].Descriptor()
+	// roomuse.NoteValidator is a validator for the "note" field. It is called by the builders before save.
+	roomuse.NoteValidator = func() func(string) error {
+		validators := roomuseDescNote.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+		}
+		return func(note string) error {
+			for _, fn := range fns {
+				if err := fn(note); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
+	// roomuseDescContact is the schema descriptor for contact field.
+	roomuseDescContact := roomuseFields[2].Descriptor()
+	// roomuse.ContactValidator is a validator for the "contact" field. It is called by the builders before save.
+	roomuse.ContactValidator = func() func(string) error {
+		validators := roomuseDescContact.Validators
+		fns := [...]func(string) error{
+			validators[0].(func(string) error),
+			validators[1].(func(string) error),
+			validators[2].(func(string) error),
+		}
+		return func(contact string) error {
+			for _, fn := range fns {
+				if err := fn(contact); err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}()
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescName is the schema descriptor for name field.

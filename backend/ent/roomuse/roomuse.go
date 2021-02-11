@@ -7,8 +7,16 @@ const (
 	Label = "roomuse"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldAddedTime holds the string denoting the added_time field in the database.
-	FieldAddedTime = "added_time"
+	// FieldAge holds the string denoting the age field in the database.
+	FieldAge = "age"
+	// FieldNote holds the string denoting the note field in the database.
+	FieldNote = "note"
+	// FieldContact holds the string denoting the contact field in the database.
+	FieldContact = "contact"
+	// FieldInTime holds the string denoting the in_time field in the database.
+	FieldInTime = "in_time"
+	// FieldOutTime holds the string denoting the out_time field in the database.
+	FieldOutTime = "out_time"
 
 	// EdgeRooms holds the string denoting the rooms edge name in mutations.
 	EdgeRooms = "rooms"
@@ -45,7 +53,11 @@ const (
 // Columns holds all SQL columns for roomuse fields.
 var Columns = []string{
 	FieldID,
-	FieldAddedTime,
+	FieldAge,
+	FieldNote,
+	FieldContact,
+	FieldInTime,
+	FieldOutTime,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Roomuse type.
@@ -54,3 +66,12 @@ var ForeignKeys = []string{
 	"room_id",
 	"UserID",
 }
+
+var (
+	// AgeValidator is a validator for the "age" field. It is called by the builders before save.
+	AgeValidator func(int) error
+	// NoteValidator is a validator for the "note" field. It is called by the builders before save.
+	NoteValidator func(string) error
+	// ContactValidator is a validator for the "contact" field. It is called by the builders before save.
+	ContactValidator func(string) error
+)

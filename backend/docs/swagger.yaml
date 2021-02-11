@@ -49,7 +49,15 @@ definitions:
     type: object
   controllers.Roomuse:
     properties:
-      addedTime:
+      adderAge:
+        type: integer
+      contact:
+        type: string
+      inTime:
+        type: string
+      note:
+        type: string
+      outTime:
         type: string
       purposeID:
         type: integer
@@ -169,6 +177,9 @@ definitions:
         type: integer
       name:
         description: Name holds the value of the "name" field.
+        type: string
+      phone:
+        description: Phone holds the value of the "phone" field.
         type: string
       purpose:
         description: Purpose holds the value of the "purpose" field.
@@ -451,6 +462,29 @@ definitions:
           $ref: '#/definitions/ent.User'
         type: array
     type: object
+  ent.Position:
+    properties:
+      edges:
+        $ref: '#/definitions/ent.PositionEdges'
+        description: |-
+          Edges holds the relations/edges for other nodes in the graph.
+          The values are being populated by the PositionQuery when eager-loading is set.
+        type: object
+      id:
+        description: ID of the ent.
+        type: integer
+      name:
+        description: Name holds the value of the "name" field.
+        type: string
+    type: object
+  ent.PositionEdges:
+    properties:
+      users:
+        description: Users holds the value of the users edge.
+        items:
+          $ref: '#/definitions/ent.User'
+        type: array
+    type: object
   ent.Purpose:
     properties:
       edges:
@@ -508,8 +542,11 @@ definitions:
     type: object
   ent.Roomuse:
     properties:
-      added_time:
-        description: AddedTime holds the value of the "added_time" field.
+      age:
+        description: Age holds the value of the "age" field.
+        type: integer
+      contact:
+        description: Contact holds the value of the "contact" field.
         type: string
       edges:
         $ref: '#/definitions/ent.RoomuseEdges'
@@ -520,6 +557,15 @@ definitions:
       id:
         description: ID of the ent.
         type: integer
+      in_time:
+        description: InTime holds the value of the "in_time" field.
+        type: string
+      note:
+        description: Note holds the value of the "note" field.
+        type: string
+      out_time:
+        description: OutTime holds the value of the "out_time" field.
+        type: string
       userID:
         type: integer
     type: object
@@ -563,6 +609,8 @@ definitions:
       password:
         description: Password holds the value of the "password" field.
         type: string
+      position_ID:
+        type: integer
       userTypeID:
         type: integer
     type: object
@@ -589,6 +637,10 @@ definitions:
       gender:
         $ref: '#/definitions/ent.Gender'
         description: Gender holds the value of the gender edge.
+        type: object
+      position:
+        $ref: '#/definitions/ent.Position'
+        description: Position holds the value of the position edge.
         type: object
       roomuse:
         description: Roomuse holds the value of the Roomuse edge.
@@ -1125,8 +1177,8 @@ paths:
             $ref: '#/definitions/gin.H'
       summary: Delete a activities entity by ID
     get:
-      description: get Activities by ID
-      operationId: get-Activities
+      description: get activities by ID
+      operationId: get-activities
       parameters:
       - description: Activities ID
         in: path
@@ -1139,7 +1191,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Activities'
+            items:
+              $ref: '#/definitions/ent.Activities'
+            type: array
         "400":
           description: Bad Request
           schema:
@@ -1152,7 +1206,7 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/gin.H'
-      summary: Get a Activities entity by ID
+      summary: Get a activities entity by ID
   /club:
     get:
       description: list club entities
@@ -1257,7 +1311,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Club'
+            items:
+              $ref: '#/definitions/ent.Club'
+            type: array
         "400":
           description: Bad Request
           schema:
@@ -2903,6 +2959,37 @@ paths:
           schema:
             $ref: '#/definitions/gin.H'
       summary: Delete a roomuse entity by ID
+    get:
+      description: get roomuse by ID
+      operationId: get-roomuse
+      parameters:
+      - description: Roomuse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/ent.Roomuse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/gin.H'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/gin.H'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/gin.H'
+      summary: Get a roomuse entity by ID
   /users:
     get:
       description: list user entities
@@ -3486,7 +3573,6 @@ securityDefinitions:
     tokenUrl: https://example.com/oauth/token
     type: oauth2
   OAuth2Application:
-    authorizationUrl: ""
     flow: application
     scopes:
       admin: ' Grants read and write access to administrative information'
@@ -3501,7 +3587,6 @@ securityDefinitions:
       write: ' Grants write access'
     type: oauth2
   OAuth2Password:
-    authorizationUrl: ""
     flow: password
     scopes:
       admin: ' Grants read and write access to administrative information'

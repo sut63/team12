@@ -627,12 +627,12 @@ var doc = `{
         },
         "/activities/{id}": {
             "get": {
-                "description": "get Activities by ID",
+                "description": "get activities by ID",
                 "produces": [
                     "application/json"
                 ],
-                "summary": "Get a Activities entity by ID",
-                "operationId": "get-Activities",
+                "summary": "Get a activities entity by ID",
+                "operationId": "get-activities",
                 "parameters": [
                     {
                         "type": "integer",
@@ -646,7 +646,10 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Activities"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Activities"
+                            }
                         }
                     },
                     "400": {
@@ -823,7 +826,10 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Club"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Club"
+                            }
                         }
                     },
                     "400": {
@@ -3289,6 +3295,52 @@ var doc = `{
             }
         },
         "/roomuses/{id}": {
+            "get": {
+                "description": "get roomuse by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a roomuse entity by ID",
+                "operationId": "get-roomuse",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Roomuse ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Roomuse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/gin.H"
+                        }
+                    }
+                }
+            },
             "delete": {
                 "description": "get roomuse by ID",
                 "produces": [
@@ -4260,7 +4312,19 @@ var doc = `{
         "controllers.Roomuse": {
             "type": "object",
             "properties": {
-                "addedTime": {
+                "adderAge": {
+                    "type": "integer"
+                },
+                "contact": {
+                    "type": "string"
+                },
+                "inTime": {
+                    "type": "string"
+                },
+                "note": {
+                    "type": "string"
+                },
+                "outTime": {
                     "type": "string"
                 },
                 "purposeID": {
@@ -4417,6 +4481,10 @@ var doc = `{
                 },
                 "name": {
                     "description": "Name holds the value of the \"name\" field.",
+                    "type": "string"
+                },
+                "phone": {
+                    "description": "Phone holds the value of the \"phone\" field.",
                     "type": "string"
                 },
                 "purpose": {
@@ -4787,6 +4855,36 @@ var doc = `{
                 }
             }
         },
+        "ent.Position": {
+            "type": "object",
+            "properties": {
+                "edges": {
+                    "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the PositionQuery when eager-loading is set.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.PositionEdges"
+                },
+                "id": {
+                    "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "Name holds the value of the \"name\" field.",
+                    "type": "string"
+                }
+            }
+        },
+        "ent.PositionEdges": {
+            "type": "object",
+            "properties": {
+                "users": {
+                    "description": "Users holds the value of the users edge.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ent.User"
+                    }
+                }
+            }
+        },
         "ent.Purpose": {
             "type": "object",
             "properties": {
@@ -4862,8 +4960,12 @@ var doc = `{
         "ent.Roomuse": {
             "type": "object",
             "properties": {
-                "added_time": {
-                    "description": "AddedTime holds the value of the \"added_time\" field.",
+                "age": {
+                    "description": "Age holds the value of the \"age\" field.",
+                    "type": "integer"
+                },
+                "contact": {
+                    "description": "Contact holds the value of the \"contact\" field.",
                     "type": "string"
                 },
                 "edges": {
@@ -4874,6 +4976,18 @@ var doc = `{
                 "id": {
                     "description": "ID of the ent.",
                     "type": "integer"
+                },
+                "in_time": {
+                    "description": "InTime holds the value of the \"in_time\" field.",
+                    "type": "string"
+                },
+                "note": {
+                    "description": "Note holds the value of the \"note\" field.",
+                    "type": "string"
+                },
+                "out_time": {
+                    "description": "OutTime holds the value of the \"out_time\" field.",
+                    "type": "string"
                 },
                 "userID": {
                     "type": "integer"
@@ -4931,6 +5045,9 @@ var doc = `{
                     "description": "Password holds the value of the \"password\" field.",
                     "type": "string"
                 },
+                "position_ID": {
+                    "type": "integer"
+                },
                 "userTypeID": {
                     "type": "integer"
                 }
@@ -4967,6 +5084,11 @@ var doc = `{
                     "description": "Gender holds the value of the gender edge.",
                     "type": "object",
                     "$ref": "#/definitions/ent.Gender"
+                },
+                "position": {
+                    "description": "Position holds the value of the position edge.",
+                    "type": "object",
+                    "$ref": "#/definitions/ent.Position"
                 },
                 "roomuse": {
                     "description": "Roomuse holds the value of the Roomuse edge.",
@@ -5115,7 +5237,6 @@ var doc = `{
         "OAuth2Application": {
             "type": "oauth2",
             "flow": "application",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
@@ -5134,7 +5255,6 @@ var doc = `{
         "OAuth2Password": {
             "type": "oauth2",
             "flow": "password",
-            "authorizationUrl": "",
             "tokenUrl": "https://example.com/oauth/token",
             "scopes": {
                 "admin": " Grants read and write access to administrative information",
