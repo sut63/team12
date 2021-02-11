@@ -11,6 +11,7 @@ import (
 	"github.com/OMENX/app/ent/complaint"
 	"github.com/OMENX/app/ent/discipline"
 	"github.com/OMENX/app/ent/gender"
+	"github.com/OMENX/app/ent/position"
 	"github.com/OMENX/app/ent/predicate"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
@@ -103,6 +104,25 @@ func (uu *UserUpdate) SetNillableFromClubID(id *int) *UserUpdate {
 // SetFromClub sets the FromClub edge to Club.
 func (uu *UserUpdate) SetFromClub(c *Club) *UserUpdate {
 	return uu.SetFromClubID(c.ID)
+}
+
+// SetPositionID sets the position edge to Position by id.
+func (uu *UserUpdate) SetPositionID(id int) *UserUpdate {
+	uu.mutation.SetPositionID(id)
+	return uu
+}
+
+// SetNillablePositionID sets the position edge to Position by id if the given value is not nil.
+func (uu *UserUpdate) SetNillablePositionID(id *int) *UserUpdate {
+	if id != nil {
+		uu = uu.SetPositionID(*id)
+	}
+	return uu
+}
+
+// SetPosition sets the position edge to Position.
+func (uu *UserUpdate) SetPosition(p *Position) *UserUpdate {
+	return uu.SetPositionID(p.ID)
 }
 
 // SetGenderID sets the gender edge to Gender by id.
@@ -255,6 +275,12 @@ func (uu *UserUpdate) ClearUsertype() *UserUpdate {
 // ClearFromClub clears the FromClub edge to Club.
 func (uu *UserUpdate) ClearFromClub() *UserUpdate {
 	uu.mutation.ClearFromClub()
+	return uu
+}
+
+// ClearPosition clears the position edge to Position.
+func (uu *UserUpdate) ClearPosition() *UserUpdate {
+	uu.mutation.ClearPosition()
 	return uu
 }
 
@@ -524,6 +550,41 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: club.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uu.mutation.PositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.PositionTable,
+			Columns: []string{user.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: position.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uu.mutation.PositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.PositionTable,
+			Columns: []string{user.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: position.FieldID,
 				},
 			},
 		}
@@ -911,6 +972,25 @@ func (uuo *UserUpdateOne) SetFromClub(c *Club) *UserUpdateOne {
 	return uuo.SetFromClubID(c.ID)
 }
 
+// SetPositionID sets the position edge to Position by id.
+func (uuo *UserUpdateOne) SetPositionID(id int) *UserUpdateOne {
+	uuo.mutation.SetPositionID(id)
+	return uuo
+}
+
+// SetNillablePositionID sets the position edge to Position by id if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillablePositionID(id *int) *UserUpdateOne {
+	if id != nil {
+		uuo = uuo.SetPositionID(*id)
+	}
+	return uuo
+}
+
+// SetPosition sets the position edge to Position.
+func (uuo *UserUpdateOne) SetPosition(p *Position) *UserUpdateOne {
+	return uuo.SetPositionID(p.ID)
+}
+
 // SetGenderID sets the gender edge to Gender by id.
 func (uuo *UserUpdateOne) SetGenderID(id int) *UserUpdateOne {
 	uuo.mutation.SetGenderID(id)
@@ -1061,6 +1141,12 @@ func (uuo *UserUpdateOne) ClearUsertype() *UserUpdateOne {
 // ClearFromClub clears the FromClub edge to Club.
 func (uuo *UserUpdateOne) ClearFromClub() *UserUpdateOne {
 	uuo.mutation.ClearFromClub()
+	return uuo
+}
+
+// ClearPosition clears the position edge to Position.
+func (uuo *UserUpdateOne) ClearPosition() *UserUpdateOne {
+	uuo.mutation.ClearPosition()
 	return uuo
 }
 
@@ -1328,6 +1414,41 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (u *User, err error) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: club.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if uuo.mutation.PositionCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.PositionTable,
+			Columns: []string{user.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: position.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := uuo.mutation.PositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.PositionTable,
+			Columns: []string{user.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: position.FieldID,
 				},
 			},
 		}

@@ -11,6 +11,8 @@ const (
 	FieldName = "name"
 	// FieldPurpose holds the string denoting the purpose field in the database.
 	FieldPurpose = "purpose"
+	// FieldPhone holds the string denoting the phone field in the database.
+	FieldPhone = "phone"
 
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
@@ -85,6 +87,7 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldPurpose,
+	FieldPhone,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the Club type.
@@ -99,4 +102,6 @@ var (
 	NameValidator func(string) error
 	// PurposeValidator is a validator for the "purpose" field. It is called by the builders before save.
 	PurposeValidator func(string) error
+	// PhoneValidator is a validator for the "phone" field. It is called by the builders before save.
+	PhoneValidator func(string) error
 )

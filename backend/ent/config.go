@@ -36,6 +36,7 @@ type hooks struct {
 	ComplaintType   []ent.Hook
 	Discipline      []ent.Hook
 	Gender          []ent.Hook
+	Position        []ent.Hook
 	Purpose         []ent.Hook
 	Room            []ent.Hook
 	Roomuse         []ent.Hook

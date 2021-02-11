@@ -14,6 +14,7 @@ import (
 	"github.com/OMENX/app/ent/complaint"
 	"github.com/OMENX/app/ent/discipline"
 	"github.com/OMENX/app/ent/gender"
+	"github.com/OMENX/app/ent/position"
 	"github.com/OMENX/app/ent/predicate"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
@@ -36,6 +37,7 @@ type UserQuery struct {
 	// eager-loading edges.
 	withUsertype        *UsertypeQuery
 	withFromClub        *ClubQuery
+	withPosition        *PositionQuery
 	withGender          *GenderQuery
 	withUserstatus      *UserStatusQuery
 	withDiscipline      *DisciplineQuery
@@ -103,6 +105,24 @@ func (uq *UserQuery) QueryFromClub() *ClubQuery {
 			sqlgraph.From(user.Table, user.FieldID, uq.sqlQuery()),
 			sqlgraph.To(club.Table, club.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, user.FromClubTable, user.FromClubColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryPosition chains the current query on the position edge.
+func (uq *UserQuery) QueryPosition() *PositionQuery {
+	query := &PositionQuery{config: uq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := uq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, uq.sqlQuery()),
+			sqlgraph.To(position.Table, position.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, user.PositionTable, user.PositionColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(uq.driver.Dialect(), step)
 		return fromU, nil
@@ -455,6 +475,17 @@ func (uq *UserQuery) WithFromClub(opts ...func(*ClubQuery)) *UserQuery {
 	return uq
 }
 
+//  WithPosition tells the query-builder to eager-loads the nodes that are connected to
+// the "position" edge. The optional arguments used to configure the query builder of the edge.
+func (uq *UserQuery) WithPosition(opts ...func(*PositionQuery)) *UserQuery {
+	query := &PositionQuery{config: uq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	uq.withPosition = query
+	return uq
+}
+
 //  WithGender tells the query-builder to eager-loads the nodes that are connected to
 // the "gender" edge. The optional arguments used to configure the query builder of the edge.
 func (uq *UserQuery) WithGender(opts ...func(*GenderQuery)) *UserQuery {
@@ -610,9 +641,10 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		nodes       = []*User{}
 		withFKs     = uq.withFKs
 		_spec       = uq.querySpec()
-		loadedTypes = [10]bool{
+		loadedTypes = [11]bool{
 			uq.withUsertype != nil,
 			uq.withFromClub != nil,
+			uq.withPosition != nil,
 			uq.withGender != nil,
 			uq.withUserstatus != nil,
 			uq.withDiscipline != nil,
@@ -623,7 +655,7 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 			uq.withRoomuse != nil,
 		}
 	)
-	if uq.withUsertype != nil || uq.withFromClub != nil || uq.withGender != nil || uq.withUserstatus != nil || uq.withDiscipline != nil || uq.withYear != nil {
+	if uq.withUsertype != nil || uq.withFromClub != nil || uq.withPosition != nil || uq.withGender != nil || uq.withUserstatus != nil || uq.withDiscipline != nil || uq.withYear != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -699,6 +731,31 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 			}
 			for i := range nodes {
 				nodes[i].Edges.FromClub = n
+			}
+		}
+	}
+
+	if query := uq.withPosition; query != nil {
+		ids := make([]int, 0, len(nodes))
+		nodeids := make(map[int][]*User)
+		for i := range nodes {
+			if fk := nodes[i].Position_ID; fk != nil {
+				ids = append(ids, *fk)
+				nodeids[*fk] = append(nodeids[*fk], nodes[i])
+			}
+		}
+		query.Where(position.IDIn(ids...))
+		neighbors, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nodeids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected foreign-key "Position_ID" returned %v`, n.ID)
+			}
+			for i := range nodes {
+				nodes[i].Edges.Position = n
 			}
 		}
 	}

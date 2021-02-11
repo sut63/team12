@@ -45,6 +45,12 @@ func (cu *ClubUpdate) SetPurpose(s string) *ClubUpdate {
 	return cu
 }
 
+// SetPhone sets the phone field.
+func (cu *ClubUpdate) SetPhone(s string) *ClubUpdate {
+	cu.mutation.SetPhone(s)
+	return cu
+}
+
 // SetUserID sets the user edge to User by id.
 func (cu *ClubUpdate) SetUserID(id int) *ClubUpdate {
 	cu.mutation.SetUserID(id)
@@ -257,6 +263,11 @@ func (cu *ClubUpdate) Save(ctx context.Context) (int, error) {
 			return 0, &ValidationError{Name: "purpose", err: fmt.Errorf("ent: validator failed for field \"purpose\": %w", err)}
 		}
 	}
+	if v, ok := cu.mutation.Phone(); ok {
+		if err := club.PhoneValidator(v); err != nil {
+			return 0, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
+		}
+	}
 
 	var (
 		err      error
@@ -337,6 +348,13 @@ func (cu *ClubUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: club.FieldPurpose,
+		})
+	}
+	if value, ok := cu.mutation.Phone(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: club.FieldPhone,
 		})
 	}
 	if cu.mutation.UserCleared() {
@@ -626,6 +644,12 @@ func (cuo *ClubUpdateOne) SetPurpose(s string) *ClubUpdateOne {
 	return cuo
 }
 
+// SetPhone sets the phone field.
+func (cuo *ClubUpdateOne) SetPhone(s string) *ClubUpdateOne {
+	cuo.mutation.SetPhone(s)
+	return cuo
+}
+
 // SetUserID sets the user edge to User by id.
 func (cuo *ClubUpdateOne) SetUserID(id int) *ClubUpdateOne {
 	cuo.mutation.SetUserID(id)
@@ -838,6 +862,11 @@ func (cuo *ClubUpdateOne) Save(ctx context.Context) (*Club, error) {
 			return nil, &ValidationError{Name: "purpose", err: fmt.Errorf("ent: validator failed for field \"purpose\": %w", err)}
 		}
 	}
+	if v, ok := cuo.mutation.Phone(); ok {
+		if err := club.PhoneValidator(v); err != nil {
+			return nil, &ValidationError{Name: "phone", err: fmt.Errorf("ent: validator failed for field \"phone\": %w", err)}
+		}
+	}
 
 	var (
 		err  error
@@ -916,6 +945,13 @@ func (cuo *ClubUpdateOne) sqlSave(ctx context.Context) (c *Club, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: club.FieldPurpose,
+		})
+	}
+	if value, ok := cuo.mutation.Phone(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: club.FieldPhone,
 		})
 	}
 	if cuo.mutation.UserCleared() {

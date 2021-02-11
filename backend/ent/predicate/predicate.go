@@ -42,6 +42,9 @@ type Discipline func(*sql.Selector)
 // Gender is the predicate function for gender builders.
 type Gender func(*sql.Selector)
 
+// Position is the predicate function for position builders.
+type Position func(*sql.Selector)
+
 // Purpose is the predicate function for purpose builders.
 type Purpose func(*sql.Selector)
 

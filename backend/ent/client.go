@@ -21,6 +21,7 @@ import (
 	"github.com/OMENX/app/ent/complainttype"
 	"github.com/OMENX/app/ent/discipline"
 	"github.com/OMENX/app/ent/gender"
+	"github.com/OMENX/app/ent/position"
 	"github.com/OMENX/app/ent/purpose"
 	"github.com/OMENX/app/ent/room"
 	"github.com/OMENX/app/ent/roomuse"
@@ -63,6 +64,8 @@ type Client struct {
 	Discipline *DisciplineClient
 	// Gender is the client for interacting with the Gender builders.
 	Gender *GenderClient
+	// Position is the client for interacting with the Position builders.
+	Position *PositionClient
 	// Purpose is the client for interacting with the Purpose builders.
 	Purpose *PurposeClient
 	// Room is the client for interacting with the Room builders.
@@ -102,6 +105,7 @@ func (c *Client) init() {
 	c.ComplaintType = NewComplaintTypeClient(c.config)
 	c.Discipline = NewDisciplineClient(c.config)
 	c.Gender = NewGenderClient(c.config)
+	c.Position = NewPositionClient(c.config)
 	c.Purpose = NewPurposeClient(c.config)
 	c.Room = NewRoomClient(c.config)
 	c.Roomuse = NewRoomuseClient(c.config)
@@ -153,6 +157,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		ComplaintType:   NewComplaintTypeClient(cfg),
 		Discipline:      NewDisciplineClient(cfg),
 		Gender:          NewGenderClient(cfg),
+		Position:        NewPositionClient(cfg),
 		Purpose:         NewPurposeClient(cfg),
 		Room:            NewRoomClient(cfg),
 		Roomuse:         NewRoomuseClient(cfg),
@@ -187,6 +192,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		ComplaintType:   NewComplaintTypeClient(cfg),
 		Discipline:      NewDisciplineClient(cfg),
 		Gender:          NewGenderClient(cfg),
+		Position:        NewPositionClient(cfg),
 		Purpose:         NewPurposeClient(cfg),
 		Room:            NewRoomClient(cfg),
 		Roomuse:         NewRoomuseClient(cfg),
@@ -234,6 +240,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.ComplaintType.Use(hooks...)
 	c.Discipline.Use(hooks...)
 	c.Gender.Use(hooks...)
+	c.Position.Use(hooks...)
 	c.Purpose.Use(hooks...)
 	c.Room.Use(hooks...)
 	c.Roomuse.Use(hooks...)
@@ -1623,6 +1630,105 @@ func (c *GenderClient) Hooks() []Hook {
 	return c.hooks.Gender
 }
 
+// PositionClient is a client for the Position schema.
+type PositionClient struct {
+	config
+}
+
+// NewPositionClient returns a client for the Position from the given config.
+func NewPositionClient(c config) *PositionClient {
+	return &PositionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `position.Hooks(f(g(h())))`.
+func (c *PositionClient) Use(hooks ...Hook) {
+	c.hooks.Position = append(c.hooks.Position, hooks...)
+}
+
+// Create returns a create builder for Position.
+func (c *PositionClient) Create() *PositionCreate {
+	mutation := newPositionMutation(c.config, OpCreate)
+	return &PositionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Update returns an update builder for Position.
+func (c *PositionClient) Update() *PositionUpdate {
+	mutation := newPositionMutation(c.config, OpUpdate)
+	return &PositionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PositionClient) UpdateOne(po *Position) *PositionUpdateOne {
+	mutation := newPositionMutation(c.config, OpUpdateOne, withPosition(po))
+	return &PositionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PositionClient) UpdateOneID(id int) *PositionUpdateOne {
+	mutation := newPositionMutation(c.config, OpUpdateOne, withPositionID(id))
+	return &PositionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Position.
+func (c *PositionClient) Delete() *PositionDelete {
+	mutation := newPositionMutation(c.config, OpDelete)
+	return &PositionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *PositionClient) DeleteOne(po *Position) *PositionDeleteOne {
+	return c.DeleteOneID(po.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *PositionClient) DeleteOneID(id int) *PositionDeleteOne {
+	builder := c.Delete().Where(position.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PositionDeleteOne{builder}
+}
+
+// Create returns a query builder for Position.
+func (c *PositionClient) Query() *PositionQuery {
+	return &PositionQuery{config: c.config}
+}
+
+// Get returns a Position entity by its id.
+func (c *PositionClient) Get(ctx context.Context, id int) (*Position, error) {
+	return c.Query().Where(position.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PositionClient) GetX(ctx context.Context, id int) *Position {
+	po, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return po
+}
+
+// QueryUsers queries the users edge of a Position.
+func (c *PositionClient) QueryUsers(po *Position) *UserQuery {
+	query := &UserQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := po.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(position.Table, position.FieldID, id),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, position.UsersTable, position.UsersColumn),
+		)
+		fromV = sqlgraph.Neighbors(po.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *PositionClient) Hooks() []Hook {
+	return c.hooks.Position
+}
+
 // PurposeClient is a client for the Purpose schema.
 type PurposeClient struct {
 	config
@@ -2055,6 +2161,22 @@ func (c *UserClient) QueryFromClub(u *User) *ClubQuery {
 			sqlgraph.From(user.Table, user.FieldID, id),
 			sqlgraph.To(club.Table, club.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, user.FromClubTable, user.FromClubColumn),
+		)
+		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryPosition queries the position edge of a User.
+func (c *UserClient) QueryPosition(u *User) *PositionQuery {
+	query := &PositionQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := u.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, id),
+			sqlgraph.To(position.Table, position.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, user.PositionTable, user.PositionColumn),
 		)
 		fromV = sqlgraph.Neighbors(u.driver.Dialect(), step)
 		return fromV, nil

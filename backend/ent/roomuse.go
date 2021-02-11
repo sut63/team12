@@ -19,8 +19,16 @@ type Roomuse struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// AddedTime holds the value of the "added_time" field.
-	AddedTime time.Time `json:"added_time,omitempty"`
+	// Age holds the value of the "age" field.
+	Age int `json:"age,omitempty"`
+	// Note holds the value of the "note" field.
+	Note string `json:"note,omitempty"`
+	// Contact holds the value of the "contact" field.
+	Contact string `json:"contact,omitempty"`
+	// InTime holds the value of the "in_time" field.
+	InTime time.Time `json:"in_time,omitempty"`
+	// OutTime holds the value of the "out_time" field.
+	OutTime time.Time `json:"out_time,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the RoomuseQuery when eager-loading is set.
 	Edges      RoomuseEdges `json:"edges"`
@@ -87,8 +95,12 @@ func (e RoomuseEdges) UsersOrErr() (*User, error) {
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Roomuse) scanValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // id
-		&sql.NullTime{},  // added_time
+		&sql.NullInt64{},  // id
+		&sql.NullInt64{},  // age
+		&sql.NullString{}, // note
+		&sql.NullString{}, // contact
+		&sql.NullTime{},   // in_time
+		&sql.NullTime{},   // out_time
 	}
 }
 
@@ -113,12 +125,32 @@ func (r *Roomuse) assignValues(values ...interface{}) error {
 	}
 	r.ID = int(value.Int64)
 	values = values[1:]
-	if value, ok := values[0].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field added_time", values[0])
+	if value, ok := values[0].(*sql.NullInt64); !ok {
+		return fmt.Errorf("unexpected type %T for field age", values[0])
 	} else if value.Valid {
-		r.AddedTime = value.Time
+		r.Age = int(value.Int64)
 	}
-	values = values[1:]
+	if value, ok := values[1].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field note", values[1])
+	} else if value.Valid {
+		r.Note = value.String
+	}
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field contact", values[2])
+	} else if value.Valid {
+		r.Contact = value.String
+	}
+	if value, ok := values[3].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field in_time", values[3])
+	} else if value.Valid {
+		r.InTime = value.Time
+	}
+	if value, ok := values[4].(*sql.NullTime); !ok {
+		return fmt.Errorf("unexpected type %T for field out_time", values[4])
+	} else if value.Valid {
+		r.OutTime = value.Time
+	}
+	values = values[5:]
 	if len(values) == len(roomuse.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field purpose_id", value)
@@ -180,8 +212,16 @@ func (r *Roomuse) String() string {
 	var builder strings.Builder
 	builder.WriteString("Roomuse(")
 	builder.WriteString(fmt.Sprintf("id=%v", r.ID))
-	builder.WriteString(", added_time=")
-	builder.WriteString(r.AddedTime.Format(time.ANSIC))
+	builder.WriteString(", age=")
+	builder.WriteString(fmt.Sprintf("%v", r.Age))
+	builder.WriteString(", note=")
+	builder.WriteString(r.Note)
+	builder.WriteString(", contact=")
+	builder.WriteString(r.Contact)
+	builder.WriteString(", in_time=")
+	builder.WriteString(r.InTime.Format(time.ANSIC))
+	builder.WriteString(", out_time=")
+	builder.WriteString(r.OutTime.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

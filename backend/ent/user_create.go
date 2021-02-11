@@ -12,6 +12,7 @@ import (
 	"github.com/OMENX/app/ent/complaint"
 	"github.com/OMENX/app/ent/discipline"
 	"github.com/OMENX/app/ent/gender"
+	"github.com/OMENX/app/ent/position"
 	"github.com/OMENX/app/ent/roomuse"
 	"github.com/OMENX/app/ent/user"
 	"github.com/OMENX/app/ent/userstatus"
@@ -88,6 +89,25 @@ func (uc *UserCreate) SetNillableFromClubID(id *int) *UserCreate {
 // SetFromClub sets the FromClub edge to Club.
 func (uc *UserCreate) SetFromClub(c *Club) *UserCreate {
 	return uc.SetFromClubID(c.ID)
+}
+
+// SetPositionID sets the position edge to Position by id.
+func (uc *UserCreate) SetPositionID(id int) *UserCreate {
+	uc.mutation.SetPositionID(id)
+	return uc
+}
+
+// SetNillablePositionID sets the position edge to Position by id if the given value is not nil.
+func (uc *UserCreate) SetNillablePositionID(id *int) *UserCreate {
+	if id != nil {
+		uc = uc.SetPositionID(*id)
+	}
+	return uc
+}
+
+// SetPosition sets the position edge to Position.
+func (uc *UserCreate) SetPosition(p *Position) *UserCreate {
+	return uc.SetPositionID(p.ID)
 }
 
 // SetGenderID sets the gender edge to Gender by id.
@@ -382,6 +402,25 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: club.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := uc.mutation.PositionIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   user.PositionTable,
+			Columns: []string{user.PositionColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: position.FieldID,
 				},
 			},
 		}

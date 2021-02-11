@@ -22,6 +22,8 @@ type Club struct {
 	Name string `json:"name,omitempty"`
 	// Purpose holds the value of the "purpose" field.
 	Purpose string `json:"purpose,omitempty"`
+	// Phone holds the value of the "phone" field.
+	Phone string `json:"phone,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ClubQuery when eager-loading is set.
 	Edges         ClubEdges `json:"edges"`
@@ -135,6 +137,7 @@ func (*Club) scanValues() []interface{} {
 		&sql.NullInt64{},  // id
 		&sql.NullString{}, // name
 		&sql.NullString{}, // purpose
+		&sql.NullString{}, // phone
 	}
 }
 
@@ -169,7 +172,12 @@ func (c *Club) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		c.Purpose = value.String
 	}
-	values = values[2:]
+	if value, ok := values[2].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field phone", values[2])
+	} else if value.Valid {
+		c.Phone = value.String
+	}
+	values = values[3:]
 	if len(values) == len(club.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
 			return fmt.Errorf("unexpected type %T for edge-field ClubBranch_ID", value)
@@ -255,6 +263,8 @@ func (c *Club) String() string {
 	builder.WriteString(c.Name)
 	builder.WriteString(", purpose=")
 	builder.WriteString(c.Purpose)
+	builder.WriteString(", phone=")
+	builder.WriteString(c.Phone)
 	builder.WriteByte(')')
 	return builder.String()
 }
