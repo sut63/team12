@@ -100,11 +100,11 @@ export default function Roomuse() {
   const [peopleError, setPeopleError] = useState('');
 
   const validatenote = (val: string) => {
-    return val.match("^[A-Za-zก-๙]+[ \t\r\n\v\f]+[A-Za-zก-๙]+[^๐-๙]$");
+    return val.match("^[A-Za-zก-๙]{1,25}$");
   }
   const validatepeople = (val: string) => {
     var a = Number(val);
-    if (a > 0 && a < 200) {
+    if (a > 0) {
       return String(val)
     }
     return val = ''
@@ -116,7 +116,7 @@ export default function Roomuse() {
   const checkPattern = (id: string, value: string) => {
     switch (id) {
       case 'note':
-        validatenote(value) ? setNoteError('') : setNoteError('ข้อมูล short note ไม่ถูกต้อง');
+        validatenote(value) ? setNoteError('') : setNoteError('ต้องมีข้อความสั้น 1-25 ตัวอักษร');
         return;
         case 'people':
           validatepeople(value) ? setPeopleError('') : setPeopleError('ข้อมูลจำนวนผู้เข้าใช้ไม่ถูกต้อง');
@@ -218,7 +218,7 @@ export default function Roomuse() {
         alertMessage("error","เบอร์โทรศัพท์ต้องมี 10 หลัก");
         return;
       case 'note':
-        alertMessage("error","ข้อความสั้น ไม่ควรเกิน 25 ตัวอักษร");
+        alertMessage("error","ควรมีข้อความสั้นและไม่ควรเกิน 25 ตัวอักษร");
         return;
       default:
         alertMessage("error","บันทึกข้อมูลไม่สำเร็จ");
@@ -425,9 +425,10 @@ export default function Roomuse() {
                     <TextField
                       //type="reset"
                       error={noteError ? true : false}
-                      id="memo"
+                      id="note"
                       size="medium"
                       variant="outlined"
+                      helperText={noteError}
                       value={note}
                       onChange={NotehandleChang}
                     />
@@ -445,6 +446,7 @@ export default function Roomuse() {
                       id="people"
                       size="medium"
                       variant="outlined"
+                      helperText={peopleError}
                       value={people}
                       onChange={PeoplehandleChang}
                     />
@@ -458,8 +460,9 @@ export default function Roomuse() {
                   <form className={classes.paper} noValidate autoComplete="off">
                     <TextField
                       error={contactError ? true : false}
-                      id="outlined-multiline-static"
+                      id="contact"
                       variant="outlined"
+                      helperText={contactError}
                       value={contact}
                       onChange={ContacthandleChang}
                     />
