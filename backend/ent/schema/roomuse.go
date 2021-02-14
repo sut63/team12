@@ -14,7 +14,7 @@ type Roomuse struct {
 // Fields of the Roomuse.
 func (Roomuse) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("age").Positive().Min(0),
+		field.Int("people").Positive().Min(0),
 		field.String("note").NotEmpty().MaxLen(25),
 		field.String("contact").NotEmpty().MinLen(10).MaxLen(10),
 		field.Time("in_time"),
