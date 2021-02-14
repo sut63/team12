@@ -25,7 +25,7 @@ type Roomuse struct {
 	RoomID    int
 	PurposeID int
 	UserID    int
-	AdderAge  int
+	People    int
 	Note      string
 	Contact   string
 	InTime    string
@@ -96,7 +96,7 @@ func (ctl *RoomuseController) CreateRoomuse(c *gin.Context) {
 		SetUsers(u).
 		SetRooms(r).
 		SetPurposes(p).
-		SetAge(obj.AdderAge).
+		SetPeople(obj.People).
 		SetNote(obj.Note).
 		SetContact(obj.Contact).
 		SetInTime(intimes).
