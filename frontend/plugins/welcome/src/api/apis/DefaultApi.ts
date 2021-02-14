@@ -286,6 +286,10 @@ export interface GetRoomRequest {
     id: number;
 }
 
+export interface GetRoomuseRequest {
+    id: number;
+}
+
 export interface GetUserRequest {
     id: number;
 }
@@ -1826,7 +1830,7 @@ export class DefaultApi extends runtime.BaseAPI {
      * get club by ID
      * Get a club entity by ID
      */
-    async getClubRaw(requestParameters: GetClubRequest): Promise<runtime.ApiResponse<EntClub>> {
+    async getClubRaw(requestParameters: GetClubRequest): Promise<runtime.ApiResponse<Array<EntClub>>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getClub.');
         }
@@ -1842,14 +1846,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntClubFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntClubFromJSON));
     }
 
     /**
      * get club by ID
      * Get a club entity by ID
      */
-    async getClub(requestParameters: GetClubRequest): Promise<EntClub> {
+    async getClub(requestParameters: GetClubRequest): Promise<Array<EntClub>> {
         const response = await this.getClubRaw(requestParameters);
         return await response.value();
     }
@@ -2171,6 +2175,38 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getRoom(requestParameters: GetRoomRequest): Promise<EntRoom> {
         const response = await this.getRoomRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get roomuse by ID
+     * Get a roomuse entity by ID
+     */
+    async getRoomuseRaw(requestParameters: GetRoomuseRequest): Promise<runtime.ApiResponse<Array<EntRoomuse>>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getRoomuse.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/roomuses/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntRoomuseFromJSON));
+    }
+
+    /**
+     * get roomuse by ID
+     * Get a roomuse entity by ID
+     */
+    async getRoomuse(requestParameters: GetRoomuseRequest): Promise<Array<EntRoomuse>> {
+        const response = await this.getRoomuseRaw(requestParameters);
         return await response.value();
     }
 
