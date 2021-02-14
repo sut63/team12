@@ -23,9 +23,9 @@ type RoomuseCreate struct {
 	hooks    []Hook
 }
 
-// SetAge sets the age field.
-func (rc *RoomuseCreate) SetAge(i int) *RoomuseCreate {
-	rc.mutation.SetAge(i)
+// SetPeople sets the people field.
+func (rc *RoomuseCreate) SetPeople(i int) *RoomuseCreate {
+	rc.mutation.SetPeople(i)
 	return rc
 }
 
@@ -117,12 +117,12 @@ func (rc *RoomuseCreate) Mutation() *RoomuseMutation {
 
 // Save creates the Roomuse in the database.
 func (rc *RoomuseCreate) Save(ctx context.Context) (*Roomuse, error) {
-	if _, ok := rc.mutation.Age(); !ok {
-		return nil, &ValidationError{Name: "age", err: errors.New("ent: missing required field \"age\"")}
+	if _, ok := rc.mutation.People(); !ok {
+		return nil, &ValidationError{Name: "people", err: errors.New("ent: missing required field \"people\"")}
 	}
-	if v, ok := rc.mutation.Age(); ok {
-		if err := roomuse.AgeValidator(v); err != nil {
-			return nil, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+	if v, ok := rc.mutation.People(); ok {
+		if err := roomuse.PeopleValidator(v); err != nil {
+			return nil, &ValidationError{Name: "people", err: fmt.Errorf("ent: validator failed for field \"people\": %w", err)}
 		}
 	}
 	if _, ok := rc.mutation.Note(); !ok {
@@ -207,13 +207,13 @@ func (rc *RoomuseCreate) createSpec() (*Roomuse, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := rc.mutation.Age(); ok {
+	if value, ok := rc.mutation.People(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: roomuse.FieldAge,
+			Column: roomuse.FieldPeople,
 		})
-		r.Age = value
+		r.People = value
 	}
 	if value, ok := rc.mutation.Note(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{

@@ -31,16 +31,16 @@ func (ru *RoomuseUpdate) Where(ps ...predicate.Roomuse) *RoomuseUpdate {
 	return ru
 }
 
-// SetAge sets the age field.
-func (ru *RoomuseUpdate) SetAge(i int) *RoomuseUpdate {
-	ru.mutation.ResetAge()
-	ru.mutation.SetAge(i)
+// SetPeople sets the people field.
+func (ru *RoomuseUpdate) SetPeople(i int) *RoomuseUpdate {
+	ru.mutation.ResetPeople()
+	ru.mutation.SetPeople(i)
 	return ru
 }
 
-// AddAge adds i to age.
-func (ru *RoomuseUpdate) AddAge(i int) *RoomuseUpdate {
-	ru.mutation.AddAge(i)
+// AddPeople adds i to people.
+func (ru *RoomuseUpdate) AddPeople(i int) *RoomuseUpdate {
+	ru.mutation.AddPeople(i)
 	return ru
 }
 
@@ -150,9 +150,9 @@ func (ru *RoomuseUpdate) ClearUsers() *RoomuseUpdate {
 
 // Save executes the query and returns the number of rows/vertices matched by this operation.
 func (ru *RoomuseUpdate) Save(ctx context.Context) (int, error) {
-	if v, ok := ru.mutation.Age(); ok {
-		if err := roomuse.AgeValidator(v); err != nil {
-			return 0, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+	if v, ok := ru.mutation.People(); ok {
+		if err := roomuse.PeopleValidator(v); err != nil {
+			return 0, &ValidationError{Name: "people", err: fmt.Errorf("ent: validator failed for field \"people\": %w", err)}
 		}
 	}
 	if v, ok := ru.mutation.Note(); ok {
@@ -233,18 +233,18 @@ func (ru *RoomuseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := ru.mutation.Age(); ok {
+	if value, ok := ru.mutation.People(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: roomuse.FieldAge,
+			Column: roomuse.FieldPeople,
 		})
 	}
-	if value, ok := ru.mutation.AddedAge(); ok {
+	if value, ok := ru.mutation.AddedPeople(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: roomuse.FieldAge,
+			Column: roomuse.FieldPeople,
 		})
 	}
 	if value, ok := ru.mutation.Note(); ok {
@@ -398,16 +398,16 @@ type RoomuseUpdateOne struct {
 	mutation *RoomuseMutation
 }
 
-// SetAge sets the age field.
-func (ruo *RoomuseUpdateOne) SetAge(i int) *RoomuseUpdateOne {
-	ruo.mutation.ResetAge()
-	ruo.mutation.SetAge(i)
+// SetPeople sets the people field.
+func (ruo *RoomuseUpdateOne) SetPeople(i int) *RoomuseUpdateOne {
+	ruo.mutation.ResetPeople()
+	ruo.mutation.SetPeople(i)
 	return ruo
 }
 
-// AddAge adds i to age.
-func (ruo *RoomuseUpdateOne) AddAge(i int) *RoomuseUpdateOne {
-	ruo.mutation.AddAge(i)
+// AddPeople adds i to people.
+func (ruo *RoomuseUpdateOne) AddPeople(i int) *RoomuseUpdateOne {
+	ruo.mutation.AddPeople(i)
 	return ruo
 }
 
@@ -517,9 +517,9 @@ func (ruo *RoomuseUpdateOne) ClearUsers() *RoomuseUpdateOne {
 
 // Save executes the query and returns the updated entity.
 func (ruo *RoomuseUpdateOne) Save(ctx context.Context) (*Roomuse, error) {
-	if v, ok := ruo.mutation.Age(); ok {
-		if err := roomuse.AgeValidator(v); err != nil {
-			return nil, &ValidationError{Name: "age", err: fmt.Errorf("ent: validator failed for field \"age\": %w", err)}
+	if v, ok := ruo.mutation.People(); ok {
+		if err := roomuse.PeopleValidator(v); err != nil {
+			return nil, &ValidationError{Name: "people", err: fmt.Errorf("ent: validator failed for field \"people\": %w", err)}
 		}
 	}
 	if v, ok := ruo.mutation.Note(); ok {
@@ -598,18 +598,18 @@ func (ruo *RoomuseUpdateOne) sqlSave(ctx context.Context) (r *Roomuse, err error
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Roomuse.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := ruo.mutation.Age(); ok {
+	if value, ok := ruo.mutation.People(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: roomuse.FieldAge,
+			Column: roomuse.FieldPeople,
 		})
 	}
-	if value, ok := ruo.mutation.AddedAge(); ok {
+	if value, ok := ruo.mutation.AddedPeople(); ok {
 		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
 			Type:   field.TypeInt,
 			Value:  value,
-			Column: roomuse.FieldAge,
+			Column: roomuse.FieldPeople,
 		})
 	}
 	if value, ok := ruo.mutation.Note(); ok {

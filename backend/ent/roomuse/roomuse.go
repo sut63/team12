@@ -7,8 +7,8 @@ const (
 	Label = "roomuse"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldAge holds the string denoting the age field in the database.
-	FieldAge = "age"
+	// FieldPeople holds the string denoting the people field in the database.
+	FieldPeople = "people"
 	// FieldNote holds the string denoting the note field in the database.
 	FieldNote = "note"
 	// FieldContact holds the string denoting the contact field in the database.
@@ -53,7 +53,7 @@ const (
 // Columns holds all SQL columns for roomuse fields.
 var Columns = []string{
 	FieldID,
-	FieldAge,
+	FieldPeople,
 	FieldNote,
 	FieldContact,
 	FieldInTime,
@@ -68,8 +68,8 @@ var ForeignKeys = []string{
 }
 
 var (
-	// AgeValidator is a validator for the "age" field. It is called by the builders before save.
-	AgeValidator func(int) error
+	// PeopleValidator is a validator for the "people" field. It is called by the builders before save.
+	PeopleValidator func(int) error
 	// NoteValidator is a validator for the "note" field. It is called by the builders before save.
 	NoteValidator func(string) error
 	// ContactValidator is a validator for the "contact" field. It is called by the builders before save.

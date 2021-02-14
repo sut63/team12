@@ -19,8 +19,8 @@ type Roomuse struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// Age holds the value of the "age" field.
-	Age int `json:"age,omitempty"`
+	// People holds the value of the "people" field.
+	People int `json:"people,omitempty"`
 	// Note holds the value of the "note" field.
 	Note string `json:"note,omitempty"`
 	// Contact holds the value of the "contact" field.
@@ -96,7 +96,7 @@ func (e RoomuseEdges) UsersOrErr() (*User, error) {
 func (*Roomuse) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullInt64{},  // age
+		&sql.NullInt64{},  // people
 		&sql.NullString{}, // note
 		&sql.NullString{}, // contact
 		&sql.NullTime{},   // in_time
@@ -126,9 +126,9 @@ func (r *Roomuse) assignValues(values ...interface{}) error {
 	r.ID = int(value.Int64)
 	values = values[1:]
 	if value, ok := values[0].(*sql.NullInt64); !ok {
-		return fmt.Errorf("unexpected type %T for field age", values[0])
+		return fmt.Errorf("unexpected type %T for field people", values[0])
 	} else if value.Valid {
-		r.Age = int(value.Int64)
+		r.People = int(value.Int64)
 	}
 	if value, ok := values[1].(*sql.NullString); !ok {
 		return fmt.Errorf("unexpected type %T for field note", values[1])
@@ -212,8 +212,8 @@ func (r *Roomuse) String() string {
 	var builder strings.Builder
 	builder.WriteString("Roomuse(")
 	builder.WriteString(fmt.Sprintf("id=%v", r.ID))
-	builder.WriteString(", age=")
-	builder.WriteString(fmt.Sprintf("%v", r.Age))
+	builder.WriteString(", people=")
+	builder.WriteString(fmt.Sprintf("%v", r.People))
 	builder.WriteString(", note=")
 	builder.WriteString(r.Note)
 	builder.WriteString(", contact=")

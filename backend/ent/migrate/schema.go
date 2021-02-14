@@ -310,7 +310,7 @@ var (
 	// RoomusesColumns holds the columns for the "roomuses" table.
 	RoomusesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "age", Type: field.TypeInt},
+		{Name: "people", Type: field.TypeInt},
 		{Name: "note", Type: field.TypeString, Size: 25},
 		{Name: "contact", Type: field.TypeString, Size: 10},
 		{Name: "in_time", Type: field.TypeTime},

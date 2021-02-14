@@ -93,10 +93,10 @@ func IDLTE(id int) predicate.Roomuse {
 	})
 }
 
-// Age applies equality check predicate on the "age" field. It's identical to AgeEQ.
-func Age(v int) predicate.Roomuse {
+// People applies equality check predicate on the "people" field. It's identical to PeopleEQ.
+func People(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAge), v))
+		s.Where(sql.EQ(s.C(FieldPeople), v))
 	})
 }
 
@@ -128,22 +128,22 @@ func OutTime(v time.Time) predicate.Roomuse {
 	})
 }
 
-// AgeEQ applies the EQ predicate on the "age" field.
-func AgeEQ(v int) predicate.Roomuse {
+// PeopleEQ applies the EQ predicate on the "people" field.
+func PeopleEQ(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldAge), v))
+		s.Where(sql.EQ(s.C(FieldPeople), v))
 	})
 }
 
-// AgeNEQ applies the NEQ predicate on the "age" field.
-func AgeNEQ(v int) predicate.Roomuse {
+// PeopleNEQ applies the NEQ predicate on the "people" field.
+func PeopleNEQ(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldAge), v))
+		s.Where(sql.NEQ(s.C(FieldPeople), v))
 	})
 }
 
-// AgeIn applies the In predicate on the "age" field.
-func AgeIn(vs ...int) predicate.Roomuse {
+// PeopleIn applies the In predicate on the "people" field.
+func PeopleIn(vs ...int) predicate.Roomuse {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -155,12 +155,12 @@ func AgeIn(vs ...int) predicate.Roomuse {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.In(s.C(FieldAge), v...))
+		s.Where(sql.In(s.C(FieldPeople), v...))
 	})
 }
 
-// AgeNotIn applies the NotIn predicate on the "age" field.
-func AgeNotIn(vs ...int) predicate.Roomuse {
+// PeopleNotIn applies the NotIn predicate on the "people" field.
+func PeopleNotIn(vs ...int) predicate.Roomuse {
 	v := make([]interface{}, len(vs))
 	for i := range v {
 		v[i] = vs[i]
@@ -172,35 +172,35 @@ func AgeNotIn(vs ...int) predicate.Roomuse {
 			s.Where(sql.False())
 			return
 		}
-		s.Where(sql.NotIn(s.C(FieldAge), v...))
+		s.Where(sql.NotIn(s.C(FieldPeople), v...))
 	})
 }
 
-// AgeGT applies the GT predicate on the "age" field.
-func AgeGT(v int) predicate.Roomuse {
+// PeopleGT applies the GT predicate on the "people" field.
+func PeopleGT(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldAge), v))
+		s.Where(sql.GT(s.C(FieldPeople), v))
 	})
 }
 
-// AgeGTE applies the GTE predicate on the "age" field.
-func AgeGTE(v int) predicate.Roomuse {
+// PeopleGTE applies the GTE predicate on the "people" field.
+func PeopleGTE(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldAge), v))
+		s.Where(sql.GTE(s.C(FieldPeople), v))
 	})
 }
 
-// AgeLT applies the LT predicate on the "age" field.
-func AgeLT(v int) predicate.Roomuse {
+// PeopleLT applies the LT predicate on the "people" field.
+func PeopleLT(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldAge), v))
+		s.Where(sql.LT(s.C(FieldPeople), v))
 	})
 }
 
-// AgeLTE applies the LTE predicate on the "age" field.
-func AgeLTE(v int) predicate.Roomuse {
+// PeopleLTE applies the LTE predicate on the "people" field.
+func PeopleLTE(v int) predicate.Roomuse {
 	return predicate.Roomuse(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldAge), v))
+		s.Where(sql.LTE(s.C(FieldPeople), v))
 	})
 }
 

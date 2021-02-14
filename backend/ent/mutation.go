@@ -7448,8 +7448,8 @@ type RoomuseMutation struct {
 	op              Op
 	typ             string
 	id              *int
-	age             *int
-	addage          *int
+	people          *int
+	addpeople       *int
 	note            *string
 	contact         *string
 	in_time         *time.Time
@@ -7544,61 +7544,61 @@ func (m *RoomuseMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
-// SetAge sets the age field.
-func (m *RoomuseMutation) SetAge(i int) {
-	m.age = &i
-	m.addage = nil
+// SetPeople sets the people field.
+func (m *RoomuseMutation) SetPeople(i int) {
+	m.people = &i
+	m.addpeople = nil
 }
 
-// Age returns the age value in the mutation.
-func (m *RoomuseMutation) Age() (r int, exists bool) {
-	v := m.age
+// People returns the people value in the mutation.
+func (m *RoomuseMutation) People() (r int, exists bool) {
+	v := m.people
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldAge returns the old age value of the Roomuse.
+// OldPeople returns the old people value of the Roomuse.
 // If the Roomuse object wasn't provided to the builder, the object is fetched
 // from the database.
 // An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *RoomuseMutation) OldAge(ctx context.Context) (v int, err error) {
+func (m *RoomuseMutation) OldPeople(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldAge is allowed only on UpdateOne operations")
+		return v, fmt.Errorf("OldPeople is allowed only on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldAge requires an ID field in the mutation")
+		return v, fmt.Errorf("OldPeople requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAge: %w", err)
+		return v, fmt.Errorf("querying old value for OldPeople: %w", err)
 	}
-	return oldValue.Age, nil
+	return oldValue.People, nil
 }
 
-// AddAge adds i to age.
-func (m *RoomuseMutation) AddAge(i int) {
-	if m.addage != nil {
-		*m.addage += i
+// AddPeople adds i to people.
+func (m *RoomuseMutation) AddPeople(i int) {
+	if m.addpeople != nil {
+		*m.addpeople += i
 	} else {
-		m.addage = &i
+		m.addpeople = &i
 	}
 }
 
-// AddedAge returns the value that was added to the age field in this mutation.
-func (m *RoomuseMutation) AddedAge() (r int, exists bool) {
-	v := m.addage
+// AddedPeople returns the value that was added to the people field in this mutation.
+func (m *RoomuseMutation) AddedPeople() (r int, exists bool) {
+	v := m.addpeople
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// ResetAge reset all changes of the "age" field.
-func (m *RoomuseMutation) ResetAge() {
-	m.age = nil
-	m.addage = nil
+// ResetPeople reset all changes of the "people" field.
+func (m *RoomuseMutation) ResetPeople() {
+	m.people = nil
+	m.addpeople = nil
 }
 
 // SetNote sets the note field.
@@ -7881,8 +7881,8 @@ func (m *RoomuseMutation) Type() string {
 // fields that were in/decremented, call AddedFields().
 func (m *RoomuseMutation) Fields() []string {
 	fields := make([]string, 0, 5)
-	if m.age != nil {
-		fields = append(fields, roomuse.FieldAge)
+	if m.people != nil {
+		fields = append(fields, roomuse.FieldPeople)
 	}
 	if m.note != nil {
 		fields = append(fields, roomuse.FieldNote)
@@ -7904,8 +7904,8 @@ func (m *RoomuseMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *RoomuseMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case roomuse.FieldAge:
-		return m.Age()
+	case roomuse.FieldPeople:
+		return m.People()
 	case roomuse.FieldNote:
 		return m.Note()
 	case roomuse.FieldContact:
@@ -7923,8 +7923,8 @@ func (m *RoomuseMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *RoomuseMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case roomuse.FieldAge:
-		return m.OldAge(ctx)
+	case roomuse.FieldPeople:
+		return m.OldPeople(ctx)
 	case roomuse.FieldNote:
 		return m.OldNote(ctx)
 	case roomuse.FieldContact:
@@ -7942,12 +7942,12 @@ func (m *RoomuseMutation) OldField(ctx context.Context, name string) (ent.Value,
 // type mismatch the field type.
 func (m *RoomuseMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case roomuse.FieldAge:
+	case roomuse.FieldPeople:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetAge(v)
+		m.SetPeople(v)
 		return nil
 	case roomuse.FieldNote:
 		v, ok := value.(string)
@@ -7985,8 +7985,8 @@ func (m *RoomuseMutation) SetField(name string, value ent.Value) error {
 // or decremented during this mutation.
 func (m *RoomuseMutation) AddedFields() []string {
 	var fields []string
-	if m.addage != nil {
-		fields = append(fields, roomuse.FieldAge)
+	if m.addpeople != nil {
+		fields = append(fields, roomuse.FieldPeople)
 	}
 	return fields
 }
@@ -7996,8 +7996,8 @@ func (m *RoomuseMutation) AddedFields() []string {
 // that this field was not set, or was not define in the schema.
 func (m *RoomuseMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
-	case roomuse.FieldAge:
-		return m.AddedAge()
+	case roomuse.FieldPeople:
+		return m.AddedPeople()
 	}
 	return nil, false
 }
@@ -8007,12 +8007,12 @@ func (m *RoomuseMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *RoomuseMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case roomuse.FieldAge:
+	case roomuse.FieldPeople:
 		v, ok := value.(int)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.AddAge(v)
+		m.AddPeople(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Roomuse numeric field %s", name)
@@ -8042,8 +8042,8 @@ func (m *RoomuseMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *RoomuseMutation) ResetField(name string) error {
 	switch name {
-	case roomuse.FieldAge:
-		m.ResetAge()
+	case roomuse.FieldPeople:
+		m.ResetPeople()
 		return nil
 	case roomuse.FieldNote:
 		m.ResetNote()

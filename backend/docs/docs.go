@@ -4312,9 +4312,6 @@ var doc = `{
         "controllers.Roomuse": {
             "type": "object",
             "properties": {
-                "adderAge": {
-                    "type": "integer"
-                },
                 "contact": {
                     "type": "string"
                 },
@@ -4326,6 +4323,9 @@ var doc = `{
                 },
                 "outTime": {
                     "type": "string"
+                },
+                "people": {
+                    "type": "integer"
                 },
                 "purposeID": {
                     "type": "integer"
@@ -4960,10 +4960,6 @@ var doc = `{
         "ent.Roomuse": {
             "type": "object",
             "properties": {
-                "age": {
-                    "description": "Age holds the value of the \"age\" field.",
-                    "type": "integer"
-                },
                 "contact": {
                     "description": "Contact holds the value of the \"contact\" field.",
                     "type": "string"
@@ -4988,6 +4984,10 @@ var doc = `{
                 "out_time": {
                     "description": "OutTime holds the value of the \"out_time\" field.",
                     "type": "string"
+                },
+                "people": {
+                    "description": "People holds the value of the \"people\" field.",
+                    "type": "integer"
                 },
                 "userID": {
                     "type": "integer"
