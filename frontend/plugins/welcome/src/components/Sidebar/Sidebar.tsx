@@ -45,6 +45,7 @@ export const AppSidebar = () => (
       to="/ActivityTable"
       text="ค้นหากิจกรรมชมรม"
     />
+    <SidebarItem icon={SearchIcon} to="/RoomuseSearch" text="ค้นหาการใช้ห้อง" />
     <SidebarSpace />
     <SidebarDivider />
     <SidebarItem icon={SignOut} to="/" text="Sign Out" />
