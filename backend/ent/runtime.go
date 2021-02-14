@@ -211,18 +211,18 @@ func init() {
 	room.MaxContainValidator = roomDescMaxContain.Validators[0].(func(int) error)
 	roomuseFields := schema.Roomuse{}.Fields()
 	_ = roomuseFields
-	// roomuseDescAge is the schema descriptor for age field.
-	roomuseDescAge := roomuseFields[0].Descriptor()
-	// roomuse.AgeValidator is a validator for the "age" field. It is called by the builders before save.
-	roomuse.AgeValidator = func() func(int) error {
-		validators := roomuseDescAge.Validators
+	// roomuseDescPeople is the schema descriptor for people field.
+	roomuseDescPeople := roomuseFields[0].Descriptor()
+	// roomuse.PeopleValidator is a validator for the "people" field. It is called by the builders before save.
+	roomuse.PeopleValidator = func() func(int) error {
+		validators := roomuseDescPeople.Validators
 		fns := [...]func(int) error{
 			validators[0].(func(int) error),
 			validators[1].(func(int) error),
 		}
-		return func(age int) error {
+		return func(people int) error {
 			for _, fn := range fns {
-				if err := fn(age); err != nil {
+				if err := fn(people); err != nil {
 					return err
 				}
 			}
