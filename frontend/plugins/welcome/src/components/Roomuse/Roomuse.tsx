@@ -30,6 +30,13 @@ import { EntPurpose } from '../../api/models/EntPurpose';
 import { UserHeader } from '../UserHeader/UserHeader';
 import { AppSidebar } from '../Sidebar/Sidebar';
 
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import WarningIcon from '@material-ui/icons/Warning';
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -63,6 +70,8 @@ export default function Roomuse() {
   const classes = useStyles();
   const api = new DefaultApi();
 
+  const [checker, SetChecker] = useState(false);
+  const [open, setOpen] = React.useState(false);
   const [users, setUsers] = useState<EntUser[]>([]);
   const [rooms, setRooms] = useState<EntRoom[]>([]);
   const [purposes, setPurposes] = useState<EntPurpose[]>([]);
@@ -82,18 +91,18 @@ export default function Roomuse() {
   // const [addedmemo, SetMemo] = useState(String);
   const [contact, SetContact] = useState(String);
   const [note, SetNote] = useState(String);
-  const [age, SetAge] = useState(Number);
+  const [people, SetPeople] = useState(Number);
 
-  let adderAge = Number(age);
+  let People = Number(people);
 
   const [noteError, setNoteError] = useState('');
   const [contactError, setContactError] = useState('');
-  const [ageError, setAgeError] = useState('');
+  const [peopleError, setPeopleError] = useState('');
 
   const validatenote = (val: string) => {
     return val.match("^[A-Za-zก-๙]+[ \t\r\n\v\f]+[A-Za-zก-๙]+[^๐-๙]$");
   }
-  const validateage = (val: string) => {
+  const validatepeople = (val: string) => {
     var a = Number(val);
     if (a > 0 && a < 200) {
       return String(val)
@@ -109,8 +118,8 @@ export default function Roomuse() {
       case 'note':
         validatenote(value) ? setNoteError('') : setNoteError('ข้อมูล short note ไม่ถูกต้อง');
         return;
-        case 'age':
-          validateage(value) ? setAgeError('') : setAgeError('ข้อมูลจำนวนผู้เข้าใช้ไม่ถูกต้อง');
+        case 'people':
+          validatepeople(value) ? setPeopleError('') : setPeopleError('ข้อมูลจำนวนผู้เข้าใช้ไม่ถูกต้อง');
         return;
       case 'contact':
         validatecontact(value) ? setContactError('') : setContactError('เบอร์โทรศัพท์ 10 หลัก');
@@ -156,6 +165,13 @@ export default function Roomuse() {
     };
     getPurpose();
 
+    const getChecker = async () => {
+      if(uStatus == "Unknow" && uType != "เจ้าหน้าที่"){
+        SetChecker(true);
+      }
+    };
+    getChecker();
+
   }, [loading]);
 
   const handleInDatetimeChange = (event: any) => {
@@ -171,12 +187,12 @@ export default function Roomuse() {
     checkPattern(id, validatecontact)
     SetContact(event.target.value as string);
   };
-  const AgehandleChang = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
+  const PeoplehandleChang = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
     const id = event.target.id as keyof typeof Roomuse
     const { value } = event.target;
-    const validateage = value.toString()
-    checkPattern(id, validateage)
-    SetAge(event.target.value as number);
+    const validatepeople = value.toString()
+    checkPattern(id, validatepeople)
+    SetPeople(event.target.value as number);
   };
   const NotehandleChang = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
     const id = event.target.id as keyof typeof Roomuse
@@ -195,11 +211,11 @@ export default function Roomuse() {
 
   const checkCaseSaveError = (field: string) => {
     switch(field) {
-      case 'age':
+      case 'people':
         alertMessage("error","ต้องมีคนเข้าใช้ห้องอย่างน้อย 1 คน");
         return;
       case 'contact':
-        alertMessage("error","เบอร์โทรศัพท์ 10 หลัก");
+        alertMessage("error","เบอร์โทรศัพท์ต้องมี 10 หลัก");
         return;
       case 'note':
         alertMessage("error","ข้อความสั้น ไม่ควรเกิน 25 ตัวอักษร");
@@ -210,12 +226,14 @@ export default function Roomuse() {
     }
   }
 
-  // const CreateRoomuse = async () => {
-
+  
+    //set UserData ..
+    var uType = JSON.parse(String(localStorage.getItem('user-type')));
+    var uStatus = JSON.parse(String(localStorage.getItem('user-status')));
   
     const roomuse = {
       note          : note,
-      adderAge,
+      People,
       contact       : contact,
       inTime        : intime + ":00+07:00",
       outTime       : outtime + ":00+07:00",
@@ -264,6 +282,18 @@ export default function Roomuse() {
     setPurpose(event.target.value as number);
   };
 
+  function home() {
+    history.pushState("", "", "/welcome");
+    window.location.reload(false);
+  }
+  function handleClose() {
+    setOpen(false);
+  };
+  function handleCloseChecker() {
+    SetChecker(false);
+    home();
+  };
+
   const refreshPage = () => {
     window.location.reload();
   }
@@ -276,6 +306,27 @@ export default function Roomuse() {
       <Header title="การเข้าใช้ห้องชมรม">  
       <UserHeader />  
       </Header>
+      <Dialog
+        open={checker}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+      <DialogTitle id="alert-dialog-title">
+          <WarningIcon color="secondary"/>
+          &nbsp;ไม่ตรงตามข้อกำหนด
+        </DialogTitle>
+        <DialogContent dividers>
+          <DialogContentText  id="alert-dialog-description">
+            คุณยังไม่เป็นสมาชิกชมรม<br/>หากต้องการใช้ห้อง กรุณาสมัครชมรมก่อน
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseChecker} color="secondary" autoFocus variant="outlined">
+            ฉันเข้าใจแล้ว
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Content>
         <ContentHeader title="ใส่ข้อมูลการเข้าใช้">
 
@@ -376,6 +427,7 @@ export default function Roomuse() {
                       error={noteError ? true : false}
                       id="memo"
                       size="medium"
+                      variant="outlined"
                       value={note}
                       onChange={NotehandleChang}
                     />
@@ -389,11 +441,12 @@ export default function Roomuse() {
                   <form className={classes.paper} noValidate autoComplete="off">
 
                     <TextField
-                      error={ageError ? true : false}
-                      id="peopleuse"
+                      error={peopleError ? true : false}
+                      id="people"
                       size="medium"
-                      value={age}
-                      onChange={AgehandleChang}
+                      variant="outlined"
+                      value={people}
+                      onChange={PeoplehandleChang}
                     />
                   </form>
                 </Grid>
@@ -406,10 +459,6 @@ export default function Roomuse() {
                     <TextField
                       error={contactError ? true : false}
                       id="outlined-multiline-static"
-                      label="contact"
-                      multiline
-                      rows={2}
-                      defaultValue="เบอร์โทรศัพท์: "
                       variant="outlined"
                       value={contact}
                       onChange={ContacthandleChang}
@@ -476,7 +525,7 @@ export default function Roomuse() {
                   save();
                 }}
                >
-                 เข้าใช้ห้อง
+                 บันทึก
                </Button>
              </Grid>
            </Grid>
