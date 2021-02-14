@@ -64,9 +64,9 @@ export function EntRoomuseEdgesFromJSONTyped(json: any, ignoreDiscriminator: boo
     }
     return {
         
-        'purposes': !exists(json, 'purposes') ? undefined : EntPurposeFromJSON(json['purposes']),
-        'rooms': !exists(json, 'rooms') ? undefined : EntRoomFromJSON(json['rooms']),
-        'users': !exists(json, 'users') ? undefined : EntUserFromJSON(json['users']),
+        'purposes': !exists(json, 'Purposes') ? undefined : EntPurposeFromJSON(json['Purposes']),
+        'rooms': !exists(json, 'Rooms') ? undefined : EntRoomFromJSON(json['Rooms']),
+        'users': !exists(json, 'Users') ? undefined : EntUserFromJSON(json['Users']),
     };
 }
 

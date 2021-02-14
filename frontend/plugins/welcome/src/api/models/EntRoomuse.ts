@@ -27,11 +27,11 @@ import {
  */
 export interface EntRoomuse {
     /**
-     * AddedTime holds the value of the "added_time" field.
+     * Contact holds the value of the "contact" field.
      * @type {string}
      * @memberof EntRoomuse
      */
-    addedTime?: string;
+    contact?: string;
     /**
      * 
      * @type {EntRoomuseEdges}
@@ -44,6 +44,30 @@ export interface EntRoomuse {
      * @memberof EntRoomuse
      */
     id?: number;
+    /**
+     * InTime holds the value of the "in_time" field.
+     * @type {string}
+     * @memberof EntRoomuse
+     */
+    inTime?: string;
+    /**
+     * Note holds the value of the "note" field.
+     * @type {string}
+     * @memberof EntRoomuse
+     */
+    note?: string;
+    /**
+     * OutTime holds the value of the "out_time" field.
+     * @type {string}
+     * @memberof EntRoomuse
+     */
+    outTime?: string;
+    /**
+     * People holds the value of the "people" field.
+     * @type {number}
+     * @memberof EntRoomuse
+     */
+    people?: number;
     /**
      * 
      * @type {number}
@@ -62,9 +86,13 @@ export function EntRoomuseFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     }
     return {
         
-        'addedTime': !exists(json, 'added_time') ? undefined : json['added_time'],
+        'contact': !exists(json, 'contact') ? undefined : json['contact'],
         'edges': !exists(json, 'edges') ? undefined : EntRoomuseEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
+        'inTime': !exists(json, 'in_time') ? undefined : json['in_time'],
+        'note': !exists(json, 'note') ? undefined : json['note'],
+        'outTime': !exists(json, 'out_time') ? undefined : json['out_time'],
+        'people': !exists(json, 'people') ? undefined : json['people'],
         'userID': !exists(json, 'userID') ? undefined : json['userID'],
     };
 }
@@ -78,9 +106,13 @@ export function EntRoomuseToJSON(value?: EntRoomuse | null): any {
     }
     return {
         
-        'added_time': value.addedTime,
+        'contact': value.contact,
         'edges': EntRoomuseEdgesToJSON(value.edges),
         'id': value.id,
+        'in_time': value.inTime,
+        'note': value.note,
+        'out_time': value.outTime,
+        'people': value.people,
         'userID': value.userID,
     };
 }

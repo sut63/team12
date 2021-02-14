@@ -24,7 +24,31 @@ export interface ControllersRoomuse {
      * @type {string}
      * @memberof ControllersRoomuse
      */
-    addedTime?: string;
+    contact?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersRoomuse
+     */
+    inTime?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersRoomuse
+     */
+    note?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ControllersRoomuse
+     */
+    outTime?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersRoomuse
+     */
+    people?: number;
     /**
      * 
      * @type {number}
@@ -55,7 +79,11 @@ export function ControllersRoomuseFromJSONTyped(json: any, ignoreDiscriminator: 
     }
     return {
         
-        'addedTime': !exists(json, 'addedTime') ? undefined : json['addedTime'],
+        'contact': !exists(json, 'contact') ? undefined : json['contact'],
+        'inTime': !exists(json, 'inTime') ? undefined : json['inTime'],
+        'note': !exists(json, 'note') ? undefined : json['note'],
+        'outTime': !exists(json, 'outTime') ? undefined : json['outTime'],
+        'people': !exists(json, 'people') ? undefined : json['people'],
         'purposeID': !exists(json, 'purposeID') ? undefined : json['purposeID'],
         'roomID': !exists(json, 'roomID') ? undefined : json['roomID'],
         'userID': !exists(json, 'userID') ? undefined : json['userID'],
@@ -71,7 +99,11 @@ export function ControllersRoomuseToJSON(value?: ControllersRoomuse | null): any
     }
     return {
         
-        'addedTime': value.addedTime,
+        'contact': value.contact,
+        'inTime': value.inTime,
+        'note': value.note,
+        'outTime': value.outTime,
+        'people': value.people,
         'purposeID': value.purposeID,
         'roomID': value.roomID,
         'userID': value.userID,

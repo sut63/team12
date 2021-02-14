@@ -231,7 +231,7 @@ const alertMessage = (icon: any, title: any) => {
              <TableCell align="center">{item.edges?.rooms?.roomName}</TableCell>
              <TableCell align="center">{item.edges?.purposes?.purpose}</TableCell>
              <TableCell align="center">{item.edges?.users?.email}</TableCell>
-             <TableCell align="center">{item.age}</TableCell>
+             <TableCell align="center">{item.people}</TableCell>
              <TableCell align="center">{item.note}</TableCell>
              <TableCell align="center">{item.contact}</TableCell>
              <TableCell align="center">{moment(item.in_time).format('DD/MM/YYYY HH.mm  ')}</TableCell>
