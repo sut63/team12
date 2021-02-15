@@ -37,6 +37,11 @@ export const AppSidebar = () => (
     <SidebarDivider />
     <SidebarItem
       icon={SearchIcon}
+      to="/ClubSearch"
+      text="ค้นหาชมรม"
+    />
+    <SidebarItem
+      icon={SearchIcon}
       to="/ClubappSearch"
       text="ค้นหาใบสมัครชมรม"
     />
