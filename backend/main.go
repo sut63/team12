@@ -4,16 +4,13 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"time"
 
 	"github.com/OMENX/app/controllers"
 	_ "github.com/OMENX/app/docs"
 	"github.com/OMENX/app/ent"
 	"github.com/OMENX/app/ent/club"
-	"github.com/OMENX/app/ent/complainttype"
 	"github.com/OMENX/app/ent/gender"
 	"github.com/OMENX/app/ent/position"
-	"github.com/OMENX/app/ent/user"
 	"github.com/OMENX/app/ent/userstatus"
 	"github.com/OMENX/app/ent/usertype"
 	"github.com/OMENX/app/ent/year"
@@ -139,31 +136,31 @@ type ClubappStatus struct {
 	Status string
 }
 
-// Complaint struct
-type Complaint struct {
-	UserID      int
-	ClubID      int
-	TypeID      int
-	Name        string
-	Phonenumber string
-	Info        string
-	Date        string
-}
+// // Complaint struct
+// type Complaint struct {
+// 	UserID      int
+// 	ClubID      int
+// 	TypeID      int
+// 	Name        string
+// 	Phonenumber string
+// 	Info        string
+// 	Date        string
+// }
 
-// Complaints struct
-type Complaints struct {
-	Complaint []Complaint
-}
+// // Complaints struct
+// type Complaints struct {
+// 	Complaint []Complaint
+// }
 
-// ComplaintType struct
-type ComplaintType struct {
-	Description string
-}
+// // ComplaintType struct
+// type ComplaintType struct {
+// 	Description string
+// }
 
-// ComplaintTypes struct
-type ComplaintTypes struct {
-	ComplaintType []ComplaintType
-}
+// // ComplaintTypes struct
+// type ComplaintTypes struct {
+// 	ComplaintType []ComplaintType
+// }
 
 type Rooms struct {
 	Room []Room
@@ -552,73 +549,73 @@ func main() {
 			Save(context.Background())
 	}
 
-	// Set ComplaintType Data
-	complainttypes := ComplaintTypes{
-		ComplaintType: []ComplaintType{
-			ComplaintType{"TestType1"},
-			ComplaintType{"TestType2"},
-		},
-	}
+	// // Set ComplaintType Data
+	// complainttypes := ComplaintTypes{
+	// 	ComplaintType: []ComplaintType{
+	// 		ComplaintType{"TestType1"},
+	// 		ComplaintType{"TestType2"},
+	// 	},
+	// }
 
-	for _, cpt := range complainttypes.ComplaintType {
-		client.ComplaintType.
-			Create().
-			SetDescription(cpt.Description).
-			Save(context.Background())
-	}
+	// for _, cpt := range complainttypes.ComplaintType {
+	// 	client.ComplaintType.
+	// 		Create().
+	// 		SetDescription(cpt.Description).
+	// 		Save(context.Background())
+	// }
 
-	// Set Complaint Data
-	complaints := Complaints{
-		Complaint: []Complaint{
-			//Complaint{1, 1, 1, "บูรพา ภูสามารถ", "0624357155", "Test1", "2000-19-01 00:00:00+00:00"},
-		},
-	}
+	// // Set Complaint Data
+	// complaints := Complaints{
+	// 	Complaint: []Complaint{
+	// 		//Complaint{1, 1, 1, "บูรพา ภูสามารถ", "0624357155", "Test1", "2000-19-01 00:00:00+00:00"},
+	// 	},
+	// }
 
-	for _, cp := range complaints.Complaint {
+	// for _, cp := range complaints.Complaint {
 
-		u, err := client.User.
-			Query().
-			Where(user.IDEQ(int(cp.UserID))).
-			Only(context.Background())
+	// 	u, err := client.User.
+	// 		Query().
+	// 		Where(user.IDEQ(int(cp.UserID))).
+	// 		Only(context.Background())
 
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
+	// 	if err != nil {
+	// 		fmt.Println(err.Error())
+	// 		return
+	// 	}
 
-		ct, err := client.ComplaintType.
-			Query().
-			Where(complainttype.IDEQ(int(cp.TypeID))).
-			Only(context.Background())
+	// 	ct, err := client.ComplaintType.
+	// 		Query().
+	// 		Where(complainttype.IDEQ(int(cp.TypeID))).
+	// 		Only(context.Background())
 
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
+	// 	if err != nil {
+	// 		fmt.Println(err.Error())
+	// 		return
+	// 	}
 
-		cc, err := client.Club.
-			Query().
-			Where(club.IDEQ(int(cp.ClubID))).
-			Only(context.Background())
+	// 	cc, err := client.Club.
+	// 		Query().
+	// 		Where(club.IDEQ(int(cp.ClubID))).
+	// 		Only(context.Background())
 
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
+	// 	if err != nil {
+	// 		fmt.Println(err.Error())
+	// 		return
+	// 	}
 
-		time, err := time.Parse(time.RFC3339, cp.Date)
+	// 	time, err := time.Parse(time.RFC3339, cp.Date)
 
-		client.Complaint.
-			Create().
-			SetComplaintToUser(u).
-			SetComplaintToClub(cc).
-			SetComplaintToComplaintType(ct).
-			SetName(cp.Name).
-			SetPhonenumber(cp.Phonenumber).
-			SetInfo(cp.Info).
-			SetDate(time).
-			Save(context.Background())
-	}
+	// 	client.Complaint.
+	// 		Create().
+	// 		SetComplaintToUser(u).
+	// 		SetComplaintToClub(cc).
+	// 		SetComplaintToComplaintType(ct).
+	// 		SetName(cp.Name).
+	// 		SetPhonenumber(cp.Phonenumber).
+	// 		SetInfo(cp.Info).
+	// 		SetDate(time).
+	// 		Save(context.Background())
+	// }
 
 	// Set Room Data
 	rooms := Rooms{
