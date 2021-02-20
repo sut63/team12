@@ -102,6 +102,11 @@ export default function CreateComplaint() {
   const [name, setName] = useState(String);
   const [phonenumber, setPhoneNumber] = useState(String);
 
+  //const [errorName, setErrorName] = useState(String);
+  const [nameError, setNameError] = useState('');
+  const [phoneNumberError, setPhoneNumberError] = useState('');
+  const [infoError, setInfoError] = useState('');
+
   const [uID, setUID] = useState(localStorage.getItem('user-id')); 
   let userid = Number(uID);
 
@@ -158,21 +163,56 @@ export default function CreateComplaint() {
     setComplaintType(event.target.value as number);
   };
 
-  const handleInfoChange = (event: any) => {
-    setInfo(event.target.value as string);
-  };
-
   const handleDateChange = (event: any) => {
     setDate(event.target.value as string);
   };
 
-  const handleNameChange = (event: any) => {
+  const handleInfoChange = (event: React.ChangeEvent<{ value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('info', validateValue)
+    setInfo(event.target.value as string);
+  };
+
+  const handleNameChange = (event: React.ChangeEvent<{ value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('name', validateValue)
     setName(event.target.value as string);
   };
 
-  const handlePhoneNumberChange = (event: any) => {
+  const handlePhoneNumberChange = (event: React.ChangeEvent<{ value: any }>) => {
+    const { value } = event.target;
+    const validateValue = value
+    checkPattern('phonenumber', validateValue)
     setPhoneNumber(event.target.value as string);
   };
+
+  const validateName = (val: string) => {
+    return val.match(".{1,}");
+  }
+  const validatePhoneNumber = (val: string) => {
+    return val.length == 10 ? true : false;
+  }
+  const validateInfo = (val: string) => {
+    return val.match(".{20,}");
+  }
+  
+  const checkPattern = (id: string, value: string) => {
+    switch (id) {
+      case 'name':
+        validateName(value) ? setNameError('') : setNameError('รูปแบบชื่อผิดพลาด กรุณาป้อน ชื่อ นามสกุล');
+        return;
+      case 'phonenumber':
+        validatePhoneNumber(value) ? setPhoneNumberError('') : setPhoneNumberError('หมายเลขโทรศัพท์ไม่ถูกต้อง');
+        return;
+      case 'info':
+        validateInfo(value) ? setInfoError('') : setInfoError('กรุณาป้อนข้อมูลอย่างน้อย 20 ตัวอักษร');
+        return;
+      default:
+        return;
+    }
+  }
 
   // const handleChange = (event: React.ChangeEvent<{ id?: string; value: any }>) => {
   //   const id = event.target.id as keyof typeof Complaint;
@@ -445,6 +485,8 @@ export default function CreateComplaint() {
                   <form className={classes.textboxroot} noValidate autoComplete="off">
                     <div>
                     <TextField
+                      error={nameError ? true : false}
+                      helperText={nameError}
                       id="name-field"
                       label="ชื่อ-นามสกุลของผู้ร้องเรียน"
                       multiline
@@ -463,6 +505,8 @@ export default function CreateComplaint() {
                   <form className={classes.textboxroot} noValidate autoComplete="off">
                     <div>
                     <TextField
+                      error={phoneNumberError ? true : false}
+                      helperText={phoneNumberError}
                       id="phonenumber-field"
                       label="หมายเลขโทรศัพท์ (ในกรณีที่อาจจะต้องมีการติดต่อจากผู้ตรวจสอบเพื่อสืบสวนเพิ่มเติม)"
                       multiline
@@ -481,6 +525,8 @@ export default function CreateComplaint() {
                   <form className={classes.textboxroot} noValidate autoComplete="off">
                     <div>
                     <TextField
+                      error={infoError ? true : false}
+                      helperText={infoError}
                       id="info-field"
                       label="รายละเอียด"
                       multiline
