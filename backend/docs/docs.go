@@ -1067,7 +1067,10 @@ var doc = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/ent.Clubapplication"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ent.Clubapplication"
+                            }
                         }
                     },
                     "400": {

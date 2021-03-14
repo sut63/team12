@@ -132,7 +132,7 @@ func (ctl *ClubapplicationController) CreateClubapplication(c *gin.Context) {
 // @Param id path int true "Clubapplication ID"
 // @Param cid query int false "Club ID"
 // @Param sid query int false "ClabappStatus ID"
-// @Success 200 {object} ent.Clubapplication
+// @Success 200 {array} ent.Clubapplication
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
 // @Failure 500 {object} gin.H

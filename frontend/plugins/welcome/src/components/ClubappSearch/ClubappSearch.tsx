@@ -46,15 +46,12 @@ export default function ClubappSearch() {
     const [clubID, SetClubID] = useState(Number);
     const [appstatusID, SetAppstatusID] = useState(Number);
     const [search, SetSearch] = useState(Boolean);
-    const [clubs, SetClubs] = useState("");
-    const [appstatuses, SetAppstatuses] = useState(String);
     const [alert, SetAlert] = useState(Boolean);
     const [status, SetStatus] = useState(false);
     const [open, setOpen] = React.useState(false);
 
     const [club, SetClub] = useState<EntClub[]>([]);
     const [appstatus, SetAppstatus] = useState<EntClubappStatus[]>([]);
-    const [clubapp, SetClubapp] = useState<EntClubapplication[]>([]);
     const [data, SetData] = useState<EntClubapplication[]>([]);
 
     const GrowhandleChange = () => {
@@ -63,7 +60,6 @@ export default function ClubappSearch() {
 
     const ClubIDhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         SetClubID(event.target.value as number);
-        SetClubData(event.target.value as number);
         
     };
     // console.log("clubIDChange=>", clubID)
@@ -71,108 +67,39 @@ export default function ClubappSearch() {
 
     const AppstatusIDhabdleChang = (event: React.ChangeEvent<{ value: unknown }>) => {
         SetAppstatusID(event.target.value as number);
-        SetAppStatusData(event.target.value as number);
     };
     // console.log("appstatusIDChange=>", appstatusID)
     // console.log("appstatus=>", appstatuses)
-
-    var uname = JSON.parse(String(localStorage.getItem('user-name')))
+    var userID = JSON.parse(String(localStorage.getItem('user-id')));
+    let uid = Number(userID);
 
     function handleClose() {
         setOpen(false);
     };
 
-    function SearchTrue() {
-        SetStatus(true)
-        SetAlert(true)
-        setOpen(true)
-        SetSearch(true)
-    };
-
-    function SearchFalse() {
-        SetStatus(true)
-        SetAlert(false)
-        setOpen(true)
-        SetSearch(false)
-    }
-
-    const SetClubData = async (x: number) => {
-        await club.map((item: EntClub) => {
-            if (item.id == x) {
-                const res = String(item.name)
-                SetClubs(res);
-            }
-        })
-    };
-
-    const SetAppStatusData = async (x: number) => {
-        await appstatus.map((item: EntClubappStatus) => {
-            if (item.id == x) {
-                const res = String(item.clubstatus)
-                SetAppstatuses(res);
-            }
-        });
-    };
-
     const SearchClubApplication = async () => {
-        SetSearch(false)
-        const res = clubapp.filter((filter: EntClubapplication) => filter.edges?.owner?.name?.includes(uname))
-        //console.log(res.length)
-
-        if (res.length > 0) {
-            if (clubID == 0 || appstatusID == 0) {
-                if (clubID == 0 && appstatusID != 0) {
-                    const c = res.filter((filter: EntClubapplication) => filter.edges?.clubappstatus?.clubstatus?.includes(appstatuses))
-                    if (c.length > 0) {
-                        SetData(c)
-                        SearchTrue();
-                    }
-                    else {
-                        SearchFalse();
-                    }
-                }
-                else if (appstatusID == 0 && clubID != 0) {
-                    const c = res.filter((filter: EntClubapplication) => filter.edges?.club?.name?.includes(clubs))
-                    if (c.length > 0) {
-                        SetData(c)
-                        SearchTrue();
-                    }
-                    else {
-                        SearchFalse();
-                    }
-                }
-                else if (appstatusID == 0 && clubID == 0) {
-                    if (res.length > 0) {
-                        SetData(res)
-                        SearchTrue();
-                    }
-                    else {
-                        SearchFalse();
-                    }
-                }
-            }
-            else if (clubID != 0 && appstatusID != 0) {
-                const c = res.filter((filter: EntClubapplication) => filter.edges?.club?.name?.includes(clubs) && filter.edges.clubappstatus?.clubstatus?.includes(appstatuses))
-                if (c.length > 0) {
-                    SetData(c)
-                    SearchTrue();
-                }
-                else {
-                    SearchFalse();
-                }
-            }
+        SetSearch(false);
+        const res = await api.getClubapplication({ id: uid, cid: clubID, sid: appstatusID });
+        SetData(res);
+        console.log(res);
+        var x = res.length;
+        if (x > 0){
+            SetSearch(true);
+            SetStatus(true);
+            SetAlert(true);
         }
         else {
-            SearchFalse();
+            SetSearch(false);
+            SetStatus(true);
+            SetAlert(false);
         }
     }
     // console.log("search", search)
     // console.log("_______________________________________________")
 
     useEffect(() => {
-
         const getClub = async () => {
-            const res = await (await api.listClub({ limit: 10, offset: 0 }));
+            const res = await api.listClub({ limit: 10, offset: 0 });
             setLoading(false);
             SetClub(res);
         }
@@ -184,13 +111,6 @@ export default function ClubappSearch() {
             SetAppstatus(res);
         };
         getAppstatus();
-
-        const getClubapplication = async () => {
-            const res = await (await api.listClubapplication({ limit: 10, offset: 0 }));
-            setLoading(false);
-            SetClubapp(res);
-        };
-        getClubapplication();
 
     }, [loading]);
 

@@ -1472,7 +1472,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/ent.Clubapplication'
+            items:
+              $ref: '#/definitions/ent.Clubapplication'
+            type: array
         "400":
           description: Bad Request
           schema:

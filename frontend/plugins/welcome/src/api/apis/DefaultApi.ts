@@ -248,6 +248,8 @@ export interface GetClubRequest {
 
 export interface GetClubapplicationRequest {
     id: number;
+    cid?: number;
+    sid?: number;
 }
 
 export interface GetClubappstatusRequest {
@@ -1862,12 +1864,20 @@ export class DefaultApi extends runtime.BaseAPI {
      * get clubapplication by ID
      * Get a clubapplication entity by ID
      */
-    async getClubapplicationRaw(requestParameters: GetClubapplicationRequest): Promise<runtime.ApiResponse<EntClubapplication>> {
+    async getClubapplicationRaw(requestParameters: GetClubapplicationRequest): Promise<runtime.ApiResponse<Array<EntClubapplication>>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getClubapplication.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.cid !== undefined) {
+            queryParameters['cid'] = requestParameters.cid;
+        }
+
+        if (requestParameters.sid !== undefined) {
+            queryParameters['sid'] = requestParameters.sid;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -1878,14 +1888,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntClubapplicationFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntClubapplicationFromJSON));
     }
 
     /**
      * get clubapplication by ID
      * Get a clubapplication entity by ID
      */
-    async getClubapplication(requestParameters: GetClubapplicationRequest): Promise<EntClubapplication> {
+    async getClubapplication(requestParameters: GetClubapplicationRequest): Promise<Array<EntClubapplication>> {
         const response = await this.getClubapplicationRaw(requestParameters);
         return await response.value();
     }

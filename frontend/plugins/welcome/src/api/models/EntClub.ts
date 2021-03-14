@@ -57,6 +57,12 @@ export interface EntClub {
      */
     name?: string;
     /**
+     * Phone holds the value of the "phone" field.
+     * @type {string}
+     * @memberof EntClub
+     */
+    phone?: string;
+    /**
      * Purpose holds the value of the "purpose" field.
      * @type {string}
      * @memberof EntClub
@@ -85,6 +91,7 @@ export function EntClubFromJSONTyped(json: any, ignoreDiscriminator: boolean): E
         'edges': !exists(json, 'edges') ? undefined : EntClubEdgesFromJSON(json['edges']),
         'id': !exists(json, 'id') ? undefined : json['id'],
         'name': !exists(json, 'name') ? undefined : json['name'],
+        'phone': !exists(json, 'phone') ? undefined : json['phone'],
         'purpose': !exists(json, 'purpose') ? undefined : json['purpose'],
         'userID': !exists(json, 'userID') ? undefined : json['userID'],
     };
@@ -104,6 +111,7 @@ export function EntClubToJSON(value?: EntClub | null): any {
         'edges': EntClubEdgesToJSON(value.edges),
         'id': value.id,
         'name': value.name,
+        'phone': value.phone,
         'purpose': value.purpose,
         'userID': value.userID,
     };
