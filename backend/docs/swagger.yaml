@@ -1458,6 +1458,14 @@ paths:
         name: id
         required: true
         type: integer
+      - description: Club ID
+        in: query
+        name: cid
+        type: integer
+      - description: ClabappStatus ID
+        in: query
+        name: sid
+        type: integer
       produces:
       - application/json
       responses:
