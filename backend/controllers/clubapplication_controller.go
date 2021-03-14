@@ -130,6 +130,8 @@ func (ctl *ClubapplicationController) CreateClubapplication(c *gin.Context) {
 // @ID get-clubapplication
 // @Produce  json
 // @Param id path int true "Clubapplication ID"
+// @Param cid query int false "Club ID"
+// @Param sid query int false "ClabappStatus ID"
 // @Success 200 {object} ent.Clubapplication
 // @Failure 400 {object} gin.H
 // @Failure 404 {object} gin.H
@@ -144,18 +146,95 @@ func (ctl *ClubapplicationController) GetClubapplication(c *gin.Context) {
 		return
 	}
 
-	ca, err := ctl.client.Clubapplication.
-		Query().
-		Where(clubapplication.IDEQ(int(id))).
-		Only(context.Background())
+	cid, err := strconv.ParseInt(c.Query("cid"), 10, 64)
 	if err != nil {
-		c.JSON(404, gin.H{
+		c.JSON(400, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, ca)
+	sid, err := strconv.ParseInt(c.Query("sid"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	switch {
+		case int(cid) == 0 && int(sid) == 0 :
+			ca, err := ctl.client.Clubapplication.
+				Query().
+				WithOwner().
+				WithClub().
+				WithClubappstatus().
+				Where(clubapplication.HasOwnerWith(user.IDEQ(int(id)))).
+				All(context.Background())
+
+			if err != nil {
+				c.JSON(404, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+		
+			c.JSON(200, ca)
+
+		case int(cid) == 0 :
+			ca, err := ctl.client.Clubapplication.
+				Query().
+				WithOwner().
+				WithClub().
+				WithClubappstatus().
+				Where(clubapplication.HasOwnerWith(user.IDEQ(int(id))), clubapplication.HasClubappstatusWith(clubappstatus.IDEQ(int(sid)))).
+				All(context.Background())
+
+			if err != nil {
+				c.JSON(404, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+		
+			c.JSON(200, ca)
+
+		case int(sid) == 0 :
+			ca, err := ctl.client.Clubapplication.
+				Query().
+				WithOwner().
+				WithClub().
+				WithClubappstatus().
+				Where(clubapplication.HasOwnerWith(user.IDEQ(int(id))), clubapplication.HasClubWith(club.IDEQ(int(cid)))).
+				All(context.Background())
+
+			if err != nil {
+				c.JSON(404, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+		
+			c.JSON(200, ca)
+
+		default:
+			ca, err := ctl.client.Clubapplication.
+				Query().
+				WithOwner().
+				WithClub().
+				WithClubappstatus().
+				Where(clubapplication.HasOwnerWith(user.IDEQ(int(id))), clubapplication.HasClubWith(club.IDEQ(int(cid))), clubapplication.HasClubappstatusWith(clubappstatus.IDEQ(int(sid)))).
+				All(context.Background())
+				
+			if err != nil {
+				c.JSON(404, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+		
+			c.JSON(200, ca)
+	}
 }
 
 // ListClubapplication handles request to get a list of clubapplication entities

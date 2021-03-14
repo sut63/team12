@@ -1049,6 +1049,18 @@ var doc = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Club ID",
+                        "name": "cid",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ClabappStatus ID",
+                        "name": "sid",
+                        "in": "query"
                     }
                 ],
                 "responses": {
