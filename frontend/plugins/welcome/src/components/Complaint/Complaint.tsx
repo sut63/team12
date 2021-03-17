@@ -147,6 +147,30 @@ export default function CreateComplaint() {
 
   useEffect(() => {
     //getUsers();
+
+    const checkUserType = async () => {
+      const userType = JSON.parse(
+        String(localStorage.getItem('user-type')),
+      );
+      setLoading(false);
+      if (userType != "นักศึกษา" && userType != "เจ้าหน้าที่") {
+        Swal.fire({
+          title: 'คุณไม่สามารถส่งเรื่องร้องเรียนได้',
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown',
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp',
+          },
+        });
+        setTimeout(() => {
+          history.pushState('', '', './welcome');
+          window.location.reload(false);
+        }, 3000);
+      }
+    };
+    checkUserType();
+
     getClubs();
     getTypes();
   }, [loading]);
