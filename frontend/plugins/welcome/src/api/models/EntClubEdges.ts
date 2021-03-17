@@ -103,9 +103,9 @@ export function EntClubEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'activities': !exists(json, 'activities') ? undefined : ((json['activities'] as Array<any>).map(EntActivitiesFromJSON)),
         'clubToComplaint': !exists(json, 'clubToComplaint') ? undefined : ((json['clubToComplaint'] as Array<any>).map(EntComplaintFromJSON)),
         'clubapplication': !exists(json, 'clubapplication') ? undefined : ((json['clubapplication'] as Array<any>).map(EntClubapplicationFromJSON)),
-        'clubbranch': !exists(json, 'Clubbranch') ? undefined : EntClubBranchFromJSON(json['Clubbranch']),
-        'clubtype': !exists(json, 'Clubtype') ? undefined : EntClubTypeFromJSON(json['Clubtype']),
-        'user': !exists(json, 'User') ? undefined : EntUserFromJSON(json['User']),
+        'clubbranch': !exists(json, 'clubbranch') ? undefined : EntClubBranchFromJSON(json['clubbranch']),
+        'clubtype': !exists(json, 'clubtype') ? undefined : EntClubTypeFromJSON(json['clubtype']),
+        'user': !exists(json, 'user') ? undefined : EntUserFromJSON(json['user']),
         'userclub': !exists(json, 'userclub') ? undefined : ((json['userclub'] as Array<any>).map(EntUserFromJSON)),
     };
 }

@@ -15,6 +15,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import ReportProblemTwoToneIcon from '@material-ui/icons/ReportProblemTwoTone';
 import FiberManualRecordTwoToneIcon from '@material-ui/icons/FiberManualRecordTwoTone';
 import moment from 'moment';
+import Swal from 'sweetalert2';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -45,119 +46,110 @@ export default function ComplaintSearch() {
     const [clubID, SetClubID] = useState(Number);
     const [typeID, SetTypeID] = useState(Number);
     const [search, SetSearch] = useState(Boolean);
-    const [clubs, SetClubs] = useState("");
-    const [types, SetTypes] = useState(String);
+    // const [clubs, SetClubs] = useState("");
+    // const [types, SetTypes] = useState(String);
     const [alert, SetAlert] = useState(Boolean);
     const [status, SetStatus] = useState(false);
     const [open, setOpen] = React.useState(false);
 
     const [club, SetClub] = useState<EntClub[]>([]);
     const [type, SetType] = useState<EntComplaintType[]>([]);
-    const [complaint, SetComplaint] = useState<EntComplaint[]>([]);
+    // const [complaint, SetComplaint] = useState<EntComplaint[]>([]);
     const [data, SetData] = useState<EntComplaint[]>([]);
 
     const ClubIDhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         SetClubID(event.target.value as number);
-        SetClubData(event.target.value as number);
+        // SetClubData(event.target.value as number);
         
     };
 
     const TypeIDhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         SetTypeID(event.target.value as number);
-        SetTypeData(event.target.value as number);
+        // SetTypeData(event.target.value as number);
     };
 
-    var uname = JSON.parse(String(localStorage.getItem('user-name')))
+    // var uname = JSON.parse(String(localStorage.getItem('user-name')))
 
     function handleClose() {
         setOpen(false);
     };
 
-    function SearchTrue() {
-        SetStatus(true)
-        SetAlert(true)
-        setOpen(true)
-        SetSearch(true)
-    };
+    // function SearchTrue() {
+    //     SetStatus(true)
+    //     SetAlert(true)
+    //     setOpen(true)
+    //     SetSearch(true)
+    // };
 
-    function SearchFalse() {
-        SetStatus(true)
-        SetAlert(false)
-        setOpen(true)
-        SetSearch(false)
-    }
+    // function SearchFalse() {
+    //     SetStatus(true)
+    //     SetAlert(false)
+    //     setOpen(true)
+    //     SetSearch(false)
+    // }
 
-    const SetClubData = async (x: number) => {
-        await club.map((item: EntClub) => {
-            if (item.id == x) {
-                const res = String(item.name)
-                SetClubs(res);
-            }
-        })
-    };
+    // const SetClubData = async (x: number) => {
+    //     await club.map((item: EntClub) => {
+    //         if (item.id == x) {
+    //             const res = String(item.name)
+    //             SetClubs(res);
+    //         }
+    //     })
+    // };
 
-    const SetTypeData = async (x: number) => {
-        await type.map((item: EntComplaintType) => {
-            if (item.id == x) {
-                const res = String(item.description)
-                SetTypes(res);
-            }
-        });
-    };
+    // const SetTypeData = async (x: number) => {
+    //     await type.map((item: EntComplaintType) => {
+    //         if (item.id == x) {
+    //             const res = String(item.description)
+    //             SetTypes(res);
+    //         }
+    //     });
+    // };
+    
+    var userID = JSON.parse(String(localStorage.getItem('user-id')));
+    let uid = Number(userID);
 
     const SearchComplaint = async () => {
-        SetSearch(false)
-        const res = complaint.filter((filter: EntComplaint) => filter.edges?.complaintToUser?.name?.includes(uname))
-
-        if (res.length > 0) {
-            if (clubID == 0 || typeID == 0) {
-                if (clubID == 0 && typeID != 0) {
-                    const c = res.filter((filter: EntComplaint) => filter.edges?.complaintToComplaintType?.description?.includes(types))
-                    if (c.length > 0) {
-                        SetData(c)
-                        SearchTrue();
-                    }
-                    else {
-                        SearchFalse();
-                    }
-                }
-                else if (typeID == 0 && clubID != 0) {
-                    const c = res.filter((filter: EntComplaint) => filter.edges?.complaintToClub?.name?.includes(clubs))
-                    if (c.length > 0) {
-                        SetData(c)
-                        SearchTrue();
-                    }
-                    else {
-                        SearchFalse();
-                    }
-                }
-                else if (typeID == 0 && clubID == 0) {
-                    if (res.length > 0) {
-                        SetData(res)
-                        SearchTrue();
-                    }
-                    else {
-                        SearchFalse();
-                    }
-                }
-            }
-            else if (clubID != 0 && typeID != 0) {
-                const c = res.filter((filter: EntComplaint) => filter.edges?.complaintToClub?.name?.includes(clubs) && filter.edges.complaintToComplaintType?.description?.includes(types))
-                if (c.length > 0) {
-                    SetData(c)
-                    SearchTrue();
-                }
-                else {
-                    SearchFalse();
-                }
-            }
+        SetSearch(false);
+        const res = await api.getComplaint({ id: uid, cid: clubID, tid: typeID });
+        SetData(res);
+        console.log(res);
+        var x = res.length;
+        if (x > 0){
+            SetSearch(true);
+            SetStatus(true);
+            SetAlert(true);
         }
         else {
-            SearchFalse();
+            SetSearch(false);
+            SetStatus(true);
+            SetAlert(false);
         }
     }
 
     useEffect(() => {
+        const checkUserType = async () => {
+            const userType = JSON.parse(
+              String(localStorage.getItem('user-type')),
+            );
+            setLoading(false);
+            if (userType != "นักศึกษา" && userType != "เจ้าหน้าที่") {
+              Swal.fire({
+                title: 'คุณไม่สามารถค้นหาเรื่องร้องเรียนได้',
+                showClass: {
+                  popup: 'animate__animated animate__fadeInDown',
+                },
+                hideClass: {
+                  popup: 'animate__animated animate__fadeOutUp',
+                },
+              });
+              setTimeout(() => {
+                history.pushState('', '', './welcome');
+                window.location.reload(false);
+              }, 3000);
+            }
+          };
+        checkUserType();
 
         const getClub = async () => {
             const res = await (await api.listClub({ limit: 10, offset: 0 }));
@@ -173,12 +165,12 @@ export default function ComplaintSearch() {
         };
         getType();
 
-        const getComplaint = async () => {
-            const res = await (await api.listComplaint({ limit: 10, offset: 0 }));
-            setLoading(false);
-            SetComplaint(res);
-        };
-        getComplaint();
+        // const getComplaint = async () => {
+        //     const res = await (await api.listComplaint({ limit: 10, offset: 0 }));
+        //     setLoading(false);
+        //     SetComplaint(res);
+        // };
+        // getComplaint();
 
     }, [loading]);
 
@@ -304,7 +296,7 @@ export default function ComplaintSearch() {
                                                     <StyledTableCell align="center">หมายเลขคำร้อง</StyledTableCell>
                                                     <StyledTableCell align="center">ชื่อผู้ร้องเรียน</StyledTableCell>
                                                     <StyledTableCell align="center">เบอร์โทรศัพท์</StyledTableCell>
-                                                    <StyledTableCell align="center">วันและเวลา</StyledTableCell>
+                                                    <StyledTableCell align="center">วันที่</StyledTableCell>
                                                     <StyledTableCell align="center">ชมรม</StyledTableCell>
                                                     <StyledTableCell align="center">ประเภท</StyledTableCell>
                                                     <StyledTableCell align="center">ข้อมูล</StyledTableCell>
@@ -316,7 +308,7 @@ export default function ComplaintSearch() {
                                                         <TableCell align="center">{item.id}</TableCell>
                                                         <TableCell align="center">{item.name}</TableCell>
                                                         <TableCell align="center">{item.phonenumber}</TableCell>
-                                                        <TableCell align="center">{moment(item.date).format('MM/DD/YYYY HH.mm')}</TableCell>
+                                                        <TableCell align="center">{moment(item.date).format('DD/MM/YYYY')}</TableCell>
                                                         <TableCell align="center">{item.edges?.complaintToClub?.name}</TableCell>
                                                         <TableCell align="center">{item.edges?.complaintToComplaintType?.description}</TableCell>
                                                         <TableCell align="center">{item.info}</TableCell>
