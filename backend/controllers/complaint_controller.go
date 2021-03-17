@@ -136,18 +136,95 @@ func (ctl *ComplaintController) GetComplaint(c *gin.Context) {
 		return
 	}
 
-	cp, err := ctl.client.Complaint.
-		Query().
-		Where(complaint.IDEQ(int(id))).
-		Only(context.Background())
+	cid, err := strconv.ParseInt(c.Query("cid"), 10, 64)
 	if err != nil {
-		c.JSON(404, gin.H{
+		c.JSON(400, gin.H{
 			"error": err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, cp)
+	tid, err := strconv.ParseInt(c.Query("tid"), 10, 64)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	switch {
+	case int(cid) == 0 && int(tid) == 0:
+		cp, err := ctl.client.Complaint.
+			Query().
+			WithComplaintToUser().
+			WithComplaintToClub().
+			WithComplaintToComplaintType().
+			Where(complaint.HasComplaintToUserWith(user.IDEQ(int(id)))).
+			All(context.Background())
+
+		if err != nil {
+			c.JSON(404, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, cp)
+
+	case int(cid) == 0:
+		cp, err := ctl.client.Complaint.
+			Query().
+			WithComplaintToUser().
+			WithComplaintToClub().
+			WithComplaintToComplaintType().
+			Where(complaint.HasComplaintToUserWith(user.IDEQ(int(id))), complaint.HasComplaintToComplaintTypeWith(complainttype.IDEQ(int(tid)))).
+			All(context.Background())
+
+		if err != nil {
+			c.JSON(404, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, cp)
+
+	case int(tid) == 0:
+		cp, err := ctl.client.Complaint.
+			Query().
+			WithComplaintToUser().
+			WithComplaintToClub().
+			WithComplaintToComplaintType().
+			Where(complaint.HasComplaintToUserWith(user.IDEQ(int(id))), complaint.HasComplaintToClubWith(club.IDEQ(int(cid)))).
+			All(context.Background())
+
+		if err != nil {
+			c.JSON(404, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, cp)
+
+	default:
+		cp, err := ctl.client.Complaint.
+			Query().
+			WithComplaintToUser().
+			WithComplaintToClub().
+			WithComplaintToComplaintType().
+			Where(complaint.HasComplaintToUserWith(user.IDEQ(int(id))), complaint.HasComplaintToClubWith(club.IDEQ(int(cid))), complaint.HasComplaintToComplaintTypeWith(complainttype.IDEQ(int(tid)))).
+			All(context.Background())
+
+		if err != nil {
+			c.JSON(404, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		c.JSON(200, cp)
+	}
 }
 
 // ListComplaint handles request to get a list of complaint entities

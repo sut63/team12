@@ -266,6 +266,8 @@ export interface GetClubtypeRequest {
 
 export interface GetComplaintRequest {
     id: number;
+    cid?: number;
+    tid?: number;
 }
 
 export interface GetComplainttypeRequest {
@@ -2000,12 +2002,20 @@ export class DefaultApi extends runtime.BaseAPI {
      * get complaint by ID
      * Get a complaint entity by ID
      */
-    async getComplaintRaw(requestParameters: GetComplaintRequest): Promise<runtime.ApiResponse<EntComplaint>> {
+    async getComplaintRaw(requestParameters: GetComplaintRequest): Promise<runtime.ApiResponse<Array<EntComplaint>>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getComplaint.');
         }
 
         const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.cid !== undefined) {
+            queryParameters['cid'] = requestParameters.cid;
+        }
+
+        if (requestParameters.tid !== undefined) {
+            queryParameters['tid'] = requestParameters.tid;
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -2016,14 +2026,14 @@ export class DefaultApi extends runtime.BaseAPI {
             query: queryParameters,
         });
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntComplaintFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntComplaintFromJSON));
     }
 
     /**
      * get complaint by ID
      * Get a complaint entity by ID
      */
-    async getComplaint(requestParameters: GetComplaintRequest): Promise<EntComplaint> {
+    async getComplaint(requestParameters: GetComplaintRequest): Promise<Array<EntComplaint>> {
         const response = await this.getComplaintRaw(requestParameters);
         return await response.value();
     }
