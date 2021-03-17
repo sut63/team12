@@ -99,16 +99,17 @@ export default function CreateComplaint() {
   const [clubid, setClub] = React.useState(Number);
   const [complainttypeid, setComplaintType] = React.useState(Number);
   const [info, setInfo] = useState(String);
-  const [name, setName] = useState(String);
+  // const [name, setName] = useState(String);
   const [phonenumber, setPhoneNumber] = useState(String);
 
   //const [errorName, setErrorName] = useState(String);
-  const [nameError, setNameError] = useState('');
+  // const [nameError, setNameError] = useState('');
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const [infoError, setInfoError] = useState('');
 
   const [uID, setUID] = useState(localStorage.getItem('user-id')); 
   let userid = Number(uID);
+  const name = JSON.parse(String(localStorage.getItem('user-name')),);
 
   // const [nameError, setNameError] = React.useState('');
   // const [phonenumberError, setPhoneNumberError] = React.useState('');
@@ -198,12 +199,12 @@ export default function CreateComplaint() {
     setInfo(event.target.value as string);
   };
 
-  const handleNameChange = (event: React.ChangeEvent<{ value: any }>) => {
-    const { value } = event.target;
-    const validateValue = value
-    checkPattern('name', validateValue)
-    setName(event.target.value as string);
-  };
+  // const handleNameChange = (event: React.ChangeEvent<{ value: any }>) => {
+  //   const { value } = event.target;
+  //   const validateValue = value
+  //   checkPattern('name', validateValue)
+  //   setName(event.target.value as string);
+  // };
 
   const handlePhoneNumberChange = (event: React.ChangeEvent<{ value: any }>) => {
     const { value } = event.target;
@@ -212,9 +213,9 @@ export default function CreateComplaint() {
     setPhoneNumber(event.target.value as string);
   };
 
-  const validateName = (val: string) => {
-    return val.match(".{1,}");
-  }
+  // const validateName = (val: string) => {
+  //   return val.match(".{1,}");
+  // }
   const validatePhoneNumber = (val: string) => {
     return val.length == 10 ? true : false;
   }
@@ -224,9 +225,9 @@ export default function CreateComplaint() {
   
   const checkPattern = (id: string, value: string) => {
     switch (id) {
-      case 'name':
-        validateName(value) ? setNameError('') : setNameError('รูปแบบชื่อผิดพลาด กรุณาป้อน ชื่อ นามสกุล');
-        return;
+      // case 'name':
+      //   validateName(value) ? setNameError('') : setNameError('รูปแบบชื่อผิดพลาด กรุณาป้อน ชื่อ นามสกุล');
+      //   return;
       case 'phonenumber':
         validatePhoneNumber(value) ? setPhoneNumberError('') : setPhoneNumberError('หมายเลขโทรศัพท์ไม่ถูกต้อง');
         return;
@@ -502,7 +503,7 @@ export default function CreateComplaint() {
                     </Select>
                   </FormControl>
                   </div>
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <div className={classes.paper}></div>
                   </Grid>
                   <div>
@@ -521,7 +522,7 @@ export default function CreateComplaint() {
                     />
                     </div>
                   </form>
-                  </div>
+                  </div> */}
                   <Grid item xs={12}>
                     <div className={classes.paper}></div>
                   </Grid>
