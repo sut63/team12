@@ -57,6 +57,18 @@ export default function ComplaintSearch() {
     // const [complaint, SetComplaint] = useState<EntComplaint[]>([]);
     const [data, SetData] = useState<EntComplaint[]>([]);
 
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: toast => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+    });
+
     const ClubIDhandleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
         SetClubID(event.target.value as number);
         // SetClubData(event.target.value as number);
@@ -119,11 +131,19 @@ export default function ComplaintSearch() {
             SetSearch(true);
             SetStatus(true);
             SetAlert(true);
+            Toast.fire({
+                icon: 'success',
+                title: 'ค้นหาข้อมูลสำเร็จ',
+            });
         }
         else {
             SetSearch(false);
             SetStatus(true);
             SetAlert(false);
+            Toast.fire({
+                icon: 'error',
+                title: 'ค้นหาข้อมูลไม่สำเร็จ',
+            });
         }
     }
 
