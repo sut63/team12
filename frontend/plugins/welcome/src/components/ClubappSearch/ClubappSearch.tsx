@@ -87,11 +87,13 @@ export default function ClubappSearch() {
             SetSearch(true);
             SetStatus(true);
             SetAlert(true);
+            setOpen(true);
         }
         else {
             SetSearch(false);
             SetStatus(true);
             SetAlert(false);
+            setOpen(true);
         }
     }
     // console.log("search", search)
