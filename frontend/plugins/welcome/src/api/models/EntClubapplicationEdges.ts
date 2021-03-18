@@ -64,9 +64,9 @@ export function EntClubapplicationEdgesFromJSONTyped(json: any, ignoreDiscrimina
     }
     return {
         
-        'club': !exists(json, 'club') ? undefined : EntClubFromJSON(json['club']),
-        'clubappstatus': !exists(json, 'clubappstatus') ? undefined : EntClubappStatusFromJSON(json['clubappstatus']),
-        'owner': !exists(json, 'owner') ? undefined : EntUserFromJSON(json['owner']),
+        'club': !exists(json, 'Club') ? undefined : EntClubFromJSON(json['Club']),
+        'clubappstatus': !exists(json, 'Clubappstatus') ? undefined : EntClubappStatusFromJSON(json['Clubappstatus']),
+        'owner': !exists(json, 'Owner') ? undefined : EntUserFromJSON(json['Owner']),
     };
 }
 
