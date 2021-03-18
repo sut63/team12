@@ -342,7 +342,7 @@ var uStatus = JSON.parse(String(localStorage.getItem('user-status')));
                             <Grid>
                             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                               <Alert onClose={handleClose} severity="error">
-                              ข้อมูลติดต่อผิดพลาด กรุณาป้อนข้อมูลอยา่งน้อย 10 ตัวอักษร
+                              ข้อมูลติดต่อผิดพลาด กรุณาป้อนข้อมูลอย่างน้อย 10 ตัวอักษร
                               </Alert>
                             </Snackbar>
                             </Grid>
